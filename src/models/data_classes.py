@@ -1,1 +1,0 @@
-# 定義 Task, Generator, Battery 等類別
