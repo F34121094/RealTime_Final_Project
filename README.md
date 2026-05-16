@@ -31,13 +31,13 @@ VPP_RealTime_Scheduler/
     * [x] 確立 Git 版控與協作流程
     * [x] 建立符合自動評分腳本的目錄結構
 * [x] **Phase 1: 測資生成 (Task Generator)**
-      - 執行檔案 `src/task_generator.py`
-      - 結果寫入 `output/task_set.json`
+      > 執行檔案 `src/task_generator.py`
+      > 結果寫入 `output/task_set.json`
     * [x] 實作週期任務基礎參數範圍限制
     * [x] 實作死線 (Deadline) 特殊分佈限制
     * [x] 實作高壓系統負載密度驗證 (Dw >= 0.7)
 * [x] **Phase 2: 環境建構 (Data Models & Parsers)**
-      - 這邊就是在把 json 裡面的內容全補整理成 Class 或是 List 的形式可以直接讀取
+      > 這邊就是在把 json 裡面的內容全補整理成 Class 或是 List 的形式可以直接讀取
     * [x] 實作發電機組 (Processor/Generator) 資料結構與限制式
     * [x] 實作儲能設備 (Battery) 資料結構
     * [x] 實作電價表 (Price Table) 解析邏輯
