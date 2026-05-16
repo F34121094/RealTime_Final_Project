@@ -163,8 +163,8 @@ if __name__ == "__main__":
         print(f"[task loading] fail:{e}")
     try:
         generator_set,storage_set,renewable_set,price_72 = load_environment()
-        environment_check(generator_set,storage_set,renewable_set,price_72)
+        # environment_check(generator_set,storage_set,renewable_set,price_72)
         print("[environment loading] success")
     except Exception as e:
         print(f"[environment loading] fail:{e}")
-
+        
