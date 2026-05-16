@@ -48,6 +48,7 @@ VPP_RealTime_Scheduler/
 <br>
 
 * [ ] **Phase 3: 核心排程器 (Static Scheduler)**
+    * [x] 將 task_set 展開為 72 個小時形式（這個時間點可以開始做，若開始做但做不完會刪除）
     * [ ] 實作基礎 Clock-driven 靜態排程框架
     * [ ] 實作電力負載分配演算法 (平行多工處理)
     * [ ] 產出合規的 schedule_result.json
