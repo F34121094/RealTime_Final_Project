@@ -10,35 +10,46 @@ VPP_RealTime_Scheduler/
 │   └── price_72hr.json             # 72小時電價表
 │
 ├── output/                         # 各模組產出的結果 (API 合約交集區)
-│   ├── task_set.json               # Generator 產出
-│   ├── schedule_result.json        # Scheduler 產出
-│   └── evaluation_results.json     # Evaluator 產出
+│   ├── task_set.json               # task_generator 產出的測資
+│   ├── schedule_result.json        # scheduler 排程結果產出
+│   ├── evaluation_results.json     # evaluator 算分與效能產出
+│   └── acceptance_test_log.json    # (Level 2) 動態任務接收測試日誌
 │
-├── src/                            # 核心程式碼
-│   ├── task_generator/             # 週期性任務生成器
-│   │   ├── __init__.py
-│   │   └── main.py                 
-│   │
-│   ├── scheduler/                  # 核心排程器
-│   │   ├── __init__.py
-│   │   ├── main.py                 # 排程主程式入口
-│   │   ├── static_scheduler.py     # 處理日前固定排程 (Periodic Tasks)
-│   │   └── dynamic_scheduler.py    # 處理 Acceptance Test (Sporadic/Aperiodic)
-│   │
-│   ├── evaluator/                  # 效能評估器
-│   │   ├── __init__.py
-│   │   └── main.py                 # 計算 Miss rate, Tardiness, 成本與收益
-│   │
-│   ├── models/                     # [領域模型] 資料物件定義區
-│   │   ├── __init__.py
-│   │   └── data_classes.py         # 封裝 Task, Generator, Battery 等資料結構
-│   │
-│   └── utils/                      # [共用工具] 
-│       ├── __init__.py
-│       ├── file_io.py              # 專門處理 JSON 讀寫與驗證
-│       └── math_tools.py           # 共用數學計算與轉換模組
+├── src/                            # 核心程式碼模組
+│   ├── task_generator.py           # 週期性任務生成器
+│   ├── scheduler.py                # 核心排程演算法 (處理日前靜態排程與資源分配)
+│   ├── evaluator.py                # 效能評估器 (計算 Miss rate, 成本與收益)
+│   └── models.py                   # [領域模型] 封裝發電機、電池、電價等環境資料結構
 │
-├── .gitignore                      # 避免快取與虛擬環境推上版控
-├── README.md                       # 專案說明與執行指南
-├── requirements.txt                # 統一的套件依賴清單
-└── run_pipeline.py                 # 全局執行腳本 (一鍵依序執行全系統)
+├── .gitignore                      # 避免快取與編譯環境被推上版控
+├── README.md                       # 專案說明與執行指南 (本檔案)
+└── requirements.txt                # 統一的 Python 套件依賴清單
+```
+
+## 2. 開發進度表 (Project Progress) 
+> Gemini 幫我生成的一個可以參考的進度表
+
+* **[x] Phase 0: 專案基礎建設**
+    * [x] 確立 Git 版控與協作流程
+    * [x] 建立符合自動評分腳本的目錄結構
+* **[x] Phase 1: 測資生成 (Task Generator)**
+    > 執行檔案 `src/task_generator.py`, 結果 `output/task_set.json`
+    * [x] 實作週期任務基礎參數範圍限制
+    * [x] 實作死線 (Deadline) 特殊分佈限制
+    * [x] 實作高壓系統負載密度驗證 (Dw >= 0.7)
+* **[ ] Phase 2: 環境建構 (Data Models & Parsers)**
+    * [ ] 實作發電機組 (Processor/Generator) 資料結構與限制式
+    * [ ] 實作儲能設備 (Battery) 資料結構
+    * [ ] 實作電價表 (Price Table) 解析邏輯
+* **[ ] Phase 3: 核心排程器 (Static Scheduler)**
+    * [ ] 實作基礎 Clock-driven 靜態排程框架
+    * [ ] 實作電力負載分配演算法 (平行多工處理)
+    * [ ] 產出合規的 schedule_result.json
+* **[ ] Phase 4: 效能評估器 (Evaluator)**
+    * [ ] 實作 Miss Rate 與 Tardiness 計算
+    * [ ] 實作發電成本與收益計算模型
+* **[ ] Phase 5: 動態排程進階挑戰 (Dynamic Scheduler) - Optional**
+    * [ ] 實作 Aperiodic/Sporadic 任務之 Acceptance Test
+
+
+
