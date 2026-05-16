@@ -123,13 +123,37 @@ def load_environment() -> List[Task]:
     with open(path_2,'r') as f:
         data = json.load(f)
     data_price = data["price"]
-    price_72 = [float(entry["market_price"]) for entry in data_price]
+    price_72 = [entry["market_price"] for entry in data_price]
     print("[price 72 loading] success")
     
     return generator_set,storage_set,renewable_set,price_72
 
-def environment_check():
-    pass
+def environment_check(generator_set,storage_set,renewable_set,price_72):
+    print("\n--- generator_set ---")
+    for i in generator_set:
+        print(f"id : {i.generator_id}")
+        print(f"ramp_up_rate: {i.ramp_up_rate}")
+        print(f"initial_on_time : {i.initial_on_time}\n")
+
+    print("\n--- storage_set ---")
+    for i in storage_set:
+        print(f"id : {i.storage_id}")
+        print(f"soc_min: {i.soc_min}")
+        print(f"charge_max : {i.charge_max}\n")
+    
+    print("\n--- renewable_set ---")
+    for i in renewable_set:
+        print(f"id : {i.renewable_id}")
+        print(f"capacity: {i.capacity}")
+        print(f"pv_forecast (first 20):")
+        for p in range(20):
+            print(f"hour{p+1} : {i.pv_forecast[p]}")
+        print()
+
+    print("\n--- price_72(first 10) ---")
+    for i in range(10):
+        print(f"hour{i+1} = {price_72[i]}")
+    print()
 
 if __name__ == "__main__":
     try:
@@ -139,7 +163,7 @@ if __name__ == "__main__":
         print(f"[task loading] fail:{e}")
     try:
         generator_set,storage_set,renewable_set,price_72 = load_environment()
-        
+        environment_check(generator_set,storage_set,renewable_set,price_72)
         print("[environment loading] success")
     except Exception as e:
         print(f"[environment loading] fail:{e}")
