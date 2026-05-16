@@ -186,7 +186,7 @@ def renewable_generate(renewable_set):
     hourly_renewable = [0.0] * 72
     cumulative_renewable = [0.0] * 72
     running_total = 0.0
-    # 2. 先計算每小時的獨立產出 (把所有綠電設備加總)
+
     for re in renewable_set:
         for t in range(72):
             hourly_power = float(re.capacity) * float(re.pv_forecast[t])
