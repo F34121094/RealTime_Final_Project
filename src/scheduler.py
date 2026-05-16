@@ -14,6 +14,7 @@ class Task:         #任務清單
     p: int          # Period
     e: int          # Execution Time
     d: int          # Deadline
+    d_count: int    # 新增特質 - deadline 倒數用於把任務從代辦清單中刪除 
     w: int          # energy demand
     preempt: int    # preemptable
 
@@ -56,9 +57,10 @@ def load_task() -> List[Task]:
         task_set.append(Task(
             task_id= task_id,    
             r= info["r"],          
-            p= info["p"],          
+            p= info["p"],
             e= info["e"],          
-            d= info["d"],          
+            d= info["d"],
+            d_count = info["d"],          
             w= info["w"],          
             preempt= info["preempt"]    
         ))
@@ -155,6 +157,36 @@ def environment_check(generator_set,storage_set,renewable_set,price_72):
         print(f"hour{i+1} = {price_72[i]}")
     print()
 
+def analyze_task_timelines(task_set):
+    timeline = []
+    task_can_be_exe = []
+    for t in range(72):
+        for task in task_set:
+            # 把任務加進來 - 只有release time可以加進來
+            # 把任務刪除 - 當d_count < e 的時候(代表做不完了)
+            # release time 只可能會 >= 目前的時間
+            
+            # 加入
+            if task.r == t:
+                task_can_be_exe.append(task.task_id)      #加入之後更新下一次的release time
+                task.r += task.p
+                continue
+            
+            #刪除
+            if task.task_id in task_can_be_exe:
+                if task.d_count <= task.e or (71 - t) < task.e:
+                    task_can_be_exe.remove(task.task_id)
+                    task.d_count = task.d     #刪除後還原 d_count
+                else:    
+                    task.d_count -= 1
+        timeline.append(list(task_can_be_exe))
+    return timeline
+
+def main_loop(task_set,generator_set,storage_set,renewable_set,price_72):
+    result = []
+    for t in range(72):
+        pass
+
 if __name__ == "__main__":
     try:
         task_set = load_task()
@@ -167,4 +199,8 @@ if __name__ == "__main__":
         print("[environment loading] success")
     except Exception as e:
         print(f"[environment loading] fail:{e}")
+
+    task_timeline = analyze_task_timelines(task_set)
+    for i in range(72):
+        print(f"{i+1} - {task_timeline[i]}")
         
