@@ -29,25 +29,25 @@ VPP_RealTime_Scheduler/
 ## 2. 開發進度表 (Project Progress) 
 * [x] **Phase 0: 專案基礎建設**
     * [x] 確立 Git 版控與協作流程
-    * [x] 建立符合自動評分腳本的目錄結構
+    * [x] 建立符合自動評分腳本的目錄結構<br>
 * [x] **Phase 1: 測資生成 (Task Generator)**
       <br> 執行檔案 `src/task_generator.py`
       <br> 結果寫入 `output/task_set.json`
     * [x] 實作週期任務基礎參數範圍限制
     * [x] 實作死線 (Deadline) 特殊分佈限制
-    * [x] 實作高壓系統負載密度驗證 (Dw >= 0.7)
+    * [x] 實作高壓系統負載密度驗證 (Dw >= 0.7)<br>
 * [x] **Phase 2: 環境建構 (Data Models & Parsers)**
       <br> 這邊就是在把 json 裡面的內容全補整理成 Class 或是 List 的形式可以直接讀取
     * [x] 實作發電機組 (Processor/Generator) 資料結構與限制式
     * [x] 實作儲能設備 (Battery) 資料結構
-    * [x] 實作電價表 (Price Table) 解析邏輯
+    * [x] 實作電價表 (Price Table) 解析邏輯<br>
 * [ ] **Phase 3: 核心排程器 (Static Scheduler)**
     * [ ] 實作基礎 Clock-driven 靜態排程框架
     * [ ] 實作電力負載分配演算法 (平行多工處理)
-    * [ ] 產出合規的 schedule_result.json
+    * [ ] 產出合規的 schedule_result.json<br>
 * [ ] **Phase 4: 效能評估器 (Evaluator)**
     * [ ] 實作 Miss Rate 與 Tardiness 計算
-    * [ ] 實作發電成本與收益計算模型
+    * [ ] 實作發電成本與收益計算模型<br>
 * [ ] **Phase 5: 動態排程進階挑戰 (Dynamic Scheduler) - Optional**
     * [ ] 實作 Aperiodic/Sporadic 任務之 Acceptance Test
 
