@@ -157,7 +157,7 @@ def environment_check(generator_set,storage_set,renewable_set,price_72):
         print(f"hour{i+1} = {price_72[i]}")
     print()
 
-def analyze_task_timelines(task_set):
+def task_timelines(task_set):
     timeline = []
     task_can_be_exe = []
     for t in range(72):
@@ -182,6 +182,23 @@ def analyze_task_timelines(task_set):
         timeline.append(list(task_can_be_exe))
     return timeline
 
+def renewable_generate(renewable_set):
+    hourly_renewable = [0.0] * 72
+    cumulative_renewable = [0.0] * 72
+    running_total = 0.0
+    # 2. 先計算每小時的獨立產出 (把所有綠電設備加總)
+    for re in renewable_set:
+        for t in range(72):
+            hourly_power = float(re.capacity) * float(re.pv_forecast[t])
+            hourly_renewable[t] += hourly_power
+            
+    for t in range(72):
+        running_total += hourly_renewable[t]
+        cumulative_renewable[t] = running_total
+        print(f"hour{t} - {hourly_renewable[t]} {cumulative_renewable[t]}")
+        
+    return hourly_renewable, cumulative_renewable
+
 def main_loop(task_set,generator_set,storage_set,renewable_set,price_72):
     result = []
     for t in range(72):
@@ -200,7 +217,9 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"[environment loading] fail:{e}")
 
-    task_timeline = analyze_task_timelines(task_set)
-    for i in range(72):
-        print(f"{i+1} - {task_timeline[i]}")
+    task_timeline = task_timelines(task_set)
+    hourly_renewable, cumulative_renewable = renewable_generate(renewable_set)
         
+
+# version 1
+# 完全不管成本，有多少就生產多少，然後盡可能做越多任務越好
