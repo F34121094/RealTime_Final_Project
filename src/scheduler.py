@@ -44,6 +44,7 @@ class Storage:              # 儲能設備
     discharge_max: int      # 最大放電功率
     charge_max: int         # 最大充電功率
     soc_init: int           # 初始存量
+    used: int               # 新增變數 - 放過電 1 / 沒放過 0
 
 @dataclass
 class Renewable:            # 再生能源
@@ -103,7 +104,8 @@ def load_environment() -> List[Task]:
                 soc_max =  info["soc_max"], 
                 discharge_max =  info["discharge_max"], 
                 charge_max =  info["charge_max"], 
-                soc_init =  info["soc_init"]
+                soc_init =  info["soc_init"],
+                used = 0
         ))
     print("[storage loading] success")
 
@@ -217,16 +219,53 @@ def generator_switch(g):
             print("關機條件不合")
             return 
 
+def battery_dis_charge(system_energy,demand,storage_set,price):
+    #用目前電池水位的邏輯來分配
+    money = 0
+    if system_energy >= demand:
+        surplus = system_energy - demand
+        storage_set.sort(key = lambda b : b.soc_init / b.soc_max)
+        for b in storage_set:
+            if surplus <= 0:
+                break 
+            available_space = b.soc_max - b.soc_init
+            actual_charge = min(surplus, b.charge_max, available_space)
+            if actual_charge > 0:
+                b.soc_init += actual_charge
+                surplus -= actual_charge
+        if surplus > 0:
+            money += surplus * price
+        
+    else:
+        deficit = demand - system_energy
+        storage_set.sort(key = lambda b : b.soc_init / b.soc_max, reverse = True)
+        for b in storage_set:
+            if deficit <= 0:
+                break
+            available_power = b.soc_init - b.soc_min
+            actual_discharge = min(deficit, b.discharge_max, available_power)
+            if actual_discharge > 0:
+                b.soc_init -= actual_discharge
+                deficit -= actual_discharge
+        if deficit > 0:
+            print(f"這回合失敗，仍需要 ${deficit}")
+    return money
+
 def main_loop(task_set,generator_set,storage_set,renewable_set,price_72):
     result = []
+    current_task = []
+    total_earn = 0
+    total_cost = 0
     for t in range(72):
-        round_e_g = 0       # 這個不要加 battery 的因為這邊是可以直接用的
+        system_energy = 0       # 這個不要加 battery 的因為這邊是可以直接用的
+        cost = 0
+        # 最大輸出
         
         # ===================== 產出部分 =====================
         # 再生能源
         print(f"----- hour {t + 1} -----")
         print(f"renewable : {renewable_set[t]}")
-        round_e_g += renewable_set[t]
+        system_energy += renewable_set[t]
         
         # 傳統機組
         for g in generator_set:
@@ -234,18 +273,34 @@ def main_loop(task_set,generator_set,storage_set,renewable_set,price_72):
                 generator_switch(g)
             else:               # 開機的這個回合還不能產出任何電力
                 if g.current_energy < g.output_max:             # 假設起始的電力是從 0 開始
-                    g.current_energy += g.ramp_up_rate          # 一次增加就是增加一個 ramp_up
-                    if(g.current_energy > g.output_max): g.current_energy = g.output_max    # 絕對不能超過 最大出力
+                    g.current_energy = min(g.current_energy + g.ramp_up_rate, g.output_max)
             print(f"generator_{g.generator_id} : {g.current_energy}")
-            round_e_g += g.current_energy       # 反正沒開機這個也是 0 
-        
-        # 電池電量
-        for s in storage_set:
-            print(f"battery_{s.storage_id} : {s.soc_init}(目前的電量)")
-        
+            cost += g.current_energy * g.cost_variable + g.cost_fixed
+            system_energy += g.current_energy       # 反正沒開機這個也是 0 
+
+        print("----- ----- ----- -----")    
         # ===================== 輸出部分 =====================
-        for job in task_set[t]:
-            
+        #用來加入現在可以執行的任務
+        #先計算目前這個回合應該輸出的總能量
+
+        print("目前正在執行任務")
+        demand = 0
+        for task in current_task:
+            print(f"task_{task.task_id} : {task.w}")
+            demand += task.w
+        print(f"總電量需求 : {demand}")
+        
+        earning = battery_dis_charge(system_energy,demand,storage_set,price_72[t])
+        print(f"回合成本 : {cost}")
+        print(f"回合獲利 : {earning}")
+        total_earn += earning
+        total_cost += cost
+
+    print(f"總成本 {total_cost}")
+    print(f"總獲利 {total_earn}")
+    return
+
+                
 
 
 if __name__ == "__main__":
