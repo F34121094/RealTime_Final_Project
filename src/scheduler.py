@@ -91,6 +91,7 @@ def load_environment() -> List[Task]:
             initial_on_time= info["initial_on_time"],    
             initial_off_time= info["initial_off_time"],   
             initial_energy= info["initial_energy"],
+            current_energy = 0,
             on_off = 0
         ))
     print("[generator loading] success")
@@ -251,11 +252,10 @@ def battery_dis_charge(system_energy,demand,storage_set,price):
             print(f"這回合失敗，仍需要 ${deficit}")
     return money
 
-def main_loop(task_set,generator_set,storage_set,renewable_set,price_72):
-    result = []
-    current_task = []
+def main_loop(task_timeline,generator_set,storage_set,renewable_set,price_72):
     total_earn = 0
     total_cost = 0
+    current_job = []
     for t in range(72):
         system_energy = 0       # 這個不要加 battery 的因為這邊是可以直接用的
         cost = 0
@@ -278,16 +278,44 @@ def main_loop(task_set,generator_set,storage_set,renewable_set,price_72):
             cost += g.current_energy * g.cost_variable + g.cost_fixed
             system_energy += g.current_energy       # 反正沒開機這個也是 0 
 
-        print("----- ----- ----- -----")    
         # ===================== 輸出部分 =====================
         #用來加入現在可以執行的任務
         #先計算目前這個回合應該輸出的總能量
 
-        print("目前正在執行任務")
         demand = 0
-        for task in current_task:
-            print(f"task_{task.task_id} : {task.w}")
-            demand += task.w
+        
+        for job in task_timeline[t]:
+            if job in current_job:
+                continue
+            else:
+                current_job.append(job)
+                demand += job.w
+                job.e_last -= 1
+                if(job.e_last == 0):
+                    job.e_last = job.e
+                    current_job.remove(job)
+                    while(1):
+                        index = t
+                        if(job in task_timeline[index]):
+                            task_timeline[index].remove(job)
+                            index += 1
+                        else: break
+
+        for job in current_job:
+            if(job.e_last == 0):
+                job.e_last = job.e
+                current_job.remove(job)
+                while(1):
+                    index = t
+                    if(job in task_timeline[index]):
+                        task_timeline[index].remove(job)
+                        index += 1
+                    else: break
+            demand += job.w
+            job.e_last -= 1
+        
+        
+        
         print(f"總電量需求 : {demand}")
         
         earning = battery_dis_charge(system_energy,demand,storage_set,price_72[t])
@@ -318,7 +346,7 @@ if __name__ == "__main__":
 
     task_timeline = task_timelines(task_set)
     hourly_renewable = renewable_generate(renewable_set)
-    main_loop(task_set,generator_set,storage_set,renewable_set,price_72, renewable_set)
+    main_loop(task_timeline,generator_set,storage_set,hourly_renewable,price_72)
 
 # version 1
 # 完全不管成本，有多少就生產多少，然後盡可能做越多任務越好
