@@ -40,20 +40,20 @@ VPP_RealTime_Scheduler/
     * [x] 實作高壓系統負載密度驗證 (Dw >= 0.7)
 <br>
 
-* [x] **Phase 2: 環境建構 (Data Models & Parsers)**
+* [x] **Phase 2: 環境建構 (Data Models & Parsers) `src/scheduler.py`**
       <br> 這邊就是在把 json 裡面的內容全補整理成 Class 或是 List 的形式可以直接讀取
     * [x] 實作發電機組 (Processor/Generator) 資料結構與限制式
     * [x] 實作儲能設備 (Battery) 資料結構
     * [x] 實作電價表 (Price Table) 解析邏輯
 <br>
 
-* [ ] **Phase 3: 核心排程器 (Static Scheduler)**
+* [ ] **Phase 3: 核心排程器 (Static Scheduler) `src/scheduler.py`**
+    > 目前這個版本還是先以可以產出一個可以跑出來的結果為主，沒有進行任何優化，發電系統在 $t = 1$ 時，啟動後就一直運轉（符合基礎的 constraint） 
     * [x] 將 task_set 展開為 72 個小時形式（這個時間點可以開始做，若開始做但做不完會刪除）
-    * [ ] 實作基礎 Clock-driven 靜態排程框架
-    * [ ] 實作電力負載分配演算法 (平行多工處理)
+    * [x] 完成主迴圈 (還有一些 bug)
     * [ ] 產出合規的 schedule_result.json
 <br> 
-
+1
 * [ ] **Phase 4: 效能評估器 (Evaluator)**
     * [ ] 實作 Miss Rate 與 Tardiness 計算
     * [ ] 實作發電成本與收益計算模型
