@@ -265,7 +265,7 @@ def main_loop(task_timeline,generator_set,storage_set,renewable_set,price_72):
         
         # ===================== 產出部分 =====================
         # 再生能源
-        print(f"----- hour {t + 1} -----")
+        print(f"----- hour {t} -----")
         print(f"renewable 發電 : {renewable_set[t]}")
         system_energy += renewable_set[t]
         
@@ -286,13 +286,13 @@ def main_loop(task_timeline,generator_set,storage_set,renewable_set,price_72):
 
         demand = 0
         print()
-        for job in current_job:
+        for job in current_job[:]:
             if(job.e_last == 0):
                 job.e_last = job.e
                 current_job.remove(job)
                 print(f"[task remove]{job.task_id}")
+                index = t
                 while(1):
-                    index = t
                     if(job in task_timeline[index]):
                         task_timeline[index].remove(job)
                         index += 1
@@ -303,24 +303,12 @@ def main_loop(task_timeline,generator_set,storage_set,renewable_set,price_72):
                 print(f"[task info]{job.task_id} 剩餘時間 : {job.e_last} 單位成本{job.w}")
 
         for job in task_timeline[t]:
-            if job in current_job:
-                continue
-            else:
+            if job not in current_job and job.e_last > 0:
                 current_job.append(job)
                 print(f"[task add]{job.task_id}, 須執行時間 : {job.e_last}")
                 demand += job.w
                 job.e_last -= 1
                 print(f"[task info]{job.task_id} 剩餘時間 : {job.e_last} 單位成本{job.w}")
-                if(job.e_last == 0):
-                    job.e_last = job.e
-                    current_job.remove(job)
-                    print(f"[task remove]{job.task_id}")
-                    while(1):
-                        index = t
-                        if(job in task_timeline[index]):
-                            task_timeline[index].remove(job)
-                            index += 1
-                        else: break
         
         print(f"\n總電量需求 : {demand}")
         
