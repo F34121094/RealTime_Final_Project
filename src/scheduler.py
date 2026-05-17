@@ -15,7 +15,8 @@ class Task:         #任務清單
     e: int          # Execution Time
     d: int          # Deadline
     d_count: int    # 新增特質 - deadline 倒數用於把任務從代辦清單中刪除 
-    w: int          # energy demand
+    e_last: int     # 新增特質 - 剩下還需要的執行時間
+    w: int          # energy demand (每個小時)
     preempt: int    # preemptable
 
 @dataclass
@@ -32,6 +33,8 @@ class Generator:            # 傳統機組
     initial_on_time: int    # 排程前機組已經連續開機的時間 
     initial_off_time: int   # 排程前機組已經連續關機的時間
     initial_energy: int     # 機組在 t = 0 時可供應的電量
+    on_off: int             # 新增變數 - 0:關機 1:開機
+    current_energy: int     # 新增變數 - 目前出力
 
 @dataclass
 class Storage:              # 儲能設備
@@ -60,7 +63,8 @@ def load_task() -> List[Task]:
             p= info["p"],
             e= info["e"],          
             d= info["d"],
-            d_count = info["d"],          
+            d_count = info["d"],
+            e_last = info["e"],
             w= info["w"],          
             preempt= info["preempt"]    
         ))
@@ -85,7 +89,8 @@ def load_environment() -> List[Task]:
             cost_variable= info["cost_variable"],      
             initial_on_time= info["initial_on_time"],    
             initial_off_time= info["initial_off_time"],   
-            initial_energy= info["initial_energy"]
+            initial_energy= info["initial_energy"],
+            on_off = 0
         ))
     print("[generator loading] success")
     
@@ -191,18 +196,57 @@ def renewable_generate(renewable_set):
         for t in range(72):
             hourly_power = float(re.capacity) * float(re.pv_forecast[t])
             hourly_renewable[t] += hourly_power
-            
-    for t in range(72):
-        running_total += hourly_renewable[t]
-        cumulative_renewable[t] = running_total
-        print(f"hour{t} - {hourly_renewable[t]} {cumulative_renewable[t]}")
         
-    return hourly_renewable, cumulative_renewable
+    return hourly_renewable
+
+def generator_switch(g):
+    if(g.on_off == 0):          # 關機 -> 開機
+        if(g.min_down_time <= g.initial_off_time):
+            g.on_off = 1
+            g.initial_off_time = 0
+            return
+        else:
+            print("開機條件不合")
+            return 
+    else:                       # 開機 -> 關機
+        if(g.min_up_time <= g.initial_on_time):
+            g.on_off = 0
+            g.initial_on_time = 0
+            return
+        else:
+            print("關機條件不合")
+            return 
 
 def main_loop(task_set,generator_set,storage_set,renewable_set,price_72):
     result = []
     for t in range(72):
-        pass
+        round_e_g = 0       # 這個不要加 battery 的因為這邊是可以直接用的
+        
+        # ===================== 產出部分 =====================
+        # 再生能源
+        print(f"----- hour {t + 1} -----")
+        print(f"renewable : {renewable_set[t]}")
+        round_e_g += renewable_set[t]
+        
+        # 傳統機組
+        for g in generator_set:
+            if g.on_off == 0:   # 第一版直接開機開機
+                generator_switch(g)
+            else:               # 開機的這個回合還不能產出任何電力
+                if g.current_energy < g.output_max:             # 假設起始的電力是從 0 開始
+                    g.current_energy += g.ramp_up_rate          # 一次增加就是增加一個 ramp_up
+                    if(g.current_energy > g.output_max): g.current_energy = g.output_max    # 絕對不能超過 最大出力
+            print(f"generator_{g.generator_id} : {g.current_energy}")
+            round_e_g += g.current_energy       # 反正沒開機這個也是 0 
+        
+        # 電池電量
+        for s in storage_set:
+            print(f"battery_{s.storage_id} : {s.soc_init}(目前的電量)")
+        
+        # ===================== 輸出部分 =====================
+        for job in task_set[t]:
+            
+
 
 if __name__ == "__main__":
     try:
@@ -218,8 +262,8 @@ if __name__ == "__main__":
         print(f"[environment loading] fail:{e}")
 
     task_timeline = task_timelines(task_set)
-    hourly_renewable, cumulative_renewable = renewable_generate(renewable_set)
-        
+    hourly_renewable = renewable_generate(renewable_set)
+    main_loop(task_set,generator_set,storage_set,renewable_set,price_72, renewable_set)
 
 # version 1
 # 完全不管成本，有多少就生產多少，然後盡可能做越多任務越好
