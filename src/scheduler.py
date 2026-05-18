@@ -173,20 +173,22 @@ def task_timelines(task_set):       # [FUNC] 先把 Perodic task 展開成 72小
             # 把任務加進來 - 只有release time可以加進來
             # 把任務刪除 - 當d_count < e 的時候(代表做不完了)
             # release time 只可能會 >= 目前的時間
-            
-            # 加入
-            if task.r == t:
-                task_can_be_exe.append(task)      #加入之後更新下一次的release time
-                task.r += task.p
-                continue
-            
-            #刪除
+            # 刪除
+            # Notation : 只要 execution time > relative deadline 就做不完
             if task in task_can_be_exe:
-                if task.d_count <= task.e or (71 - t) < task.e:
+                if task.d_count < task.e or (71 - t) < task.e:
                     task_can_be_exe.remove(task)
                     task.d_count = task.d     #刪除後還原 d_count
                 else:    
                     task.d_count -= 1
+            
+            # 加入
+            # [FIX] : 將 release time - 1 確保在 index正確的位置完成
+            if task.r - 1 == t and (72 - t) >= task.e:             
+                task_can_be_exe.append(task)
+                      
+                task.r += task.p        # 加入之後更新下一次的release time
+                task.d_count -= 1       # 這個回合會是他的第一個回合
         timeline.append(list(task_can_be_exe))
     return timeline
 
@@ -274,22 +276,22 @@ def main_loop(task_timeline,generator_set,storage_set,renewable_set,price_72):  
         
         # [發電] 傳統機組
         for g in generator_set:
-           
-            if g.on_off == 0:       # TODO [generator] : 什麼時候開機 與 關機   
+            # TODO [generator] : 什麼時候開機 與 關機 
+            if g.on_off == 0:       # 關機
                 generator_switch(g)
 
             # FIXED : [助教回信] - 發電機在開機當下就可以開始供電
             # output 由 0 開始加，但發電量至少要 >= output_min ( 假設output_min 跟 ramp_up 皆為 15，這樣第一個時間點的供電只能是15 )
-                        
-            g.current_energy = max(g.output_min,min(g.current_energy + g.ramp_up_rate, g.output_max))       # TODO [generator] : ramp_up ramp_down 的設計(現在是一直加到滿)
-            print(f"generator_{g.generator_id} 發電 : {g.current_energy}")
-            cost += g.current_energy * g.cost_variable + g.cost_fixed
-            system_energy += g.current_energy       
-
+            if g.on_off == 1:       # 開機  
+                g.current_energy = max(g.output_min,min(g.current_energy + g.ramp_up_rate, g.output_max))       # TODO [generator] : ramp_up ramp_down 的設計(現在是一直加到滿)
+                print(f"generator_{g.generator_id} 發電 : {g.current_energy}")
+                cost += g.current_energy * g.cost_variable + g.cost_fixed
+                system_energy += g.current_energy       
+        
+        print()
         # ===================== 輸電 =====================  
         
         demand = 0
-        print()
         for job in current_job[:]:
             if(job.e_last == 0):
                 job.e_last = job.e
@@ -340,6 +342,10 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"[environment loading] fail:{e}")
 
-    task_timeline = task_timelines(task_set)
-    hourly_renewable = renewable_generate(renewable_set)
-    main_loop(task_timeline,generator_set,storage_set,hourly_renewable,price_72)
+    task_timeline = task_timelines(task_set)            # [BUG] : hour3 release task 會在 hour4 才出現
+    print(f"task_timeline 長度 = {len(task_timeline)}")
+    for i in range(len(task_timeline)):
+        
+        print(f"index{i} - hour{i+1}:{list(map(lambda job : job.task_id, task_timeline[i]))}")
+    # hourly_renewable = renewable_generate(renewable_set)
+    # main_loop(task_timeline,generator_set,storage_set,hourly_renewable,price_72)
