@@ -1,4 +1,4 @@
-# Periodic Task Generator
+# 1. Periodic Task Generator
 
 本模組負責生成符合虛擬電廠 (VPP) 排程系統數學限制的週期性任務集合 (Periodic Task Set)。
 
@@ -22,3 +22,9 @@
 在專案根目錄下執行：
 ```bash
 python src/task_generator/main.py
+```
+<br>
+
+# 2. scheduler（主要的排程器在這邊）
+
+

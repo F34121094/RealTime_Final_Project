@@ -8,7 +8,7 @@ from typing import List, Dict
 import os
 
 @dataclass
-class Task:         #任務清單
+class Task:         # [class] 任務清單
     task_id: str    # id
     r: int          # Release Time
     p: int          # Period
@@ -20,7 +20,7 @@ class Task:         #任務清單
     preempt: int    # preemptable
 
 @dataclass
-class Generator:            # 傳統機組
+class Generator:            # [class] 傳統機組
     generator_id: str       # 編號
     output_min: int         # 最小出力
     output_max: int         # 最大出力
@@ -37,7 +37,7 @@ class Generator:            # 傳統機組
     current_energy: int     # 新增變數 - 目前出力
 
 @dataclass
-class Storage:              # 儲能設備
+class Storage:              # [class] 儲能設備
     storage_id: str         # 編號
     soc_min: int            # 必須保留的最低電能量
     soc_max: int            # 可以儲存的最高電能量
@@ -47,12 +47,12 @@ class Storage:              # 儲能設備
     used: int               # 新增變數 - 放過電 1 / 沒放過 0
 
 @dataclass
-class Renewable:            # 再生能源
+class Renewable:            # [class] 再生能源
     renewable_id: str       # 單一再生能源的編號
     capacity: int           # 再生能源的最大出力
     pv_forecast: list       # 太陽能預測出力百分比
 
-def load_task() -> List[Task]:
+def load_task() -> List[Task]:      # [FUNC] 將 task_set.json 檔載入
     task_set = []
     path = "output/task_set.json"
     with open(path,'r') as f:
@@ -71,7 +71,7 @@ def load_task() -> List[Task]:
         ))
     return task_set
 
-def load_environment() -> List[Task]:
+def load_environment() -> List[Task]:       # [FUNC] 將 input 中的 json 檔載入
     path_1 = "input/processor_settings.json"
     with open(path_1,'r') as f:
         data = json.load(f)
@@ -138,7 +138,7 @@ def load_environment() -> List[Task]:
     
     return generator_set,storage_set,renewable_set,price_72
 
-def environment_check(generator_set,storage_set,renewable_set,price_72):
+def environment_check(generator_set,storage_set,renewable_set,price_72):        # [FUNC] 用來檢查 Json 檔是否載入正確 (不會用到)
     print("\n--- generator_set ---")
     for i in generator_set:
         print(f"id : {i.generator_id}")
@@ -165,7 +165,7 @@ def environment_check(generator_set,storage_set,renewable_set,price_72):
         print(f"hour{i+1} = {price_72[i]}")
     print()
 
-def task_timelines(task_set):
+def task_timelines(task_set):       # [FUNC] 先把 Perodic task 展開成 72小時 (可知哪個小時被排成任務最多)
     timeline = []
     task_can_be_exe = []
     for t in range(72):
@@ -190,10 +190,8 @@ def task_timelines(task_set):
         timeline.append(list(task_can_be_exe))
     return timeline
 
-def renewable_generate(renewable_set):
+def renewable_generate(renewable_set):      # [FUNC] renewable 72小時產量計算 (可以知道哪個時間點可能不用產那麼多電)
     hourly_renewable = [0.0] * 72
-    cumulative_renewable = [0.0] * 72
-    running_total = 0.0
 
     for re in renewable_set:
         for t in range(72):
@@ -202,7 +200,7 @@ def renewable_generate(renewable_set):
         
     return hourly_renewable
 
-def generator_switch(g):
+def generator_switch(g):        # [FUNC] generator 的開機與關機
     if(g.on_off == 0):          # 關機 -> 開機
         if(g.min_down_time <= g.initial_off_time):
             g.on_off = 1
@@ -220,8 +218,8 @@ def generator_switch(g):
             print("關機條件不合")
             return 
 
-def battery_dis_charge(system_energy,demand,storage_set,price):
-    #用目前電池水位的邏輯來分配
+def battery_dis_charge(system_energy,demand,storage_set,price):     # [FUNC] 總供電、輸電 + 電池輸入輸出 + 賣給台電計算
+    # Notation :  用目前電池水位的邏輯來分配
     money = 0
     if system_energy >= demand:
         surplus = system_energy - demand
@@ -254,36 +252,42 @@ def battery_dis_charge(system_energy,demand,storage_set,price):
         print(f"電池_{s.storage_id} 電量 : {s.soc_init} / {s.soc_max}")
     return money
 
-def main_loop(task_timeline,generator_set,storage_set,renewable_set,price_72):
+def main_loop(task_timeline,generator_set,storage_set,renewable_set,price_72):      # [FUNC] 排程的主要迴圈
+    # NOTATION : 這個版本是直接把傳統機組的發電直接完全開滿的情況，任務也是不管能不能做就直接全部做完(但基本上都可以做完)
+    # 然後如果電力過剩先存入電池中，電池滿了賣給台電
+    # 如果遇到電力不夠的情況的選擇: 
+    # 1.目前任務擱置 
+    # 2.代辦清單任務擱置
+    # 3.由電池放電
     total_earn = 0
     total_cost = 0
     current_job = []
     for t in range(72):
-        system_energy = 0       # 這個不要加 battery 的因為這邊是可以直接用的
+        system_energy = 0       # 不包括電池供電
         cost = 0
-        # 最大輸出
+        # ===================== 發電 =====================
         
-        # ===================== 產出部分 =====================
-        # 再生能源
+        # [發電] 再生能源
         print(f"----- hour {t} -----")
         print(f"renewable 發電 : {renewable_set[t]}")
         system_energy += renewable_set[t]
         
-        # 傳統機組
+        # [發電] 傳統機組
         for g in generator_set:
-            if g.on_off == 0:   # 第一版直接開機開機
+           
+            if g.on_off == 0:       # TODO [generator] : 什麼時候開機 與 關機   
                 generator_switch(g)
-            else:               # 開機的這個回合還不能產出任何電力
-                if g.current_energy < g.output_max:             # 假設起始的電力是從 0 開始
-                    g.current_energy = min(g.current_energy + g.ramp_up_rate, g.output_max)
+
+            # FIXED : [助教回信] - 發電機在開機當下就可以開始供電
+            # output 由 0 開始加，但發電量至少要 >= output_min ( 假設output_min 跟 ramp_up 皆為 15，這樣第一個時間點的供電只能是15 )
+                        
+            g.current_energy = max(g.output_min,min(g.current_energy + g.ramp_up_rate, g.output_max))       # TODO [generator] : ramp_up ramp_down 的設計(現在是一直加到滿)
             print(f"generator_{g.generator_id} 發電 : {g.current_energy}")
             cost += g.current_energy * g.cost_variable + g.cost_fixed
-            system_energy += g.current_energy       # 反正沒開機這個也是 0 
+            system_energy += g.current_energy       
 
-        # ===================== 輸出部分 =====================
-        #用來加入現在可以執行的任務
-        #先計算目前這個回合應該輸出的總能量
-
+        # ===================== 輸電 =====================  
+        
         demand = 0
         print()
         for job in current_job[:]:
@@ -322,8 +326,6 @@ def main_loop(task_timeline,generator_set,storage_set,renewable_set,price_72):
     print(f"總獲利 {total_earn}")
     return
 
-                
-
 
 if __name__ == "__main__":
     try:
@@ -341,6 +343,3 @@ if __name__ == "__main__":
     task_timeline = task_timelines(task_set)
     hourly_renewable = renewable_generate(renewable_set)
     main_loop(task_timeline,generator_set,storage_set,hourly_renewable,price_72)
-
-# version 1
-# 完全不管成本，有多少就生產多少，然後盡可能做越多任務越好
