@@ -358,15 +358,26 @@ def build_pulp_model(generator_set, time_horizon=72):
     
     model = pulp.LpProblem("Scheduling",pulp.LpMinimize)
     gen_ids = [g.generator_id for g in generator_set]
-    time_step = list(range(1, time_horizon + 1))
-
+    time_steps = list(range(1, time_horizon + 1))
+    
+    # 發電量變數 P 
     P = pulp.LpVariable.dict("Power",
-                             ((i,t) for i in gen_ids for t in time_step),
+                             ((i,t) for i in gen_ids for t in time_steps),
                              lowBound = 0,
                              cat = 'Continuous')
+    
+    # 宣告開關機變數
     U = pulp.LpVariable.dicts("Status", 
                               ((i, t) for i in gen_ids for t in time_steps), 
                               cat='Binary')
+    
+    for t in time_steps:
+        for g in generator_set:
+            i = g.generator_id
+
+            model += P[i,t] >= g.output_min * U[i,t]
+            model += P[i,t] >= g.output_max * U[i,t]
+
     return model,P,U
 
 
