@@ -6,6 +6,7 @@ import json
 from dataclasses import dataclass
 from typing import List, Dict
 import os
+import pulp
 
 @dataclass
 class Task:         # [class] 任務清單
@@ -352,6 +353,22 @@ def main_loop(task_timeline,generator_set,storage_set,renewable_set,price_72):  
         json.dump(scheduler_result, f, indent=4, ensure_ascii=False)
     
     return
+
+def build_pulp_model(generator_set, time_horizon=72):
+    
+    model = pulp.LpProblem("Scheduling",pulp.LpMinimize)
+    gen_ids = [g.generator_id for g in generator_set]
+    time_step = list(range(1, time_horizon + 1))
+
+    P = pulp.LpVariable.dict("Power",
+                             ((i,t) for i in gen_ids for t in time_step),
+                             lowBound = 0,
+                             cat = 'Continuous')
+    U = pulp.LpVariable.dicts("Status", 
+                              ((i, t) for i in gen_ids for t in time_steps), 
+                              cat='Binary')
+    return model,P,U
+
 
 
 if __name__ == "__main__":
