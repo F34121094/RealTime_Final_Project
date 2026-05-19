@@ -264,7 +264,24 @@ def main_loop(task_timeline,generator_set,storage_set,renewable_set,price_72):  
     total_earn = 0
     total_cost = 0
     current_job = []
+
+    # json 檔的list
+    scheduler_result = {
+        "schedule_result": []
+    }
+
     for t in range(72):
+
+        time_step_data = {
+            "t": t + 1,
+            "P": {},  # 每個發電設備的發電
+            "k": {},  # 各個耗電任務從哪取得發電
+            "sell": 0.0,    # 售電量 
+            "soc": {},      # 儲能設備剩餘電量
+            "missed_aperiodic": [],     # 逾期的 aperiodic
+            "rejected_sporadic": []     # 拒絕的 sporadic
+        }
+
         system_energy = 0       # 不包括電池供電
         cost = 0
         # ===================== 發電 =====================
@@ -287,7 +304,9 @@ def main_loop(task_timeline,generator_set,storage_set,renewable_set,price_72):  
                 print(f"generator_{g.generator_id} 發電 : {g.current_energy}")
                 cost += g.current_energy * g.cost_variable + g.cost_fixed
                 system_energy += g.current_energy       
-        
+            time_step_data["P"] = {
+
+            }
         print()
         # ===================== 輸電 =====================  
         
@@ -324,8 +343,14 @@ def main_loop(task_timeline,generator_set,storage_set,renewable_set,price_72):  
         total_earn += earning
         total_cost += cost
 
+        scheduler_result["schedule_result"].append(time_step_data)
+
     print(f"總成本 {total_cost}")
     print(f"總獲利 {total_earn}")
+
+    with open("output/schedule_result.json", "w", encoding="utf-8") as f:
+        json.dump(scheduler_result, f, indent=4, ensure_ascii=False)
+    
     return
 
 
