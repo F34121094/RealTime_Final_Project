@@ -354,31 +354,125 @@ def main_loop(task_timeline,generator_set,storage_set,renewable_set,price_72):  
     
     return
 
-def build_pulp_model(generator_set, time_horizon=72):
+def build_pulp_model(generator_set, task_set, renewable_set, time_horizon=72):
     
     model = pulp.LpProblem("Scheduling",pulp.LpMinimize)
-    gen_ids = [g.generator_id for g in generator_set]
     time_steps = list(range(1, time_horizon + 1))
     
+    # ==========================================
+    # 1 發電機變數與限制式
+    # ==========================================
+
     # 發電量變數 P 
-    P = pulp.LpVariable.dict("Power",
+    gen_ids = [g.generator_id for g in generator_set]
+    P = pulp.LpVariable.dicts("Power",
                              ((i,t) for i in gen_ids for t in time_steps),
                              lowBound = 0,
                              cat = 'Continuous')
     
-    # 宣告開關機變數
+    # 開關機變數 U
     U = pulp.LpVariable.dicts("Status", 
                               ((i, t) for i in gen_ids for t in time_steps), 
                               cat='Binary')
     
+    # 這樣是同時對所有的 generator 在 72 個時間點下限制式
     for t in time_steps:
         for g in generator_set:
             i = g.generator_id
-
+            
+            # [constraint 6] 傳統機組出力上下限
             model += P[i,t] >= g.output_min * U[i,t]
-            model += P[i,t] >= g.output_max * U[i,t]
+            model += P[i,t] <= g.output_max * U[i,t]
+            
+            # [constraint 7] ramp_up/ramp_down 限制
+            if t == 1:
+                model += P[i, t] - g.initial_energy <= g.ramp_up_rate, f"RampUpInit_{i}"
+                model += g.initial_energy - P[i, t] <= g.ramp_down_rate, f"RampDownInit_{i}"
+            else:
+                model += P[i, t] - P[i, t-1] <= g.ramp_up_rate, f"RampUp_{i}_{t}"
+                model += P[i, t-1] - P[i, t] <= g.ramp_down_rate, f"RampDown_{i}_{t}"
+    
+    # ==========================================
+    # 2. 任務變數與限制式 (你剛剛漏掉的在這裡！)
+    # ==========================================
+    jobs = []
+    for task in task_set:
+        current_t = task.r
+        instance = 1
+        while current_t <= time_horizon:
+            jobs.append({
+                "job_id": f"{task.task_id}_{instance}", 
+                "w": task.w,
+                "e": task.e,
+                "r": current_t,
+                "d": task.d,
+                "preempt": task.preempt
+            })
+            current_t += task.p 
+            instance += 1
+    job_ids = [job["job_id"] for job in jobs]
+    x = pulp.LpVariable.dicts("TaskExe", 
+                              ((j, t) for j in job_ids for t in time_steps), 
+                              cat='Binary')
 
-    return model,P,U
+    for job in jobs:
+        j = job["job_id"]
+        r = job["r"]
+        e = job["e"]
+        abs_deadline = r + job["d"] - 1
+
+        # [constraint 3] 執行時間總和必須等於 e
+        model += pulp.lpSum(x[j, t] for t in time_steps) == e, f"TotalExe_{j}"
+        
+        # [constraint 2] 不在區間內的時間，強制 x = 0
+        for t in time_steps:
+            if t < r or t > abs_deadline:
+                model += x[j, t] == 0, f"OutWindow_{j}_{t}"
+
+    # ==========================================
+    # 3 再生能源變數 & 限制式
+    # ==========================================
+
+    # 再生能源變數 P_res
+    res_ids = [r.renewable_id for r in renewable_set]
+    P_res = pulp.LpVariable.dicts("Power_Renew",
+                             ((i,t) for i in res_ids for t in time_steps),
+                             lowBound = 0,
+                             cat = 'Continuous')
+    
+    # 售電變數 Sell
+    Sell = pulp.LpVariable.dicts("Sell", time_steps, lowBound=0, cat='Continuous')
+
+    all_sources = gen_ids + res_ids  # 所有可以發電的設備 (傳統 + 再生)
+    # job 在 時間點t 從 i發電 拿了多少電
+    k = pulp.LpVariable.dicts("k",
+                              ((j, i, t) for j in job_ids for i in all_sources for t in time_steps),
+                              lowBound=0, cat='Continuous')
+    for t in time_steps:
+        # [constraint 13] 再生能源上限
+        for re in renewable_set:
+            i = re.renewable_id
+            max_res = re.capacity * re.pv_forecast[t-1]
+            model += P_res[i, t] <= max_res, f"RenewMax_{i}_{t}"
+
+        # [constraint 1] 任務的能量滿足
+        for job in jobs:
+            j = job["job_id"]
+            model += pulp.lpSum(k[j, i, t] for i in all_sources) == job["w"] * x[j, t], f"TaskDemand_{j}_{t}"
+
+        # [constraint 20] 發電設備的分配上限
+        for i in gen_ids:
+            model += pulp.lpSum(k[j, i, t] for j in job_ids) <= P[i, t], f"GenDistLimit_{i}_{t}"
+        for i in res_ids:
+            model += pulp.lpSum(k[j, i, t] for j in job_ids) <= P_res[i, t], f"ResDistLimit_{i}_{t}"
+
+        # [constraint 23] 系統全局能量平衡 (目前先不加儲能)
+        total_generate = pulp.lpSum(P[i, t] for i in gen_ids) + pulp.lpSum(P_res[i, t] for i in res_ids)
+        total_consume = pulp.lpSum(k[j, i, t] for j in job_ids for i in all_sources)
+        
+        model += total_generate == total_consume + Sell[t], f"GlobalBalance_{t}"
+    
+    return model, P, U, x, k, Sell, P_res, jobs
 
 
 
@@ -396,10 +490,15 @@ if __name__ == "__main__":
         print(f"[environment loading] fail:{e}")
 
     task_timeline = task_timelines(task_set)            # [BUG] : hour3 release task 會在 hour4 才出現
-    print(f"task_timeline 長度 = {len(task_timeline)}")
+    # print(f"task_timeline 長度 = {len(task_timeline)}")
     
     # for i in range(len(task_timeline)):
     #     print(f"index{i} - hour{i+1}:{list(map(lambda job : job.task_id, task_timeline[i]))}")
     
-    hourly_renewable = renewable_generate(renewable_set)
-    main_loop(task_timeline,generator_set,storage_set,hourly_renewable,price_72)
+    # hourly_renewable = renewable_generate(renewable_set)
+    # main_loop(task_timeline,generator_set,storage_set,hourly_renewable,price_72)
+
+    model, P, U, x, k, Sell, P_res, jobs = build_pulp_model(generator_set, task_set, renewable_set) 
+    print(Sell)
+    print(jobs)
+
