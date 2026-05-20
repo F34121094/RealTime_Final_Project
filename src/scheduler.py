@@ -399,7 +399,7 @@ def build_pulp_model(generator_set, task_set, renewable_set, time_horizon=72):
     for task in task_set:
         current_t = task.r
         instance = 1
-        while current_t <= time_horizon:
+        while current_t + task.e - 1 <= time_horizon:
             jobs.append({
                 "job_id": f"{task.task_id}_{instance}", 
                 "w": task.w,
@@ -489,7 +489,7 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"[environment loading] fail:{e}")
 
-    task_timeline = task_timelines(task_set)            # [BUG] : hour3 release task 會在 hour4 才出現
+    # task_timeline = task_timelines(task_set)            # [BUG] : hour3 release task 會在 hour4 才出現
     # print(f"task_timeline 長度 = {len(task_timeline)}")
     
     # for i in range(len(task_timeline)):
@@ -499,6 +499,98 @@ if __name__ == "__main__":
     # main_loop(task_timeline,generator_set,storage_set,hourly_renewable,price_72)
 
     model, P, U, x, k, Sell, P_res, jobs = build_pulp_model(generator_set, task_set, renewable_set) 
-    print(Sell)
-    print(jobs)
+
+    cost_var_dict = {g.generator_id: g.cost_variable for g in generator_set}
+    cost_fixed_dict = {g.generator_id: g.cost_fixed for g in generator_set}
+
+    # 2. 定義目標函數 (總成本 = 發電成本 - 售電收益)
+    # [作業目標 2 & 3] 最小化發電成本，最大化售電收益
+    gen_ids = [g.generator_id for g in generator_set]
+    time_steps = list(range(1, 73))
+    
+    # 發電成本：變動成本 (P * cost_var) + 固定開機成本 (U * cost_fixed)
+    total_gen_cost = pulp.lpSum(
+        P[i, t] * cost_var_dict[i] + U[i, t] * cost_fixed_dict[i] 
+        for i in gen_ids for t in time_steps
+    )
+    
+    # 售電收益：Sell * 當時的電價 (price_72)
+    # 注意：price_72 是 0~71 的 list，所以用 t-1 取值
+    total_revenue = pulp.lpSum(Sell[t] * price_72[t-1] for t in time_steps)
+    
+    # 把目標函數加進 model 中 (沒有 <=, >= 或 ==，這就是目標函數！)
+    model += total_gen_cost - total_revenue
+    
+    # 3. 召喚求解器 (Solver) 開始暴力破解！
+    print("求解器運算中，請稍候...")
+    # 可以加上 msg=True 來看求解器的思考過程
+    model.solve(pulp.PULP_CBC_CMD(msg=True)) 
+    
+    # 4. 印出求解結果狀態
+    status_str = pulp.LpStatus[model.status]
+    print(f"\n求解完成!狀態: {status_str}")
+
+    if status_str == "Optimal":
+        print(f"預估發電總成本: $ {pulp.value(total_gen_cost):.2f}")
+        print(f"預估售電總收益: $ {pulp.value(total_revenue):.2f}")
+        print(f"系統淨成本 (目標函數值): $ {pulp.value(model.objective):.2f}")
+
+        # 建立外層結構
+        final_output = {
+            "schedule_result": []
+        }
+        res_ids = [r.renewable_id for r in renewable_set]
+        all_sources = gen_ids + res_ids
+        # 遍歷 72 小時
+        for t in time_steps:
+            time_step_data = {
+                "t": t,
+                "P": {},
+                "k": {},
+                "sell": 0.0,
+                "soc": {},                # Level 1 如果還沒做儲能，可以先留空 dict
+                "missed_aperiodic": [],   # Aperiodic 是明天的任務，先留空 list
+                "rejected_sporadic": []   # Sporadic 是明天的任務，先留空 list
+            }
+            
+            # 1. 填寫 P 矩陣 (發電機與再生能源出力)
+            for i in gen_ids:
+                # 使用 round() 去除浮點數精度誤差 (如 0.000000001 -> 0.0)
+                val = round(pulp.value(P[i, t]), 2)
+                time_step_data["P"][i] = val
+                
+            for i in [r.renewable_id for r in renewable_set]:
+                val = round(pulp.value(P_res[i, t]), 2)
+                time_step_data["P"][i] = val
+            
+            # 2. 填寫 k 矩陣 (每個 Job 從每個設備拿了多少電)
+            for job in jobs:
+                j = job["job_id"]
+                # 為了避免 JSON 產生巨大且無用的零矩陣，我們只記錄「大於 0」的供電分配
+                task_k_dict = {}
+                for i in all_sources:
+                    val = round(pulp.value(k[j, i, t]), 2)
+                    if val > 0:
+                        task_k_dict[i] = val
+                
+                # 如果這個小時這個任務有拿到電，才加進 k 裡面
+                if task_k_dict:
+                    time_step_data["k"][j] = task_k_dict
+                    
+            # 3. 填寫售電量
+            time_step_data["sell"] = round(pulp.value(Sell[t]), 2)
+            
+            # 將這個小時的狀態加入清單
+            final_output["schedule_result"].append(time_step_data)
+            
+        # 4. 匯出檔案
+        output_path = "output/schedule_result.json"
+        import json
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump(final_output, f, indent=4, ensure_ascii=False)
+            
+        print(f"✅ JSON 排程結果已成功儲存至 {output_path}")
+    else:
+        print("警告：模型無解 (Infeasible)！請檢查限制式是否衝突。")
+
 

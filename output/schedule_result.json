@@ -1,0 +1,1400 @@
+{
+    "schedule_result": [
+        {
+            "t": 1,
+            "P": {
+                "thermal_1": 15.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {},
+            "sell": 15.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 2,
+            "P": {
+                "thermal_1": 30.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {},
+            "sell": 30.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 3,
+            "P": {
+                "thermal_1": 45.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p1_1": {
+                    "thermal_1": 18.0
+                },
+                "p3_1": {
+                    "thermal_1": 14.0
+                }
+            },
+            "sell": 13.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 4,
+            "P": {
+                "thermal_1": 60.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p1_1": {
+                    "thermal_1": 18.0
+                },
+                "p3_1": {
+                    "thermal_1": 14.0
+                }
+            },
+            "sell": 28.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 5,
+            "P": {
+                "thermal_1": 75.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p3_1": {
+                    "thermal_1": 14.0
+                }
+            },
+            "sell": 61.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 6,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p3_1": {
+                    "thermal_1": 14.0
+                }
+            },
+            "sell": 66.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 7,
+            "P": {
+                "thermal_1": 75.0,
+                "thermal_2": 0.0,
+                "pv_1": 1.8,
+                "pv_2": 2.4
+            },
+            "k": {},
+            "sell": 79.2,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 8,
+            "P": {
+                "thermal_1": 60.0,
+                "thermal_2": 0.0,
+                "pv_1": 9.6,
+                "pv_2": 12.8
+            },
+            "k": {
+                "p2_1": {
+                    "pv_1": 9.6,
+                    "pv_2": 7.4
+                }
+            },
+            "sell": 65.4,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 9,
+            "P": {
+                "thermal_1": 45.0,
+                "thermal_2": 0.0,
+                "pv_1": 15.0,
+                "pv_2": 20.0
+            },
+            "k": {
+                "p1_2": {
+                    "pv_2": 18.0
+                },
+                "p2_1": {
+                    "pv_1": 15.0,
+                    "pv_2": 2.0
+                }
+            },
+            "sell": 45.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 10,
+            "P": {
+                "thermal_1": 30.0,
+                "thermal_2": 0.0,
+                "pv_1": 18.0,
+                "pv_2": 24.0
+            },
+            "k": {
+                "p1_2": {
+                    "pv_1": 18.0
+                },
+                "p6_1": {
+                    "thermal_1": 16.0
+                }
+            },
+            "sell": 38.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 11,
+            "P": {
+                "thermal_1": 15.0,
+                "thermal_2": 0.0,
+                "pv_1": 13.8,
+                "pv_2": 18.4
+            },
+            "k": {
+                "p4_1": {
+                    "thermal_1": 14.0
+                },
+                "p6_1": {
+                    "pv_1": 13.8,
+                    "pv_2": 2.2
+                },
+                "p8_1": {
+                    "thermal_1": 1.0,
+                    "pv_2": 16.0
+                }
+            },
+            "sell": 0.2,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 12,
+            "P": {
+                "thermal_1": 0.0,
+                "thermal_2": 0.0,
+                "pv_1": 16.2,
+                "pv_2": 21.6
+            },
+            "k": {
+                "p5_1": {
+                    "pv_2": 18.0
+                },
+                "p6_1": {
+                    "pv_1": 12.4,
+                    "pv_2": 3.6
+                }
+            },
+            "sell": 3.8,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 13,
+            "P": {
+                "thermal_1": 0.0,
+                "thermal_2": 0.0,
+                "pv_1": 16.2,
+                "pv_2": 21.6
+            },
+            "k": {
+                "p5_1": {
+                    "pv_2": 18.0
+                },
+                "p8_1": {
+                    "pv_1": 13.4,
+                    "pv_2": 3.6
+                }
+            },
+            "sell": 2.8,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 14,
+            "P": {
+                "thermal_1": 0.0,
+                "thermal_2": 0.0,
+                "pv_1": 9.6,
+                "pv_2": 12.8
+            },
+            "k": {
+                "p4_1": {
+                    "pv_1": 8.2,
+                    "pv_2": 5.8
+                },
+                "p7_1": {
+                    "pv_2": 7.0
+                }
+            },
+            "sell": 1.4,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 15,
+            "P": {
+                "thermal_1": 0.0,
+                "thermal_2": 10.0,
+                "pv_1": 6.6,
+                "pv_2": 8.8
+            },
+            "k": {
+                "p1_3": {
+                    "thermal_2": 10.0,
+                    "pv_2": 8.0
+                }
+            },
+            "sell": 7.4,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 16,
+            "P": {
+                "thermal_1": 0.0,
+                "thermal_2": 10.0,
+                "pv_1": 3.6,
+                "pv_2": 4.8
+            },
+            "k": {
+                "p1_3": {
+                    "thermal_2": 10.0,
+                    "pv_1": 3.2,
+                    "pv_2": 4.8
+                }
+            },
+            "sell": 0.4,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 17,
+            "P": {
+                "thermal_1": 0.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {},
+            "sell": 0.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 18,
+            "P": {
+                "thermal_1": 15.0,
+                "thermal_2": 0.0,
+                "pv_1": 1.2,
+                "pv_2": 1.6
+            },
+            "k": {
+                "p4_1": {
+                    "thermal_1": 14.0
+                }
+            },
+            "sell": 3.8,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 19,
+            "P": {
+                "thermal_1": 30.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p5_2": {
+                    "thermal_1": 18.0
+                }
+            },
+            "sell": 12.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 20,
+            "P": {
+                "thermal_1": 45.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p5_2": {
+                    "thermal_1": 18.0
+                }
+            },
+            "sell": 27.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 21,
+            "P": {
+                "thermal_1": 60.0,
+                "thermal_2": 20.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p1_4": {
+                    "thermal_2": 18.0
+                }
+            },
+            "sell": 62.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 22,
+            "P": {
+                "thermal_1": 75.0,
+                "thermal_2": 40.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p1_4": {
+                    "thermal_2": 18.0
+                }
+            },
+            "sell": 97.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 23,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 45.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {},
+            "sell": 125.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 24,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 45.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p2_2": {
+                    "thermal_2": 17.0
+                }
+            },
+            "sell": 108.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 25,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 40.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p2_2": {
+                    "thermal_2": 17.0
+                }
+            },
+            "sell": 103.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 26,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 20.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p3_2": {
+                    "thermal_1": 10.0,
+                    "thermal_2": 4.0
+                },
+                "p6_2": {
+                    "thermal_2": 16.0
+                }
+            },
+            "sell": 70.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 27,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p1_5": {
+                    "thermal_1": 18.0
+                },
+                "p6_2": {
+                    "thermal_1": 16.0
+                }
+            },
+            "sell": 46.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 28,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p1_5": {
+                    "thermal_1": 18.0
+                },
+                "p3_2": {
+                    "thermal_1": 14.0
+                },
+                "p6_2": {
+                    "thermal_1": 16.0
+                }
+            },
+            "sell": 32.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 29,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p3_2": {
+                    "thermal_1": 14.0
+                },
+                "p5_3": {
+                    "thermal_1": 18.0
+                }
+            },
+            "sell": 48.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 30,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p3_2": {
+                    "thermal_1": 14.0
+                },
+                "p5_3": {
+                    "thermal_1": 18.0
+                },
+                "p8_2": {
+                    "thermal_1": 17.0
+                }
+            },
+            "sell": 31.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 31,
+            "P": {
+                "thermal_1": 75.0,
+                "thermal_2": 0.0,
+                "pv_1": 1.2,
+                "pv_2": 1.6
+            },
+            "k": {},
+            "sell": 77.8,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 32,
+            "P": {
+                "thermal_1": 60.0,
+                "thermal_2": 0.0,
+                "pv_1": 4.8,
+                "pv_2": 6.4
+            },
+            "k": {},
+            "sell": 71.2,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 33,
+            "P": {
+                "thermal_1": 45.0,
+                "thermal_2": 0.0,
+                "pv_1": 9.6,
+                "pv_2": 12.8
+            },
+            "k": {
+                "p1_6": {
+                    "pv_1": 5.2,
+                    "pv_2": 12.8
+                }
+            },
+            "sell": 49.4,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 34,
+            "P": {
+                "thermal_1": 30.0,
+                "thermal_2": 0.0,
+                "pv_1": 6.0,
+                "pv_2": 8.0
+            },
+            "k": {
+                "p1_6": {
+                    "thermal_1": 18.0
+                },
+                "p8_2": {
+                    "thermal_1": 9.0,
+                    "pv_2": 8.0
+                }
+            },
+            "sell": 9.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 35,
+            "P": {
+                "thermal_1": 15.0,
+                "thermal_2": 0.0,
+                "pv_1": 16.8,
+                "pv_2": 22.4
+            },
+            "k": {
+                "p4_2": {
+                    "thermal_1": 14.0
+                },
+                "p5_4": {
+                    "pv_2": 18.0
+                }
+            },
+            "sell": 22.2,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 36,
+            "P": {
+                "thermal_1": 0.0,
+                "thermal_2": 0.0,
+                "pv_1": 7.2,
+                "pv_2": 9.6
+            },
+            "k": {
+                "p4_2": {
+                    "pv_1": 4.4,
+                    "pv_2": 9.6
+                }
+            },
+            "sell": 2.8,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 37,
+            "P": {
+                "thermal_1": 0.0,
+                "thermal_2": 0.0,
+                "pv_1": 9.6,
+                "pv_2": 12.8
+            },
+            "k": {
+                "p5_4": {
+                    "pv_1": 5.2,
+                    "pv_2": 12.8
+                }
+            },
+            "sell": 4.4,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 38,
+            "P": {
+                "thermal_1": 0.0,
+                "thermal_2": 0.0,
+                "pv_1": 4.8,
+                "pv_2": 6.4
+            },
+            "k": {
+                "p7_2": {
+                    "pv_1": 0.6,
+                    "pv_2": 6.4
+                }
+            },
+            "sell": 4.2,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 39,
+            "P": {
+                "thermal_1": 15.0,
+                "thermal_2": 0.0,
+                "pv_1": 7.8,
+                "pv_2": 10.4
+            },
+            "k": {
+                "p1_7": {
+                    "thermal_1": 10.2,
+                    "pv_1": 7.8
+                },
+                "p4_2": {
+                    "thermal_1": 4.8,
+                    "pv_2": 9.2
+                }
+            },
+            "sell": 1.2,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 40,
+            "P": {
+                "thermal_1": 23.8,
+                "thermal_2": 0.0,
+                "pv_1": 4.8,
+                "pv_2": 6.4
+            },
+            "k": {
+                "p1_7": {
+                    "thermal_1": 6.8,
+                    "pv_1": 4.8,
+                    "pv_2": 6.4
+                },
+                "p2_3": {
+                    "thermal_1": 17.0
+                }
+            },
+            "sell": 0.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 41,
+            "P": {
+                "thermal_1": 27.6,
+                "thermal_2": 0.0,
+                "pv_1": 3.6,
+                "pv_2": 4.8
+            },
+            "k": {
+                "p2_3": {
+                    "thermal_1": 12.2,
+                    "pv_2": 4.8
+                },
+                "p6_3": {
+                    "thermal_1": 12.4,
+                    "pv_1": 3.6
+                }
+            },
+            "sell": 3.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 42,
+            "P": {
+                "thermal_1": 42.6,
+                "thermal_2": 0.0,
+                "pv_1": 3.6,
+                "pv_2": 4.8
+            },
+            "k": {
+                "p5_5": {
+                    "thermal_1": 18.0
+                },
+                "p6_3": {
+                    "thermal_1": 7.6,
+                    "pv_1": 3.6,
+                    "pv_2": 4.8
+                },
+                "p8_3": {
+                    "thermal_1": 17.0
+                }
+            },
+            "sell": 0.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 43,
+            "P": {
+                "thermal_1": 50.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.6,
+                "pv_2": 0.8
+            },
+            "k": {
+                "p5_5": {
+                    "thermal_1": 18.0
+                },
+                "p6_3": {
+                    "thermal_1": 16.0
+                },
+                "p8_3": {
+                    "thermal_1": 15.6,
+                    "pv_1": 0.6,
+                    "pv_2": 0.8
+                }
+            },
+            "sell": 0.4,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 44,
+            "P": {
+                "thermal_1": 65.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {},
+            "sell": 65.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 45,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p1_8": {
+                    "thermal_1": 18.0
+                },
+                "p4_3": {
+                    "thermal_1": 14.0
+                }
+            },
+            "sell": 48.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 46,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p1_8": {
+                    "thermal_1": 18.0
+                }
+            },
+            "sell": 62.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 47,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p3_3": {
+                    "thermal_1": 14.0
+                }
+            },
+            "sell": 66.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 48,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p3_3": {
+                    "thermal_1": 14.0
+                }
+            },
+            "sell": 66.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 49,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {},
+            "sell": 80.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 50,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {},
+            "sell": 80.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 51,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p1_9": {
+                    "thermal_1": 18.0
+                }
+            },
+            "sell": 62.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 52,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 0.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p1_9": {
+                    "thermal_1": 18.0
+                },
+                "p3_3": {
+                    "thermal_1": 14.0
+                },
+                "p5_6": {
+                    "thermal_1": 18.0
+                }
+            },
+            "sell": 30.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 53,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 20.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p3_3": {
+                    "thermal_1": 12.0,
+                    "thermal_2": 2.0
+                },
+                "p5_6": {
+                    "thermal_2": 18.0
+                }
+            },
+            "sell": 68.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 54,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 40.0,
+                "pv_1": 0.6,
+                "pv_2": 0.8
+            },
+            "k": {},
+            "sell": 121.4,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 55,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 45.0,
+                "pv_1": 8.4,
+                "pv_2": 11.2
+            },
+            "k": {},
+            "sell": 144.6,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 56,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 45.0,
+                "pv_1": 21.0,
+                "pv_2": 28.0
+            },
+            "k": {
+                "p2_4": {
+                    "pv_2": 17.0
+                }
+            },
+            "sell": 157.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 57,
+            "P": {
+                "thermal_1": 75.0,
+                "thermal_2": 45.0,
+                "pv_1": 34.2,
+                "pv_2": 45.6
+            },
+            "k": {
+                "p1_10": {
+                    "thermal_1": 18.0
+                },
+                "p2_4": {
+                    "thermal_2": 17.0
+                }
+            },
+            "sell": 164.8,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 58,
+            "P": {
+                "thermal_1": 60.0,
+                "thermal_2": 40.0,
+                "pv_1": 48.0,
+                "pv_2": 64.0
+            },
+            "k": {
+                "p1_10": {
+                    "pv_2": 18.0
+                },
+                "p6_4": {
+                    "thermal_2": 16.0
+                }
+            },
+            "sell": 178.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 59,
+            "P": {
+                "thermal_1": 45.0,
+                "thermal_2": 20.0,
+                "pv_1": 57.6,
+                "pv_2": 76.8
+            },
+            "k": {
+                "p6_4": {
+                    "thermal_1": 16.0
+                },
+                "p8_4": {
+                    "thermal_2": 17.0
+                }
+            },
+            "sell": 166.4,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 60,
+            "P": {
+                "thermal_1": 30.0,
+                "thermal_2": 0.0,
+                "pv_1": 58.8,
+                "pv_2": 78.4
+            },
+            "k": {
+                "p4_3": {
+                    "pv_2": 14.0
+                },
+                "p6_4": {
+                    "pv_2": 16.0
+                },
+                "p8_4": {
+                    "pv_1": 17.0
+                }
+            },
+            "sell": 120.2,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 61,
+            "P": {
+                "thermal_1": 15.0,
+                "thermal_2": 0.0,
+                "pv_1": 60.0,
+                "pv_2": 80.0
+            },
+            "k": {
+                "p4_3": {
+                    "thermal_1": 14.0
+                }
+            },
+            "sell": 141.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 62,
+            "P": {
+                "thermal_1": 0.0,
+                "thermal_2": 0.0,
+                "pv_1": 57.0,
+                "pv_2": 76.0
+            },
+            "k": {},
+            "sell": 133.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 63,
+            "P": {
+                "thermal_1": 0.0,
+                "thermal_2": 0.0,
+                "pv_1": 48.0,
+                "pv_2": 64.0
+            },
+            "k": {
+                "p1_11": {
+                    "pv_2": 18.0
+                },
+                "p5_7": {
+                    "pv_2": 18.0
+                },
+                "p8_5": {
+                    "pv_2": 17.0
+                }
+            },
+            "sell": 59.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 64,
+            "P": {
+                "thermal_1": 0.0,
+                "thermal_2": 0.0,
+                "pv_1": 36.0,
+                "pv_2": 48.0
+            },
+            "k": {
+                "p1_11": {
+                    "pv_1": 12.0,
+                    "pv_2": 6.0
+                },
+                "p5_7": {
+                    "pv_2": 18.0
+                },
+                "p7_3": {
+                    "pv_2": 7.0
+                },
+                "p8_5": {
+                    "pv_2": 17.0
+                }
+            },
+            "sell": 24.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 65,
+            "P": {
+                "thermal_1": 15.0,
+                "thermal_2": 0.0,
+                "pv_1": 21.6,
+                "pv_2": 28.8
+            },
+            "k": {},
+            "sell": 65.4,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 66,
+            "P": {
+                "thermal_1": 30.0,
+                "thermal_2": 0.0,
+                "pv_1": 7.2,
+                "pv_2": 9.6
+            },
+            "k": {
+                "p4_4": {
+                    "thermal_1": 14.0
+                }
+            },
+            "sell": 32.8,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 67,
+            "P": {
+                "thermal_1": 45.0,
+                "thermal_2": 20.0,
+                "pv_1": 0.6,
+                "pv_2": 0.8
+            },
+            "k": {
+                "p4_4": {
+                    "thermal_1": 14.0
+                }
+            },
+            "sell": 52.4,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 68,
+            "P": {
+                "thermal_1": 60.0,
+                "thermal_2": 40.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {},
+            "sell": 100.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 69,
+            "P": {
+                "thermal_1": 75.0,
+                "thermal_2": 45.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p1_12": {
+                    "thermal_2": 18.0
+                },
+                "p3_4": {
+                    "thermal_2": 14.0
+                }
+            },
+            "sell": 88.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 70,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 45.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p1_12": {
+                    "thermal_2": 18.0
+                },
+                "p3_4": {
+                    "thermal_2": 14.0
+                }
+            },
+            "sell": 93.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 71,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 45.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p3_4": {
+                    "thermal_2": 14.0
+                },
+                "p5_8": {
+                    "thermal_2": 18.0
+                }
+            },
+            "sell": 93.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        },
+        {
+            "t": 72,
+            "P": {
+                "thermal_1": 80.0,
+                "thermal_2": 45.0,
+                "pv_1": 0.0,
+                "pv_2": 0.0
+            },
+            "k": {
+                "p3_4": {
+                    "thermal_1": 14.0
+                },
+                "p4_4": {
+                    "thermal_1": 14.0
+                },
+                "p5_8": {
+                    "thermal_1": 18.0
+                }
+            },
+            "sell": 79.0,
+            "soc": {},
+            "missed_aperiodic": [],
+            "rejected_sporadic": []
+        }
+    ]
+}
