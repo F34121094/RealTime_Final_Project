@@ -17,6 +17,16 @@ class Task:         # [class] 任務清單
     preempt: int    # preemptable
 
 @dataclass
+class Task_unexpected:         # [class] aperiodic / Sporadic task
+    r: int          # Release Time
+    e: int          # Execution Time
+    d: int          # Deadline
+    w: int          # energy demand (每個小時)
+    preempt: int    # preemptable
+    type: int       # 新增特質 : 1 sporadic(hard)/ 0 aperiodic(soft)
+
+
+@dataclass
 class Generator:            # [class] 傳統機組
     generator_id: str       # 編號
     output_min: int         # 最小出力
@@ -49,7 +59,7 @@ class Renewable:            # [class] 再生能源
     capacity: int           # 再生能源的最大出力
     pv_forecast: list       # 太陽能預測出力百分比
 
-def load_task() -> List[Task]:      # [FUNC] 將 task_set.json 檔載入
+def load_task():        # [FUNC] 將 task_set.json 檔載入
     task_set = []
     path = "output/task_set.json"
     with open(path,'r') as f:
@@ -68,7 +78,32 @@ def load_task() -> List[Task]:      # [FUNC] 將 task_set.json 檔載入
         ))
     return task_set
 
-def load_environment() -> List[Task]:       # [FUNC] 將 input 中的 json 檔載入
+def load_un_task():     # [FUNC] 將 aperiodic_n_sporadic.json 檔載入
+    task_set = []
+    path = "input/aperiodic_n_sporadic.json"
+    with open(path,'r') as f:
+        data = json.load(f)
+    for info in data["aperiodic"].items():
+        task_set.append(Task(
+            r= info["r"],          
+            e= info["e"],          
+            d= info["d"],
+            w= info["w"],          
+            preempt= info["preempt"],
+            type = 0
+        ))
+    for info in data["sporadic"].items():
+        task_set.append(Task(
+            r= info["r"],          
+            e= info["e"],          
+            d= info["d"],
+            w= info["w"],          
+            preempt= info["preempt"],
+            type = 1
+        ))
+    return task_set
+
+def load_environment():       # [FUNC] 將 input 中的 json 檔載入
     path_1 = "input/processor_settings.json"
     with open(path_1,'r') as f:
         data = json.load(f)
