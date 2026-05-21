@@ -203,6 +203,8 @@ def build_pulp_model(generator_set, task_set, renewable_set, time_horizon=72):
             current_t += task.p 
             instance += 1
     job_ids = [job["job_id"] for job in jobs]
+    
+    # task 在時間 t 是否有被執行
     x = pulp.LpVariable.dicts("TaskExe", 
                               ((j, t) for j in job_ids for t in time_steps), 
                               cat='Binary')
@@ -216,10 +218,25 @@ def build_pulp_model(generator_set, task_set, renewable_set, time_horizon=72):
         # [constraint 3] 執行時間總和必須等於 e
         model += pulp.lpSum(x[j, t] for t in time_steps) == e, f"TotalExe_{j}"
         
-        # [constraint 2] 不在區間內的時間，強制 x = 0
+        # [constraint 2] 不在可以執行的範圍時，強制 x = 0
         for t in time_steps:
             if t < r or t > abs_deadline:
                 model += x[j, t] == 0, f"OutWindow_{j}_{t}"
+
+        # [constraint 5] non-preemptive 需要連續執行
+        if job["preempt"] == 0 :
+            z_vars = []
+            for t in time_steps:
+                z = pulp.LpVariable(f"z_diff_{j}_{t}", lowBound=0, cat='Continuous')
+                z_vars.append(z)
+
+                x_current = x[j,t]
+                x_prev = x[j, t-1] if t > 1 else 0
+
+                model += z >= x_current - x_prev, f"AbsPos_{j}_{t}"
+                model += z >= x_prev - x_current, f"AbsNeg_{j}_{t}"
+            
+            model += pulp.lpSum(z_vars) <= 2, f"ContinuousExe_{j}"
 
     # ==========================================
     # 3 再生能源變數 & 限制式
