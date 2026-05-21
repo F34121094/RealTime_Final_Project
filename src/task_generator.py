@@ -1,4 +1,3 @@
-# 生成 Periodic Tasks 的邏輯
 import json
 import os
 import random
@@ -57,7 +56,7 @@ def generate_tasks():
                 "w": w,             # energy demand
                 "preempt": pee      # preemptive / non-preemptive
             }
-        if check_workload_density(task_set) and check_job_count(task_set): return task_set
+        if check_workload_density(task_set) and check_job_count(task_set): return {"periodic":task_set}
     
 
 def check_workload_density(task_set):
@@ -74,11 +73,15 @@ def save_to_json(data, filepath):
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
     
     with open(filepath, 'w', encoding='utf-8') as f:
+        f.write("{\n}")
         json.dump(data, f, indent=4, ensure_ascii=False)
     print(f"[Success] Task set successfully generated")
 
+
+
 def main():
     task_data = generate_tasks()
+
     save_to_json(task_data, OUTPUT_FILE_PATH)
 
 
