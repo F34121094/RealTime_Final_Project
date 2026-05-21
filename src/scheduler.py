@@ -271,7 +271,7 @@ def build_pulp_model(generator_set, task_set, renewable_set, time_horizon=72):
     # 售電變數 Sell
     Sell = pulp.LpVariable.dicts("Sell", time_steps, lowBound=0, cat='Continuous')
 
-    all_sources = gen_ids + res_ids  # 所有可以發電的設備 (傳統 + 再生)
+    all_sources = gen_ids + res_ids + storage_ids # 所有可以發電的設備 (傳統 + 再生)
     
     # job 在 時間點t 從 i發電 拿了多少電
     k = pulp.LpVariable.dicts("k",
@@ -354,14 +354,11 @@ if __name__ == "__main__":
     )
     
     # 售電收益：Sell * 當時的電價 (price_72)
-    # 注意：price_72 是 0~71 的 list，所以用 t-1 取值
     total_revenue = pulp.lpSum(Sell[t] * price_72[t-1] for t in time_steps)
     
     # 把目標函數加進 model 中 (沒有 <=, >= 或 ==，這就是目標函數！)
     model += total_gen_cost - total_revenue
-    
-    # 3. 召喚求解器 (Solver) 開始暴力破解！
-    print("求解器運算中，請稍候...")
+
     # 可以加上 msg=True 來看求解器的思考過程
     model.solve(pulp.PULP_CBC_CMD(msg=True)) 
     
@@ -379,7 +376,8 @@ if __name__ == "__main__":
             "schedule_result": []
         }
         res_ids = [r.renewable_id for r in renewable_set]
-        all_sources = gen_ids + res_ids
+        storage_ids = [s.storage_id for s in storage_set]
+        all_sources = gen_ids + res_ids  + storage_ids
         # 遍歷 72 小時
         for t in time_steps:
             time_step_data = {
@@ -387,15 +385,18 @@ if __name__ == "__main__":
                 "P": {},
                 "k": {},
                 "sell": 0.0,
-                "soc": {},                # Level 1 如果還沒做儲能，可以先留空 dict
-                "missed_aperiodic": [],   # Aperiodic 是明天的任務，先留空 list
-                "rejected_sporadic": []   # Sporadic 是明天的任務，先留空 list
+                "soc": {},                
+                "missed_aperiodic": [],   
+                "rejected_sporadic": []   
             }
             
             # 1. 填寫 P 矩陣 (發電機與再生能源出力)
             for i in gen_ids:
-                # 使用 round() 去除浮點數精度誤差 (如 0.000000001 -> 0.0)
                 val = round(pulp.value(P[i, t]), 2)
+                time_step_data["P"][i] = val
+            
+            for i in res_ids:
+                val = round(pulp.value(P_res[i, t]), 2)
                 time_step_data["P"][i] = val
                 
             for i in [r.renewable_id for r in renewable_set]:
@@ -405,7 +406,6 @@ if __name__ == "__main__":
             # 2. 填寫 k 矩陣 (每個 Job 從每個設備拿了多少電)
             for job in jobs:
                 j = job["job_id"]
-                # 為了避免 JSON 產生巨大且無用的零矩陣，我們只記錄「大於 0」的供電分配
                 task_k_dict = {}
                 for i in all_sources:
                     val = round(pulp.value(k[j, i, t]), 2)
@@ -419,17 +419,23 @@ if __name__ == "__main__":
             # 3. 填寫售電量
             time_step_data["sell"] = round(pulp.value(Sell[t]), 2)
             
+            for sid in storage_ids:
+                time_step_data["soc"][sid] = {
+                    "energy": round(pulp.value(SOC[sid, t]), 2),     # 當下電量
+                    "charge": round(pulp.value(P_ch[sid, t]), 2),    # 當下充電功率
+                    "discharge": round(pulp.value(P_dis[sid, t]), 2) # 當下放電功率
+                }
+
             # 將這個小時的狀態加入清單
             final_output["schedule_result"].append(time_step_data)
             
         # 4. 匯出檔案
         output_path = "output/schedule_result.json"
-        import json
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(final_output, f, indent=4, ensure_ascii=False)
             
-        print(f"✅ JSON 排程結果已成功儲存至 {output_path}")
+        print(f"Json 寫入至 {output_path}")
     else:
-        print("警告：模型無解 (Infeasible)！請檢查限制式是否衝突。")
+        print("Infeasible!")
 
 
