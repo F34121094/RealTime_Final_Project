@@ -366,11 +366,16 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"[environment loading] fail:{e}")
 
-    task_timeline = task_timelines(task_set)            # [BUG] : hour3 release task 會在 hour4 才出現
+    index = 0 
+    for re in renewable_set:
+        for index in range(len(re.pv_forecast)):
+            print(f"index {index} : {re.pv_forecast[index]}")
+    
+    # task_timeline = task_timelines(task_set)            # [BUG] : hour3 release task 會在 hour4 才出現
     # print(f"task_timeline 長度 = {len(task_timeline)}")
     
     # for i in range(len(task_timeline)):
     #     print(f"index{i} - hour{i+1}:{list(map(lambda job : job.task_id, task_timeline[i]))}")
     
-    hourly_renewable = renewable_generate(renewable_set)
-    main_loop(task_timeline,generator_set,storage_set,hourly_renewable,price_72)
+    # hourly_renewable = renewable_generate(renewable_set)
+    # main_loop(task_timeline,generator_set,storage_set,hourly_renewable,price_72)

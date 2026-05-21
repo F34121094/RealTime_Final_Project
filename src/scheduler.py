@@ -238,8 +238,27 @@ def build_pulp_model(generator_set, task_set, renewable_set, time_horizon=72):
             
             model += pulp.lpSum(z_vars) <= 2, f"ContinuousExe_{j}"
 
+
     # ==========================================
-    # 3 再生能源變數 & 限制式
+    # 3 儲能設備
+    # ==========================================
+    # 宣告儲能變數
+    storage_ids = [s.storage_id for s in storage_set]
+
+    # 充電量 (Continuous, >= 0)
+    P_ch = pulp.LpVariable.dicts("Charge", ((s, t) for s in storage_ids for t in time_steps), lowBound=0, cat='Continuous')
+    # 放電量 (Continuous, >= 0)
+    P_dis = pulp.LpVariable.dicts("Discharge", ((s, t) for s in storage_ids for t in time_steps), lowBound=0, cat='Continuous')
+    
+    # 蓄電池電量 SOC
+    SOC = pulp.LpVariable.dicts("SOC", ((s, t) for s in storage_ids for t in [0] + time_steps), lowBound=0, cat='Continuous')
+
+    # 設定 t=0 的初始電量限制
+    for s in storage_set:
+        model += SOC[s.storage_id, 0] == s.soc_init, f"SOC_Init_{s.storage_id}"
+
+    # ==========================================
+    # 4 再生能源變數 & 限制式
     # ==========================================
 
     # 再生能源變數 P_res
@@ -253,10 +272,14 @@ def build_pulp_model(generator_set, task_set, renewable_set, time_horizon=72):
     Sell = pulp.LpVariable.dicts("Sell", time_steps, lowBound=0, cat='Continuous')
 
     all_sources = gen_ids + res_ids  # 所有可以發電的設備 (傳統 + 再生)
+    
     # job 在 時間點t 從 i發電 拿了多少電
     k = pulp.LpVariable.dicts("k",
                               ((j, i, t) for j in job_ids for i in all_sources for t in time_steps),
                               lowBound=0, cat='Continuous')
+    
+    IsCh = pulp.LpVariable.dicts("IsCharging", ((s, t) for s in storage_ids for t in time_steps), cat='Binary')
+    
     for t in time_steps:
         # [constraint 13] 再生能源上限
         for re in renewable_set:
@@ -269,19 +292,35 @@ def build_pulp_model(generator_set, task_set, renewable_set, time_horizon=72):
             j = job["job_id"]
             model += pulp.lpSum(k[j, i, t] for i in all_sources) == job["w"] * x[j, t], f"TaskDemand_{j}_{t}"
 
+        # [新增] 儲能設備自身的物理約束
+        for s in storage_set:
+            sid = s.storage_id
+            
+            # 1. 充放電功率不能超過硬體極限
+            model += P_ch[sid, t] <= s.charge_max * IsCh[sid, t], f"ChargeMax_{sid}_{t}"
+            model += P_dis[sid, t] <= s.discharge_max * (1 - IsCh[sid, t]), f"DischargeMax_{sid}_{t}"
+            
+            # [constraint 1] 電池電量不能低於大限（保護電池）或高於容量上限
+            model += SOC[sid, t] >= s.soc_min, f"SOC_Min_{sid}_{t}"
+            model += SOC[sid, t] <= s.soc_max, f"SOC_Max_{sid}_{t}"
+            
+            # 3. 核心：SOC 狀態轉移方程 (考慮充放電效率 efficiency)
+            # 本小時電量 = 上一小時電量 + 充電 - 放電 
+            model += SOC[sid, t] == SOC[sid, t-1] + P_ch[sid, t] - P_dis[sid, t] , f"SOC_Dynamics_{sid}_{t}"
+
         # [constraint 20] 發電設備的分配上限
         for i in gen_ids:
             model += pulp.lpSum(k[j, i, t] for j in job_ids) <= P[i, t], f"GenDistLimit_{i}_{t}"
         for i in res_ids:
             model += pulp.lpSum(k[j, i, t] for j in job_ids) <= P_res[i, t], f"ResDistLimit_{i}_{t}"
 
-        # [constraint 23] 系統全局能量平衡 (目前先不加儲能)
-        total_generate = pulp.lpSum(P[i, t] for i in gen_ids) + pulp.lpSum(P_res[i, t] for i in res_ids)
-        total_consume = pulp.lpSum(k[j, i, t] for j in job_ids for i in all_sources)
+        # [constraint 23] 系統全局能量平衡
+        total_generate = pulp.lpSum(P[i, t] for i in gen_ids) + pulp.lpSum(P_res[i, t] for i in res_ids) + pulp.lpSum(P_dis[sid,t] for sid in storage_ids)
+        total_consume = pulp.lpSum(k[j, i, t] for j in job_ids for i in all_sources) + pulp.lpSum(P_ch[sid,t] for sid in storage_ids)
         
         model += total_generate == total_consume + Sell[t], f"GlobalBalance_{t}"
     
-    return model, P, U, x, k, Sell, P_res, jobs
+    return model, P, U, x, k, Sell, P_res, jobs, P_ch, P_dis, SOC
 
 
 
@@ -298,7 +337,7 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"[environment loading] fail:{e}")
 
-    model, P, U, x, k, Sell, P_res, jobs = build_pulp_model(generator_set, task_set, renewable_set) 
+    model, P, U, x, k, Sell, P_res, jobs, P_ch, P_dis, SOC = build_pulp_model(generator_set, task_set, renewable_set) 
 
     cost_var_dict = {g.generator_id: g.cost_variable for g in generator_set}
     cost_fixed_dict = {g.generator_id: g.cost_fixed for g in generator_set}
