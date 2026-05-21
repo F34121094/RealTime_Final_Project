@@ -17,7 +17,8 @@ class Task:         # [class] 任務清單
     preempt: int    # preemptable
 
 @dataclass
-class Task_unexpected:         # [class] aperiodic / Sporadic task
+class Task_unexpected:         # [class] aperiodic / Sporadic task]
+    task_id: str    # id
     r: int          # Release Time
     e: int          # Execution Time
     d: int          # Deadline
@@ -83,8 +84,9 @@ def load_un_task():     # [FUNC] 將 aperiodic_n_sporadic.json 檔載入
     path = "input/aperiodic_n_sporadic.json"
     with open(path,'r') as f:
         data = json.load(f)
-    for info in data["aperiodic"].items():
-        task_set.append(Task(
+    for a_id, info in data["aperiodic"].items():
+        task_set.append(Task_unexpected(
+            task_id = a_id,
             r= info["r"],          
             e= info["e"],          
             d= info["d"],
@@ -92,8 +94,9 @@ def load_un_task():     # [FUNC] 將 aperiodic_n_sporadic.json 檔載入
             preempt= info["preempt"],
             type = 0
         ))
-    for info in data["sporadic"].items():
-        task_set.append(Task(
+    for s_id, info in data["sporadic"].items():
+        task_set.append(Task_unexpected(
+            task_id= s_id,
             r= info["r"],          
             e= info["e"],          
             d= info["d"],
