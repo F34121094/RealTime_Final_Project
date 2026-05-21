@@ -54,7 +54,7 @@ def load_task() -> List[Task]:      # [FUNC] 將 task_set.json 檔載入
     path = "output/task_set.json"
     with open(path,'r') as f:
         data = json.load(f)
-    for task_id,info in data.items():
+    for task_id,info in data["periodic"].items():
         task_set.append(Task(
             task_id= task_id,    
             r= info["r"],          

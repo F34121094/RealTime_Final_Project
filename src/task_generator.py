@@ -73,7 +73,6 @@ def save_to_json(data, filepath):
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
     
     with open(filepath, 'w', encoding='utf-8') as f:
-        f.write("{\n}")
         json.dump(data, f, indent=4, ensure_ascii=False)
     print(f"[Success] Task set successfully generated")
 
