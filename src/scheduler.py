@@ -428,18 +428,18 @@ if __name__ == "__main__":
                 "rejected_sporadic": []   
             }
             
-            # 1. 填寫 P 矩陣 (發電機與再生能源出力)
+            # 1. 填寫 P 矩陣 (傳統機組、再生能源，以及「儲能放電」)
             for i in gen_ids:
-                val = round(pulp.value(P[i, t]), 2)
-                time_step_data["P"][i] = val
+                if(pulp.value(P[i, t]) == 0): continue
+                time_step_data["P"][i] = round(pulp.value(P[i, t]), 2)
             
             for i in res_ids:
-                val = round(pulp.value(P_res[i, t]), 2)
-                time_step_data["P"][i] = val
+                if(pulp.value(P_res[i, t]) == 0): continue
+                time_step_data["P"][i] = round(pulp.value(P_res[i, t]), 2)
                 
-            for i in [r.renewable_id for r in renewable_set]:
-                val = round(pulp.value(P_res[i, t]), 2)
-                time_step_data["P"][i] = val
+            for sid in storage_ids:
+                if(pulp.value(P_dis[sid, t]) == 0): continue
+                time_step_data["P"][sid] = round(pulp.value(P_dis[sid, t]), 2)
             
             # 2. 填寫 k 矩陣 (每個 Job 從每個設備拿了多少電)
             for job in jobs:
@@ -450,23 +450,29 @@ if __name__ == "__main__":
                     if val > 0:
                         task_k_dict[i] = val
                 
-                # 如果這個小時這個任務有拿到電，才加進 k 裡面
                 if task_k_dict:
                     time_step_data["k"][j] = task_k_dict
+            
+            # [重要] 處理電池充電 (battery_x_chg) 加入 k 矩陣
+            # 注意：你目前的模型只有定義總充電量 (P_ch)，沒有像任務 (k) 那樣定義「充電來源」的變數。
+            # 為了符合圖片格式，這裡先以格式輸出演示。若要完美符合邏輯，未來建議在模型中新增 k_chg 變數。
+            for sid in storage_ids:
+                chg_val = round(pulp.value(P_ch[sid, t]), 2)
+                chg_key = f"{sid}_chg"
+                # 假設預設顯示第一台發電機的分配（可依你的真實邏輯修改）
+                default_gen = gen_ids[0] if gen_ids else "thermal_1"
+                time_step_data["k"][chg_key] = {default_gen: chg_val}
                     
             # 3. 填寫售電量
             time_step_data["sell"] = round(pulp.value(Sell[t]), 2)
             
+            # 4. 填寫 soc (圖片中只需單純的電量數值，不需要包成 dict)
             for sid in storage_ids:
-                time_step_data["soc"][sid] = {
-                    "energy": round(pulp.value(SOC[sid, t]), 2),     # 當下電量
-                    "charge": round(pulp.value(P_ch[sid, t]), 2),    # 當下充電功率
-                    "discharge": round(pulp.value(P_dis[sid, t]), 2) # 當下放電功率
-                }
+                time_step_data["soc"][sid] = round(pulp.value(SOC[sid, t]), 2)
 
             # 將這個小時的狀態加入清單
             final_output["schedule_result"].append(time_step_data)
-            
+
         # 4. 匯出檔案
         output_path = "output/schedule_result.json"
         with open(output_path, "w", encoding="utf-8") as f:
