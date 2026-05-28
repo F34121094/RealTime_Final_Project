@@ -352,6 +352,9 @@ def build_pulp_model(generator_set, task_set, renewable_set, time_horizon=72):
         for i in res_ids:
             model += pulp.lpSum(k[j, i, t] for j in job_ids) <= P_res[i, t], f"ResDistLimit_{i}_{t}"
 
+        for sid in storage_ids:
+            model += pulp.lpSum(k[j, sid, t] for j in job_ids) <= P_dis[sid, t], f"StorageDistLimit_{sid}_{t}"
+
         # [constraint 23] 系統全局能量平衡
         total_generate = pulp.lpSum(P[i, t] for i in gen_ids) + pulp.lpSum(P_res[i, t] for i in res_ids) + pulp.lpSum(P_dis[sid,t] for sid in storage_ids)
         total_consume = pulp.lpSum(k[j, i, t] for j in job_ids for i in all_sources) + pulp.lpSum(P_ch[sid,t] for sid in storage_ids)
@@ -444,6 +447,8 @@ if __name__ == "__main__":
             # 2. 填寫 k 矩陣 (每個 Job 從每個設備拿了多少電)
             for job in jobs:
                 j = job["job_id"]
+                base_id = j.rsplit('_',1)[0]
+
                 task_k_dict = {}
                 for i in all_sources:
                     val = round(pulp.value(k[j, i, t]), 2)
@@ -451,18 +456,37 @@ if __name__ == "__main__":
                         task_k_dict[i] = val
                 
                 if task_k_dict:
-                    time_step_data["k"][j] = task_k_dict
+                    time_step_data["k"][base_id] = task_k_dict
             
-            # [重要] 處理電池充電 (battery_x_chg) 加入 k 矩陣
-            # 注意：你目前的模型只有定義總充電量 (P_ch)，沒有像任務 (k) 那樣定義「充電來源」的變數。
-            # 為了符合圖片格式，這裡先以格式輸出演示。若要完美符合邏輯，未來建議在模型中新增 k_chg 變數。
+            remaining_power = {}
+            # 電池不能充電池，所以來源只算發電機跟再生能源
+            for i in gen_ids + res_ids: 
+                gen_p = time_step_data["P"].get(i, 0.0) # 該設備該小時總發電
+                used_p = 0.0
+                # 統計所有任務從這台設備拿了多少電
+                for task_sources in time_step_data["k"].values():
+                    used_p += task_sources.get(i, 0.0)
+                
+                remaining_power[i] = max(0.0, gen_p - used_p)
+            
             for sid in storage_ids:
                 chg_val = round(pulp.value(P_ch[sid, t]), 2)
-                chg_key = f"{sid}_chg"
-                # 假設預設顯示第一台發電機的分配（可依你的真實邏輯修改）
-                default_gen = gen_ids[0] if gen_ids else "thermal_1"
-                time_step_data["k"][chg_key] = {default_gen: chg_val}
+                if(chg_val > 0):
+                    chg_key = f"{sid}_chg"
+                    time_step_data["k"][chg_key] = {}
                     
+                    # 從有餘電的設備中依序扣除，分配給電池充電
+                    for i, avail in remaining_power.items():
+                        if chg_val <= 0:
+                            break
+                        if avail > 0:
+                            take = min(avail, chg_val)
+                            take = round(take, 2)
+                            if take > 0:
+                                time_step_data["k"][chg_key][i] = take
+                                chg_val = round(chg_val - take, 2)
+                                remaining_power[i] -= take
+
             # 3. 填寫售電量
             time_step_data["sell"] = round(pulp.value(Sell[t]), 2)
             
