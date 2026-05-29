@@ -240,7 +240,7 @@ def build_pulp_model(generator_set, task_set, renewable_set, time_horizon=72):
             })
             current_t += task.p 
             instance += 1
-    job_ids = [job["job_id"] for job in jobs]
+    job_ids = [job["job_id"] for job in jobs]   # 任務展開的集合
     
     # task 在時間 t 是否有被執行
     x = pulp.LpVariable.dicts("TaskExe", 
@@ -300,14 +300,14 @@ def build_pulp_model(generator_set, task_set, renewable_set, time_horizon=72):
     # ==========================================
 
     # 再生能源變數 P_res
-    res_ids = [r.renewable_id for r in renewable_set]
+    res_ids = [r.renewable_id for r in renewable_set] 
     P_res = pulp.LpVariable.dicts("Power_Renew",
                              ((i,t) for i in res_ids for t in time_steps),
                              lowBound = 0,
                              cat = 'Continuous')
     
     # 售電變數 Sell
-    Sell = pulp.LpVariable.dicts("Sell", time_steps, lowBound=0, cat='Continuous')
+    Sell = pulp.LpVariable.dicts("Sell", time_steps, lowBound=0, cat='Continuous')      #[constraint 22] 售電量不能是負值
 
     all_sources = gen_ids + res_ids + storage_ids # 所有可以發電的設備 (傳統 + 再生)
     
@@ -334,24 +334,22 @@ def build_pulp_model(generator_set, task_set, renewable_set, time_horizon=72):
         for s in storage_set:
             sid = s.storage_id
             
-            # 1. 充放電功率不能超過硬體極限
-            model += P_ch[sid, t] <= s.charge_max * IsCh[sid, t], f"ChargeMax_{sid}_{t}"
-            model += P_dis[sid, t] <= s.discharge_max * (1 - IsCh[sid, t]), f"DischargeMax_{sid}_{t}"
+            # 充放電功率
+            model += P_ch[sid, t] <= s.charge_max * IsCh[sid, t], f"ChargeMax_{sid}_{t}"                # [constraint 15] 儲能設備最大充電量限制
+            model += P_dis[sid, t] <= s.discharge_max * (1 - IsCh[sid, t]), f"DischargeMax_{sid}_{t}"   # [constraint 14] 儲能設備最大放電量限制
             
-            # [constraint 1] 電池電量不能低於大限（保護電池）或高於容量上限
+            # [constraint 17] 儲能設備的儲能上下限
             model += SOC[sid, t] >= s.soc_min, f"SOC_Min_{sid}_{t}"
             model += SOC[sid, t] <= s.soc_max, f"SOC_Max_{sid}_{t}"
             
-            # 3. 核心：SOC 狀態轉移方程 (考慮充放電效率 efficiency)
             # 本小時電量 = 上一小時電量 + 充電 - 放電 
-            model += SOC[sid, t] == SOC[sid, t-1] + P_ch[sid, t] - P_dis[sid, t] , f"SOC_Dynamics_{sid}_{t}"
+            model += SOC[sid, t] == SOC[sid, t-1] + P_ch[sid, t] - P_dis[sid, t] , f"SOC_Dynamics_{sid}_{t}"    # [constraint 16] 電量守恆
 
         # [constraint 20] 發電設備的分配上限
         for i in gen_ids:
             model += pulp.lpSum(k[j, i, t] for j in job_ids) <= P[i, t], f"GenDistLimit_{i}_{t}"
         for i in res_ids:
             model += pulp.lpSum(k[j, i, t] for j in job_ids) <= P_res[i, t], f"ResDistLimit_{i}_{t}"
-
         for sid in storage_ids:
             model += pulp.lpSum(k[j, sid, t] for j in job_ids) <= P_dis[sid, t], f"StorageDistLimit_{sid}_{t}"
 
