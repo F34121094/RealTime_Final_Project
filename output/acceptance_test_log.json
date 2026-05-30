@@ -1,0 +1,65 @@
+{
+    "acceptance_test_log": [
+        {
+            "job_id": "s1",
+            "status": "Accepted",
+            "scheduled_time_steps": [
+                5,
+                6
+            ],
+            "reason": "資源充足，可在 deadline 前完成。",
+            "constraint_violation": false
+        },
+        {
+            "job_id": "s2",
+            "status": "Accepted",
+            "scheduled_time_steps": [
+                10,
+                11,
+                12
+            ],
+            "reason": "資源充足，可在 deadline 前完成。",
+            "constraint_violation": false
+        },
+        {
+            "job_id": "s3",
+            "status": "Accepted",
+            "scheduled_time_steps": [
+                26
+            ],
+            "reason": "資源充足，可在 deadline 前完成。",
+            "constraint_violation": false
+        },
+        {
+            "job_id": "s4",
+            "status": "Accepted",
+            "scheduled_time_steps": [
+                35,
+                36,
+                40
+            ],
+            "reason": "資源充足，可在 deadline 前完成。",
+            "constraint_violation": false
+        },
+        {
+            "job_id": "s5",
+            "status": "Accepted",
+            "scheduled_time_steps": [
+                48,
+                49
+            ],
+            "reason": "資源充足，可在 deadline 前完成。",
+            "constraint_violation": false
+        },
+        {
+            "job_id": "s6",
+            "status": "Accepted",
+            "scheduled_time_steps": [
+                62,
+                63
+            ],
+            "reason": "資源充足，可在 deadline 前完成。",
+            "constraint_violation": false
+        }
+    ]
+}

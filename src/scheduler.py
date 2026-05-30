@@ -202,6 +202,8 @@ class VPPScheduler:
         self.jobs = []            # 記錄系統內所有的 job 字典
         self.job_ids = []         # 記錄所有的 job_id
         self.periodic_jobs = []   # 單獨記錄 Periodic job
+
+        self.acceptance_log = []  # 用來之後輸出程acceptance test log
         
         self.vars = {}            # [新增] 用一個字典來統一管理所有的 PuLP 變數
         
@@ -492,15 +494,28 @@ class VPPScheduler:
             if pulp.LpStatus[self.model.status] == "Optimal":
                 # => ACCEPTED!
                 # 如果是 Sporadic (Hard)，算出來就鎖死；Aperiodic 讓它保持彈性可以移動
+                scheduled_times = [t for t in self.time_steps if pulp.value(v["x"][j_id, t]) == 1.0]
+                
                 if task.type == 1:
+                    self.acceptance_log.append({
+                        "job_id": task.task_id,
+                        "status": "Accepted",
+                        "scheduled_time_steps": scheduled_times,
+                        "reason": "資源充足，可在 deadline 前完成。",
+                        "constraint_violation": False
+                    })
                     self.lock_scheduled_jobs([job_dict])
             else:
                 # => REJECTED!
-                if task.type == 1: # Sporadic 資源不足，直接拒絕並退回狀態
+               if task.type == 1: # Sporadic
                     self.rejected_sporadic.append(task.task_id)
-                    for t in self.time_steps:
-                        self.model += v["x"][j_id, t] == 0
-                else: # 理論上 Aperiodic 不該失敗 (有懲罰機制)，若失敗代表硬體絕對極限
+                    self.acceptance_log.append({
+                        "job_id": task.task_id,
+                        "status": "Rejected",
+                        "scheduled_time_steps": [],
+                        "reason": "資源不足或時間空檔無法滿足 deadline，求解為 Infeasible。",
+                        "constraint_violation": False # 拒絕了就不會違反
+                    })
                     for t in self.time_steps:
                         self.model += v["x"][j_id, t] == 0
 
@@ -891,6 +906,19 @@ if __name__ == "__main__":
             json.dump(final_output, f, indent=4, ensure_ascii=False)
             
         print(f"\nJson 成功寫入至 {output_path}")
+
+        log_output_path = "output/acceptance_test_log.json"
+        
+        # 將剛剛在迴圈裡記錄的 acceptance_log 包裝成字典格式
+        log_data = {
+            "acceptance_test_log": scheduler.acceptance_log
+        }
+        
+        # 寫入 json 檔案
+        with open(log_output_path, "w", encoding="utf-8") as f:
+            json.dump(log_data, f, indent=4, ensure_ascii=False)
+            
+        print(f"Acceptance Test Log 成功寫入至 {log_output_path}")
     else:
         print("Infeasible! 模型無解，請檢查輸入參數與限制式。")
 
