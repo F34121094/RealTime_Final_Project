@@ -205,10 +205,44 @@ def build_pulp_model(generator_set, task_set, renewable_set, time_horizon=72):
                               ((i, t) for i in gen_ids for t in time_steps), 
                               cat='Binary')
     
+    for g in generator_set:
+        i = g.generator_id
+
+        # [Constraint 8] 最小output不可以超過ramp-up
+        assert g.output_min <= g.ramp_up_rate, f"Error: 機組 {i} 的 output_min 大於 ramp_up_rate"
+
+        u_initial = 1 if (g.initial_on_time > 0 or g.initial_energy > 0) else 0
+
+        # [Constraint 11] 排程前的開機時數限制
+        if u_initial == 1 and 0 < g.initial_on_time < g.min_up_time:
+            remain_up = min(time_horizon, g.min_up_time - g.initial_on_time)
+            for t in range(1, remain_up + 1):
+                model += U[i, t] == 1, f"InitMinUp_{i}_{t}"
+        
+        # [Constraint 12] 排程前的關機時數限制
+        if u_initial == 0 and 0 < g.initial_off_time < g.min_down_time:
+            remain_down = min(time_horizon, g.min_down_time - g.initial_off_time)
+            for t in range(1, remain_down + 1):
+                model += U[i, t] == 0, f"InitMinDown_{i}_{t}"
+
+        for t in time_steps:
+            u_prev = U[i, t-1] if t > 1 else u_initial  # 前一刻的開機狀態
+            
+            # [Constraint 9] 轉為開機需連續維持開機的時間
+            up_window = min(time_horizon - t + 1, g.min_up_time) 
+            if up_window > 0:
+                model += pulp.lpSum(U[i, tau] for tau in range(t, t + up_window)) >= up_window * (U[i, t] - u_prev), f"MinUp_{i}_{t}"
+
+            # [Constraint 10] 轉為關機需要維持的時間限制
+            down_window = min(time_horizon - t + 1, g.min_down_time)
+            if down_window > 0:
+                model += pulp.lpSum(U[i, tau] for tau in range(t, t + down_window)) <= down_window - down_window * (u_prev - U[i, t]), f"MinDown_{i}_{t}"
+    
     # 這樣是同時對所有的 generator 在 72 個時間點下限制式
     for t in time_steps:
         for g in generator_set:
             i = g.generator_id
+
             
             # [constraint 6] 傳統機組出力上下限
             model += P[i,t] >= g.output_min * U[i,t]
@@ -300,7 +334,7 @@ def build_pulp_model(generator_set, task_set, renewable_set, time_horizon=72):
     # ==========================================
 
     # 再生能源變數 P_res
-    res_ids = [r.renewable_id for r in renewable_set] 
+    res_ids = [r.renewable_id for r in renewable_set]  
     P_res = pulp.LpVariable.dicts("Power_Renew",
                              ((i,t) for i in res_ids for t in time_steps),
                              lowBound = 0,
@@ -316,6 +350,7 @@ def build_pulp_model(generator_set, task_set, renewable_set, time_horizon=72):
                               ((j, i, t) for j in job_ids for i in all_sources for t in time_steps),
                               lowBound=0, cat='Continuous')
     
+    # [constraint 19] 不能同時充電又放電
     IsCh = pulp.LpVariable.dicts("IsCharging", ((s, t) for s in storage_ids for t in time_steps), cat='Binary')
     
     for t in time_steps:
@@ -338,9 +373,14 @@ def build_pulp_model(generator_set, task_set, renewable_set, time_horizon=72):
             model += P_ch[sid, t] <= s.charge_max * IsCh[sid, t], f"ChargeMax_{sid}_{t}"                # [constraint 15] 儲能設備最大充電量限制
             model += P_dis[sid, t] <= s.discharge_max * (1 - IsCh[sid, t]), f"DischargeMax_{sid}_{t}"   # [constraint 14] 儲能設備最大放電量限制
             
+            
+
             # [constraint 17] 儲能設備的儲能上下限
             model += SOC[sid, t] >= s.soc_min, f"SOC_Min_{sid}_{t}"
             model += SOC[sid, t] <= s.soc_max, f"SOC_Max_{sid}_{t}"
+
+            # [constraint 18] 不能放出超過最低存量的電能
+            model += P_dis[sid, t] <= SOC[sid, t-1] - s.soc_min, f"DischargeLimit_{sid}_{t}"
             
             # 本小時電量 = 上一小時電量 + 充電 - 放電 
             model += SOC[sid, t] == SOC[sid, t-1] + P_ch[sid, t] - P_dis[sid, t] , f"SOC_Dynamics_{sid}_{t}"    # [constraint 16] 電量守恆
@@ -353,7 +393,16 @@ def build_pulp_model(generator_set, task_set, renewable_set, time_horizon=72):
         for sid in storage_ids:
             model += pulp.lpSum(k[j, sid, t] for j in job_ids) <= P_dis[sid, t], f"StorageDistLimit_{sid}_{t}"
 
-        # [constraint 23] 系統全局能量平衡
+        gen_and_res = gen_ids + res_ids
+        avail_gen = pulp.lpSum(P[i, t] for i in gen_ids) + \
+                    pulp.lpSum(P_res[i, t] for i in res_ids) - \
+                    pulp.lpSum(k[j, i, t] for j in job_ids for i in gen_and_res)
+        
+        # 系統內所有的充電行為，絕對不能超過這些乾淨發電量的總和
+        model += pulp.lpSum(P_ch[sid, t] for sid in storage_ids) <= avail_gen, f"NoBatteryToBattery_{t}"
+
+
+        # [constraint 23] 系統全局能量平衡 (這是你原本寫好的，接在下面)
         total_generate = pulp.lpSum(P[i, t] for i in gen_ids) + pulp.lpSum(P_res[i, t] for i in res_ids) + pulp.lpSum(P_dis[sid,t] for sid in storage_ids)
         total_consume = pulp.lpSum(k[j, i, t] for j in job_ids for i in all_sources) + pulp.lpSum(P_ch[sid,t] for sid in storage_ids)
         
