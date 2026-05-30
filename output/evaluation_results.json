@@ -1,0 +1,14 @@
+{
+    "hard_deadline_miss_rate": 0.0,
+    "soft_deadline_miss_rate": 0.0,
+    "average_tardiness": 0.0,
+    "max_tardiness": 0,
+    "average_response_time": 3.5,
+    "max_response_time": 17,
+    "completion_time_jitter": 3.2857,
+    "sporadic_value_rate": 1.0,
+    "post_acceptance_violation_rate": 0.0,
+    "generator_cost": 296580.0,
+    "market_revenue": 395580.6,
+    "objective_value": -99000.6
+}
