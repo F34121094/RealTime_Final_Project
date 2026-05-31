@@ -204,6 +204,7 @@ class VPPScheduler:
         self.periodic_jobs = []   # 單獨記錄 Periodic job
 
         self.acceptance_log = []  # 用來之後輸出程acceptance test log
+        self.locked_time = 0
         
         self.vars = {}            # [新增] 用一個字典來統一管理所有的 PuLP 變數
         
@@ -336,22 +337,37 @@ class VPPScheduler:
         e = job_dict["e"]
         
         abs_deadline = r + job_dict["d"] - 1
-        # [修改] 將 Hard (Periodic/Sporadic) 與 Soft (Aperiodic) 分開處理
+
         if job_dict["type"] == "aperiodic":
-            # 建立專屬這個任務的 Miss 變數 
-            v[f"Miss_{j}"] = pulp.LpVariable(f"Miss_{j}", cat='Binary')
+            v[f"Miss_{j}"] = pulp.LpVariable(f"Miss_{j}", cat='Binary')     
+            v[f"Drop_{j}"] = pulp.LpVariable(f"Drop_{j}", cat='Binary')
             
-            # 就算逾期，最晚也要在排程結束(H)前做完
-            self.model += pulp.lpSum(v["x"][j, t] for t in range(r, self.time_horizon + 1)) == e    # [Constraint 3] : deadline 前要做完所需的時間
+            # 就算逾期，最晚也要在排程結束(H)前做完，除非真的連排程結束前都塞不下，只好 Drop
+            self.model += pulp.lpSum(v["x"][j, t] for t in range(r, self.time_horizon + 1)) == e * (1 - v[f"Drop_{j}"])
             
             # [Constraint 4] : Miss 的限制
             if abs_deadline <= self.time_horizon:
-                self.model += pulp.lpSum(v["x"][j, t] for t in range(r, abs_deadline + 1)) >= e * (1 - v[f"Miss_{j}"])
+                self.model += pulp.lpSum(v["x"][j, t] for t in range(r, abs_deadline + 1)) >= e * (1 - v[f"Miss_{j}"] - v[f"Drop_{j}"])
             else:
-                self.model += v[f"Miss_{j}"] == 1 # 超出 72 小時絕對算逾期
+                self.model += v[f"Miss_{j}"] == 1 - v[f"Drop_{j}"]
                 
-            for t in range(1, r): # Release time 前不可執行 [Constraint 2]
+            for t in range(1, r): # [Constraint 2] Release time 前不可執行
                 self.model += v["x"][j, t] == 0
+
+        elif job_dict["type"] == "sporadic":
+            # [新增] 設立 Reject 變數 (0=接受, 1=拒絕)
+            v[f"Reject_{j}"] = pulp.LpVariable(f"Reject_{j}", cat='Binary')
+            abs_deadline = r + job_dict["d"] - 1
+            
+            # 關鍵修改：如果拒絕 (Reject=1)，等號右邊就會變成 0，任務就不用執行了！
+            if abs_deadline <= self.time_horizon:
+                self.model += pulp.lpSum(v["x"][j, t] for t in range(r, abs_deadline + 1)) == e * (1 - v[f"Reject_{j}"])
+            else:
+                self.model += pulp.lpSum(v["x"][j, t] for t in range(r, self.time_horizon + 1)) == e * (1 - v[f"Reject_{j}"])
+                
+            for t in self.time_steps:
+                if t < r or t > abs_deadline:
+                    self.model += v["x"][j, t] == 0
 
         else: # Periodic & Sporadic
             
@@ -396,7 +412,7 @@ class VPPScheduler:
             # ==========================================
             # 2. 建立包含「所有最新任務」的新限制式 (並強制命名)
             # ==========================================
-            # Constraint 20: 設備被抽走的電 <= 該設備產生的電
+            # [Constraint 20]: 設備被抽走的電 <= 該設備產生的電
             for i in self.gen_ids:
                 self.model += pulp.lpSum(v["k"].get((j, i, t), 0) for j in self.job_ids) <= v["P"][i, t], f"GenLimit_{i}_{t}"
             for i in self.res_ids:
@@ -404,70 +420,65 @@ class VPPScheduler:
             for sid in self.storage_ids:
                 self.model += pulp.lpSum(v["k"].get((j, sid, t), 0) for j in self.job_ids) <= v["P_dis"][sid, t], f"StoLimit_{sid}_{t}"
 
-            # Constraint 21: 電池防弊
+            # [Constraint 21]: 電池防弊
             gen_res = self.gen_ids + self.res_ids
             task_use = pulp.lpSum(v["k"].get((j, src, t), 0) for j in self.job_ids for src in gen_res)
             avail_power = pulp.lpSum(v["P"][i, t] for i in self.gen_ids) + pulp.lpSum(v["P_res"][i, t] for i in self.res_ids) - task_use
             self.model += pulp.lpSum(v["P_ch"][sid, t] for sid in self.storage_ids) <= avail_power, f"NoBat2Bat_{t}"
 
-            # Constraint 23: 全局能量平衡
+            # [Constraint 23]: 全局能量平衡
             total_gen = pulp.lpSum(v["P"][i, t] for i in self.gen_ids) + pulp.lpSum(v["P_res"][i, t] for i in self.res_ids) + pulp.lpSum(v["P_dis"][sid,t] for sid in self.storage_ids)
             total_con = pulp.lpSum(v["k"].get((j, i, t), 0) for j in self.job_ids for i in self.all_sources) + pulp.lpSum(v["P_ch"][sid,t] for sid in self.storage_ids)
             self.model += total_gen == total_con + v["Sell"][t], f"GlobalBal_{t}"
 
     def _update_objective(self):
-        # [修改] 加入 Aperiodic 任務的懲罰機制
         v = self.vars
         cost_var_dict = {g.generator_id: g.cost_variable for g in self.generator_set}
         cost_fixed_dict = {g.generator_id: g.cost_fixed for g in self.generator_set}
         
-        # 發電的成本 = 發電量 * 一度電成本 + 有沒有開機 * 開機的成本
         total_gen_cost = pulp.lpSum(v["P"][i, t] * cost_var_dict[i] + v["U"][i, t] * cost_fixed_dict[i] for i in self.gen_ids for t in self.time_steps)
         total_revenue = pulp.lpSum(v["Sell"][t] * self.price_72[t-1] for t in self.time_steps)
         
-        # 抓出目前模型裡所有的 Miss 變數
         miss_vars = [val for key, val in v.items() if key.startswith("Miss_")]
-        penalty = 10000 * pulp.lpSum(miss_vars) if miss_vars else 0
+        reject_vars = [val for key, val in v.items() if key.startswith("Reject_")]
+        drop_vars = [val for key, val in v.items() if key.startswith("Drop_")] # [修改] 抓出 Drop 變數
+        
+        penalty = (10000 * pulp.lpSum(miss_vars) if miss_vars else 0) + \
+                  (1000000 * pulp.lpSum(reject_vars) if reject_vars else 0) + \
+                  (1000000 * pulp.lpSum(drop_vars) if drop_vars else 0) # [修改] 加入 Drop 懲罰
 
         self.model.setObjective(total_gen_cost - total_revenue + penalty)
     
     def run_base_schedule(self):
-        """執行第一次日前排程 (只有 Periodic Jobs)"""
         print("\n--- 正在計算 Base Schedule (Periodic) ---")
         
-        # 綁定能量平衡限制式
-        self._apply_dynamic_balance()
+        self._apply_dynamic_balance()                       # 綁定能量平衡限制式
+        self.model.solve(pulp.PULP_CBC_CMD(msg=False))      # 求解
         
-        # 開始求解
-        self.model.solve(pulp.PULP_CBC_CMD(msg=False))
-        
-        # 檢查是否有解
         if pulp.LpStatus[self.model.status] == "Optimal":
             print("=> Base Schedule 成功建立！")
-            # 成功的話，就把這些 Periodic 任務鎖死，不讓後續任務搶資源
-            self.lock_scheduled_jobs(self.periodic_jobs)
+            self.lock_scheduled_jobs(self.periodic_jobs)    # 鎖定
             return True
         else:
             print("=> Base Schedule 無解！請檢查參數。")
             return False
 
-    def lock_scheduled_jobs(self, current_jobs_to_lock):
-        #[新增] 將已確定排入的 Job 狀態鎖死，確保後續任務不搶資源
+    def lock_scheduled_jobs(self, current_jobs_to_lock):    # 鎖定 periodic task 的排程結果
         for job_dict in current_jobs_to_lock:
             j = job_dict["job_id"]
             for t in self.time_steps:
-                # 抓出剛才算出來的結果 (0 或 1)
                 fixed_x = round(pulp.value(self.vars["x"][j, t]))
-                # 加一條限制式把它鎖死
                 self.model += self.vars["x"][j, t] == fixed_x
 
-    def process_unexpected_jobs(self, unexpected_tasks):
+    def process_unexpected_jobs(self, unexpected_tasks):    # 用來處理非週期任務
         """[新增] Acceptance Test 核心引擎"""
         v = self.vars
         # 按照任務出現的時間 (r) 排序，模擬真實時間推進
         unexpected_tasks.sort(key=lambda t: t.r)
         
         for task in unexpected_tasks:
+            self._lock_past_states(task.r)
+
             j_id = f"{task.task_id}_1"
             job_dict = {
                 "job_id": j_id, "w": task.w, "e": task.e, "r": task.r,
@@ -492,258 +503,89 @@ class VPPScheduler:
             self.model.solve(pulp.PULP_CBC_CMD(msg=False))
             
             if pulp.LpStatus[self.model.status] == "Optimal":
-                # => ACCEPTED!
-                # 如果是 Sporadic (Hard)，算出來就鎖死；Aperiodic 讓它保持彈性可以移動
-                scheduled_times = [t for t in self.time_steps if pulp.value(v["x"][j_id, t]) == 1.0]
-                
+                if task.type == 1: # Sporadic
+                    # [修改] 使用 round() 避免浮點數誤差 (0.9999 != 1.0) 導致誤判
+                    reject_val = pulp.value(v[f"Reject_{j_id}"])
+                    is_rejected = True if reject_val is None else (round(reject_val) == 1)
+                    
+                    if not is_rejected:
+                        # => 真實 ACCEPTED!
+                        print(f" t = {task.r} => {task.task_id} ACCEPTED!")
+                        scheduled_times = [t for t in self.time_steps if round(pulp.value(v["x"][j_id, t])) == 1]
+                        
+                        self.acceptance_log.append({
+                            "job_id": task.task_id,
+                            "status": "Accepted",
+                            "scheduled_time_steps": scheduled_times,
+                            "reason": "資源充足，可在 deadline 前完成。",
+                            "constraint_violation": False
+                        })
+                        self.lock_scheduled_jobs([job_dict])
+                    else:
+                        # => REJECTED! 
+                        print(f" t = {task.r} => {task.task_id} REJECTED! (資源不足，系統選擇拒絕)")
+                        self.rejected_sporadic.append(task.task_id)
+                        self.acceptance_log.append({
+                            "job_id": task.task_id,
+                            "status": "Rejected",
+                            "scheduled_time_steps": [],
+                            "reason": "發電機或儲能資源達到物理極限，無法滿足任務需求。",
+                            "constraint_violation": False 
+                        })
+                        self.model += v[f"Reject_{j_id}"] == 1
+                        for t in self.time_steps:
+                            self.model += v["x"][j_id, t] == 0
+                else:
+                    # Aperiodic
+                    # [修改] 檢查是否觸發了軟限制避震器 (Drop)
+                    drop_val = pulp.value(v[f"Drop_{j_id}"])
+                    is_dropped = True if drop_val is None else (round(drop_val) == 1)
+                    
+                    if not is_dropped:
+                        print(f" t = {task.r} => {task.task_id} SCHEDULED (Aperiodic)")
+                    else:
+                        print(f" t = {task.r} => {task.task_id} DROPPED! (資源耗盡，強行捨棄以保護排程)")
+                        self.missed_aperiodic.append(task.task_id)
+                        self.model += v[f"Drop_{j_id}"] == 1
+                        for t in self.time_steps:
+                            self.model += v["x"][j_id, t] == 0
+
+            else:
+                # => 真正的無解 (Infeasible)
+                # 由於我們已經加上了 Drop 與 Reject 的軟限制保護，理論上不應該再走到這一步。
+                # 但如果真的走進來了，絕對不能再加 x == 0，否則會產生 0 == e 的永久死鎖。
+                print(f"  => {task.task_id} FATAL INFEASIBLE! (模型結構崩潰)")
                 if task.type == 1:
-                    self.acceptance_log.append({
-                        "job_id": task.task_id,
-                        "status": "Accepted",
-                        "scheduled_time_steps": scheduled_times,
-                        "reason": "資源充足，可在 deadline 前完成。",
-                        "constraint_violation": False
-                    })
-                    self.lock_scheduled_jobs([job_dict])
-            else:
-                # => REJECTED!
-               if task.type == 1: # Sporadic
                     self.rejected_sporadic.append(task.task_id)
-                    self.acceptance_log.append({
-                        "job_id": task.task_id,
-                        "status": "Rejected",
-                        "scheduled_time_steps": [],
-                        "reason": "資源不足或時間空檔無法滿足 deadline，求解為 Infeasible。",
-                        "constraint_violation": False # 拒絕了就不會違反
-                    })
-                    for t in self.time_steps:
-                        self.model += v["x"][j_id, t] == 0
+                else:
+                    self.missed_aperiodic.append(task.task_id)
 
-def build_pulp_model(generator_set, task_set, renewable_set, time_horizon=72):
-    
-    model = pulp.LpProblem("Scheduling",pulp.LpMinimize)    # 目標是要最小化
-    time_steps = list(range(1, time_horizon + 1))
-    
-    # ==========================================
-    # 1 發電機變數與限制式
-    # ==========================================
-
-    # 發電量變數 P 
-    gen_ids = [g.generator_id for g in generator_set]
-    P = pulp.LpVariable.dicts("Power",
-                             ((i,t) for i in gen_ids for t in time_steps),
-                             lowBound = 0,
-                             cat = 'Continuous')
-    
-    # 開關機變數 U
-    U = pulp.LpVariable.dicts("Status", 
-                              ((i, t) for i in gen_ids for t in time_steps), 
-                              cat='Binary')
-    
-    for g in generator_set:
-        i = g.generator_id
-
-        # [Constraint 8] 最小output不可以超過ramp-up
-        assert g.output_min <= g.ramp_up_rate, f"Error: 機組 {i} 的 output_min 大於 ramp_up_rate"
-
-        u_initial = 1 if (g.initial_on_time > 0 or g.initial_energy > 0) else 0
-
-        # [Constraint 11] 排程前的開機時數限制
-        if u_initial == 1 and 0 < g.initial_on_time < g.min_up_time:
-            remain_up = min(time_horizon, g.min_up_time - g.initial_on_time)
-            for t in range(1, remain_up + 1):
-                model += U[i, t] == 1, f"InitMinUp_{i}_{t}"
+    def _lock_past_states(self, current_r):                 # 鎖定非週期任務來之前的發電、再生能源、儲能設備結果
+        v = self.vars
         
-        # [Constraint 12] 排程前的關機時數限制
-        if u_initial == 0 and 0 < g.initial_off_time < g.min_down_time:
-            remain_down = min(time_horizon, g.min_down_time - g.initial_off_time)
-            for t in range(1, remain_down + 1):
-                model += U[i, t] == 0, f"InitMinDown_{i}_{t}"
-
-        for t in time_steps:
-            u_prev = U[i, t-1] if t > 1 else u_initial  # 前一刻的開機狀態
+        # 從上次鎖定到的時間點，一路鎖到 current_r - 1
+        for t in range(self.locked_time + 1, current_r):
             
-            # [Constraint 9] 轉為開機需連續維持開機的時間
-            up_window = min(time_horizon - t + 1, g.min_up_time) 
-            if up_window > 0:
-                model += pulp.lpSum(U[i, tau] for tau in range(t, t + up_window)) >= up_window * (U[i, t] - u_prev), f"MinUp_{i}_{t}"
-
-            # [Constraint 10] 轉為關機需要維持的時間限制
-            down_window = min(time_horizon - t + 1, g.min_down_time)
-            if down_window > 0:
-                model += pulp.lpSum(U[i, tau] for tau in range(t, t + down_window)) <= down_window - down_window * (u_prev - U[i, t]), f"MinDown_{i}_{t}"
-    
-    # 這樣是同時對所有的 generator 在 72 個時間點下限制式
-    for t in time_steps:
-        for g in generator_set:
-            i = g.generator_id
-
+            for i in self.gen_ids:
+                val = pulp.value(v["P"][i, t])
+                if val is not None:
+                    self.model += v["P"][i, t] == val, f"TimeLock_P_{i}_{t}"
             
-            # [constraint 6] 傳統機組出力上下限
-            model += P[i,t] >= g.output_min * U[i,t]
-            model += P[i,t] <= g.output_max * U[i,t]
-            
-            # [constraint 7] ramp_up/ramp_down 限制
-            if t == 1:
-                model += P[i, t] - g.initial_energy <= g.ramp_up_rate, f"RampUpInit_{i}"
-                model += g.initial_energy - P[i, t] <= g.ramp_down_rate, f"RampDownInit_{i}"
-            else:
-                model += P[i, t] - P[i, t-1] <= g.ramp_up_rate, f"RampUp_{i}_{t}"
-                model += P[i, t-1] - P[i, t] <= g.ramp_down_rate, f"RampDown_{i}_{t}"
-    
-    # ==========================================
-    # 2 任務變數與限制式
-    # ==========================================
-    jobs = []
-    for task in task_set:
-        current_t = task.r
-        instance = 1
-        while current_t + task.e - 1 <= time_horizon:
-            jobs.append({
-                "job_id": f"{task.task_id}_{instance}", 
-                "w": task.w,
-                "e": task.e,
-                "r": current_t,
-                "d": task.d,
-                "preempt": task.preempt
-            })
-            current_t += task.p 
-            instance += 1
-    job_ids = [job["job_id"] for job in jobs]   # 任務展開的集合
-    
-    # task 在時間 t 是否有被執行
-    x = pulp.LpVariable.dicts("TaskExe", 
-                              ((j, t) for j in job_ids for t in time_steps), 
-                              cat='Binary')
-
-    for job in jobs:
-        j = job["job_id"]
-        r = job["r"]
-        e = job["e"]
-        abs_deadline = r + job["d"] - 1
-
-        # [constraint 3] 執行時間總和必須等於 e
-        model += pulp.lpSum(x[j, t] for t in time_steps) == e, f"TotalExe_{j}"
+            for sid in self.storage_ids:
+                soc_val = pulp.value(v["SOC"][sid, t])
+                if soc_val is not None:
+                    self.model += v["SOC"][sid, t] == soc_val, f"TimeLock_SOC_{sid}_{t}"
+                
+                ch_val = pulp.value(v["P_ch"][sid, t])
+                if ch_val is not None:
+                    self.model += v["P_ch"][sid, t] == ch_val, f"TimeLock_Pch_{sid}_{t}"
+                    
+                dis_val = pulp.value(v["P_dis"][sid, t])
+                if dis_val is not None:
+                    self.model += v["P_dis"][sid, t] == dis_val, f"TimeLock_Pdis_{sid}_{t}"
         
-        # [constraint 2] 不在可以執行的範圍時，強制 x = 0
-        for t in time_steps:
-            if t < r or t > abs_deadline:
-                model += x[j, t] == 0, f"OutWindow_{j}_{t}"
-
-        # [constraint 5] non-preemptive 需要連續執行
-        if job["preempt"] == 0 :
-            z_vars = []
-            for t in time_steps:
-                z = pulp.LpVariable(f"z_diff_{j}_{t}", lowBound=0, cat='Continuous')
-                z_vars.append(z)
-
-                x_current = x[j,t]
-                x_prev = x[j, t-1] if t > 1 else 0
-
-                model += z >= x_current - x_prev, f"AbsPos_{j}_{t}"
-                model += z >= x_prev - x_current, f"AbsNeg_{j}_{t}"
-            
-            model += pulp.lpSum(z_vars) <= 2, f"ContinuousExe_{j}"
-
-
-    # ==========================================
-    # 3 儲能設備
-    # ==========================================
-    # 宣告儲能變數
-    storage_ids = [s.storage_id for s in storage_set]
-
-    # 充電量 (Continuous, >= 0)
-    P_ch = pulp.LpVariable.dicts("Charge", ((s, t) for s in storage_ids for t in time_steps), lowBound=0, cat='Continuous')
-    # 放電量 (Continuous, >= 0)
-    P_dis = pulp.LpVariable.dicts("Discharge", ((s, t) for s in storage_ids for t in time_steps), lowBound=0, cat='Continuous')
-    
-    # 蓄電池電量 SOC
-    SOC = pulp.LpVariable.dicts("SOC", ((s, t) for s in storage_ids for t in [0] + time_steps), lowBound=0, cat='Continuous')
-
-    # 設定 t=0 的初始電量限制
-    for s in storage_set:
-        model += SOC[s.storage_id, 0] == s.soc_init, f"SOC_Init_{s.storage_id}"
-
-    # ==========================================
-    # 4 再生能源變數 & 限制式
-    # ==========================================
-
-    # 再生能源變數 P_res
-    res_ids = [r.renewable_id for r in renewable_set]  
-    P_res = pulp.LpVariable.dicts("Power_Renew",
-                             ((i,t) for i in res_ids for t in time_steps),
-                             lowBound = 0,
-                             cat = 'Continuous')
-    
-    # 售電變數 Sell
-    Sell = pulp.LpVariable.dicts("Sell", time_steps, lowBound=0, cat='Continuous')      #[constraint 22] 售電量不能是負值
-
-    all_sources = gen_ids + res_ids + storage_ids # 所有可以發電的設備 (傳統 + 再生)
-    
-    # job 在 時間點t 從 i發電 拿了多少電
-    k = pulp.LpVariable.dicts("k",
-                              ((j, i, t) for j in job_ids for i in all_sources for t in time_steps),
-                              lowBound=0, cat='Continuous')
-    
-    # [constraint 19] 不能同時充電又放電
-    IsCh = pulp.LpVariable.dicts("IsCharging", ((s, t) for s in storage_ids for t in time_steps), cat='Binary')
-    
-    for t in time_steps:
-        # [constraint 13] 再生能源上限
-        for re in renewable_set:
-            i = re.renewable_id
-            max_res = re.capacity * re.pv_forecast[t-1]
-            model += P_res[i, t] <= max_res, f"RenewMax_{i}_{t}"
-
-        # [constraint 1] 任務的能量滿足
-        for job in jobs:
-            j = job["job_id"]
-            model += pulp.lpSum(k[j, i, t] for i in all_sources) == job["w"] * x[j, t], f"TaskDemand_{j}_{t}"
-
-        # [新增] 儲能設備自身的物理約束
-        for s in storage_set:
-            sid = s.storage_id
-            
-            # 充放電功率
-            model += P_ch[sid, t] <= s.charge_max * IsCh[sid, t], f"ChargeMax_{sid}_{t}"                # [constraint 15] 儲能設備最大充電量限制
-            model += P_dis[sid, t] <= s.discharge_max * (1 - IsCh[sid, t]), f"DischargeMax_{sid}_{t}"   # [constraint 14] 儲能設備最大放電量限制
-            
-            
-
-            # [constraint 17] 儲能設備的儲能上下限
-            model += SOC[sid, t] >= s.soc_min, f"SOC_Min_{sid}_{t}"
-            model += SOC[sid, t] <= s.soc_max, f"SOC_Max_{sid}_{t}"
-
-            # [constraint 18] 不能放出超過最低存量的電能
-            model += P_dis[sid, t] <= SOC[sid, t-1] - s.soc_min, f"DischargeLimit_{sid}_{t}"
-            
-            # 本小時電量 = 上一小時電量 + 充電 - 放電 
-            model += SOC[sid, t] == SOC[sid, t-1] + P_ch[sid, t] - P_dis[sid, t] , f"SOC_Dynamics_{sid}_{t}"    # [constraint 16] 電量守恆
-
-        # [constraint 20] 發電設備的分配上限
-        for i in gen_ids:
-            model += pulp.lpSum(k[j, i, t] for j in job_ids) <= P[i, t], f"GenDistLimit_{i}_{t}"
-        for i in res_ids:
-            model += pulp.lpSum(k[j, i, t] for j in job_ids) <= P_res[i, t], f"ResDistLimit_{i}_{t}"
-        for sid in storage_ids:
-            model += pulp.lpSum(k[j, sid, t] for j in job_ids) <= P_dis[sid, t], f"StorageDistLimit_{sid}_{t}"
-
-        gen_and_res = gen_ids + res_ids
-        avail_gen = pulp.lpSum(P[i, t] for i in gen_ids) + \
-                    pulp.lpSum(P_res[i, t] for i in res_ids) - \
-                    pulp.lpSum(k[j, i, t] for j in job_ids for i in gen_and_res)
-        
-        # 系統內所有的充電行為，絕對不能超過這些乾淨發電量的總和
-        model += pulp.lpSum(P_ch[sid, t] for sid in storage_ids) <= avail_gen, f"NoBatteryToBattery_{t}"
-
-
-        # [constraint 23] 系統全局能量平衡 (這是你原本寫好的，接在下面)
-        total_generate = pulp.lpSum(P[i, t] for i in gen_ids) + pulp.lpSum(P_res[i, t] for i in res_ids) + pulp.lpSum(P_dis[sid,t] for sid in storage_ids)
-        total_consume = pulp.lpSum(k[j, i, t] for j in job_ids for i in all_sources) + pulp.lpSum(P_ch[sid,t] for sid in storage_ids)
-        
-        model += total_generate == total_consume + Sell[t], f"GlobalBalance_{t}"
-    
-    return model, P, U, x, k, Sell, P_res, jobs, P_ch, P_dis, SOC
+        # 存檔 下次就直接從這個時間開始鎖定
+        self.locked_time = max(self.locked_time, current_r - 1)     
 
 if __name__ == "__main__":
     # ==========================================
@@ -792,6 +634,12 @@ if __name__ == "__main__":
     status_str = pulp.LpStatus[scheduler.model.status]
     print(f"\n最終求解狀態: {status_str}")
 
+
+    gen_ids = scheduler.gen_ids
+    res_ids = scheduler.res_ids
+    storage_ids = scheduler.storage_ids
+    all_sources = scheduler.all_sources
+
     if status_str == "Optimal":
         # 統計最終的 Missed Aperiodic 狀態
         v = scheduler.vars
@@ -799,8 +647,18 @@ if __name__ == "__main__":
             if key.startswith("Miss_") and pulp.value(val) == 1:
                 base_id = key.split("_")[1]
                 scheduler.missed_aperiodic.append(base_id)
+        cost_var_dict = {g.generator_id: g.cost_variable for g in generator_set}
+        cost_fixed_dict = {g.generator_id: g.cost_fixed for g in generator_set}
+        real_gen_cost = sum(
+            pulp.value(v["P"][i, t]) * cost_var_dict[i] + pulp.value(v["U"][i, t]) * cost_fixed_dict[i]
+            for i in gen_ids for t in scheduler.time_steps
+        )
+        real_revenue = sum(pulp.value(v["Sell"][t]) * price_72[t-1] for t in scheduler.time_steps)
+        real_net_cost = real_gen_cost - real_revenue
 
-        print(f"系統淨成本 (目標函數值): $ {pulp.value(scheduler.model.objective):.2f}")
+        print(f"預估發電總成本: $ {real_gen_cost:.2f}")
+        print(f"預估售電總收益: $ {real_revenue:.2f}")
+        print(f"系統真實淨成本 (不含虛擬罰款): $ {real_net_cost:.2f}")
         print(f"Rejected Sporadic 數量: {len(scheduler.rejected_sporadic)}")
         print(f"Missed Aperiodic 數量: {len(scheduler.missed_aperiodic)}")
 
@@ -810,11 +668,6 @@ if __name__ == "__main__":
         final_output = {
             "schedule_result": []
         }
-        
-        gen_ids = scheduler.gen_ids
-        res_ids = scheduler.res_ids
-        storage_ids = scheduler.storage_ids
-        all_sources = scheduler.all_sources
         
         for t in scheduler.time_steps:
             time_step_data = {
@@ -831,18 +684,15 @@ if __name__ == "__main__":
             # 1. 填寫 P 矩陣 (傳統機組、再生能源，以及「儲能放電」)
             for i in gen_ids:
                 val = pulp.value(v["P"][i, t])
-                if val is not None and val > 0:
-                    time_step_data["P"][i] = round(val, 2)
+                time_step_data["P"][i] = round(val, 2)
             
             for i in res_ids:
                 val = pulp.value(v["P_res"][i, t])
-                if val is not None and val > 0:
-                    time_step_data["P"][i] = round(val, 2)
+                time_step_data["P"][i] = round(val, 2)
                 
             for sid in storage_ids:
                 val = pulp.value(v["P_dis"][sid, t])
-                if val is not None and val > 0:
-                    time_step_data["P"][sid] = round(val, 2)
+                time_step_data["P"][sid] = round(val, 2)
             
             # 2. 填寫 k 矩陣 (每個 Job 從每個設備拿了多少電)
             for job in scheduler.jobs:
