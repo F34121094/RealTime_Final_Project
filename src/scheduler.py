@@ -201,6 +201,10 @@ class VPPScheduler:
         self.missed_aperiodic = []
         self.rejected_sporadic = []
 
+        # [新增] 為了 JSON 輸出方法二準備的「按時間分類」字典
+        self.missed_at_t = {t: [] for t in self.time_steps}
+        self.rejected_at_t = {t: [] for t in self.time_steps}
+
     def init_base_model(self, periodic_task_set):
         for task in periodic_task_set:  # 將任務展開
             current_t = task.r
@@ -364,13 +368,17 @@ class VPPScheduler:
         # [Constraint 5] : non-preemptive 要連續執行
         if job_dict["preempt"] == 0:
             z_vars = []
-            for t in range(r , self.time_steps):
+            if job_dict["type"] == "aperiodic": check_end = self.time_horizon
+            else: check_end = min(self.time_horizon, abs_deadline + 1) 
+            
+            for t in range(r , check_end + 1):
                 z = pulp.LpVariable(f"z_{j}_{t}", lowBound=0, cat='Continuous')
                 z_vars.append(z)
-                x_curr = v["x"][j, t]
-                x_prev = v["x"][j, t-1] if t > 1 else 0
+                x_curr = v["x"].get((j , t) , 0)
+                x_prev = v["x"].get((j , t-1) , 0)
                 self.model += z >= x_curr - x_prev
                 self.model += z >= x_prev - x_curr
+
             self.model += pulp.lpSum(z_vars) <= 2
             
         # [Constraint 1] : 有執行就要給電限制
@@ -463,20 +471,18 @@ class VPPScheduler:
         for task in unexpected_tasks:
             self._lock_past_states(task.r)
 
-            j_id = f"{task.task_id}_1"
+            
             job_dict = {
-                "job_id": j_id, "w": task.w, "e": task.e, "r": task.r,
+                "job_id": task.task_id, "w": task.w, "e": task.e, "r": task.r,
                 "d": task.d, "preempt": task.preempt, 
                 "type": "sporadic" if task.type == 1 else "aperiodic"
             }
             
             # 1. 將新變數加入系統
-            self.job_ids.append(j_id)
+            self.job_ids.append(job_dict["job_id"])
             self.jobs.append(job_dict)
-            # 任務 j_id 在 時間 t 有沒有在執行
-            v["x"].update(pulp.LpVariable.dicts("TaskExe", ((j_id, t) for t in self.time_steps), cat='Binary'))
-            # 任務 j_id 在 時間 t 從供電設備 i 拿了多少電
-            v["k"].update(pulp.LpVariable.dicts("k", ((j_id, i, t) for i in self.all_sources for t in self.time_steps), lowBound=0, cat='Continuous'))
+            v["x"].update(pulp.LpVariable.dicts("TaskExe", ((job_dict["job_id"], t) for t in self.time_steps), cat='Binary'))
+            v["k"].update(pulp.LpVariable.dicts("k", ((job_dict["job_id"], i, t) for i in self.all_sources for t in self.time_steps), lowBound=0, cat='Continuous'))
             
             # 2. 建立新任務的限制式並更新全域平衡
             self._build_job_constraints(job_dict)
@@ -488,61 +494,89 @@ class VPPScheduler:
             
             if pulp.LpStatus[self.model.status] == "Optimal":
                 if task.type == 1: # Sporadic
-                    # [修改] 使用 round() 避免浮點數誤差 (0.9999 != 1.0) 導致誤判
-                    reject_val = pulp.value(v[f"Reject_{j_id}"])
+                    reject_val = pulp.value(v[f"Reject_{job_dict["job_id"]}"])
                     is_rejected = True if reject_val is None else (round(reject_val) == 1)
                     
                     if not is_rejected:
-                        # => 真實 ACCEPTED!
-                        print(f" t = {task.r} => {task.task_id} ACCEPTED!")
-                        scheduled_times = [t for t in self.time_steps if round(pulp.value(v["x"][j_id, t])) == 1]
+                        print(f" t = {task.r} => {task.task_id} ACCEPTED (Sporadic)")
+                        scheduled_times = [t for t in self.time_steps if round(pulp.value(v["x"][job_dict["job_id"], t])) == 1]
                         
                         self.acceptance_log.append({
                             "job_id": task.task_id,
                             "status": "Accepted",
                             "scheduled_time_steps": scheduled_times,
-                            "reason": "資源充足，可在 deadline 前完成。",
+                            "reason": "Sufficient resources available",
                             "constraint_violation": False
                         })
                         self.lock_scheduled_jobs([job_dict])
                     else:
-                        # => REJECTED! 
-                        print(f" t = {task.r} => {task.task_id} REJECTED! (資源不足，系統選擇拒絕)")
+                        print(f" t = {task.r} => {task.task_id} REJECTED (Sporadic)")
                         self.rejected_sporadic.append(task.task_id)
+                        # [新增] 直接利用當下的 task.r，把任務丟進正確的時間分類裡！
+                        self.rejected_at_t[task.r].append(task.task_id)
+
+                        abs_deadline = task.r + task.d - 1
+                        time_window = abs_deadline - task.r + 1
+                        
+                        if time_window < task.e:
+                            # Reason 1: Insufficient physical time window
+                            detailed_reason = f"Insufficient time window: Task requires {task.e} units of execution time, but only {time_window} units are available from arrival (t={task.r}) to deadline (t={abs_deadline})."
+                        elif abs_deadline > self.time_horizon and (self.time_horizon - task.r + 1) < task.e:
+                            # Reason 2: Hit the scheduling horizon limit
+                            detailed_reason = f"Horizon limit reached: Task requires {task.e} units of time, but only {self.time_horizon - task.r + 1} units remain before the scheduling horizon ends (t={self.time_horizon})."
+                        elif task.preempt == 0:
+                            # Reason 3: Non-preemptive constraint conflict
+                            detailed_reason = f"Continuity and resource conflict: This task is non-preemptive. The system cannot allocate {task.e} continuous units of sufficient power capacity within the timeframe (t={task.r} to {abs_deadline})."
+                        else:
+                            # Reason 4: Power capacity depletion
+                            detailed_reason = f"Power supply bottleneck: During the task timeframe (t={task.r} to {abs_deadline}), generators are at maximum capacity or storage is depleted. Total remaining available power is insufficient to meet the {task.e}-unit requirement."
+
                         self.acceptance_log.append({
                             "job_id": task.task_id,
                             "status": "Rejected",
                             "scheduled_time_steps": [],
-                            "reason": "發電機或儲能資源達到物理極限，無法滿足任務需求。",
+                            "reason": detailed_reason,
                             "constraint_violation": False 
                         })
-                        self.model += v[f"Reject_{j_id}"] == 1
+                        self.model += v[f"Reject_{job_dict["job_id"]}"] == 1
                         for t in self.time_steps:
-                            self.model += v["x"][j_id, t] == 0
+                            self.model += v["x"][job_dict["job_id"], t] == 0
                 else:
-                    # Aperiodic
-                    # [修改] 檢查是否觸發了軟限制避震器 (Drop)
-                    drop_val = pulp.value(v[f"Drop_{j_id}"])
+                    drop_val = pulp.value(v[f"Drop_{task.task_id}"])
                     is_dropped = True if drop_val is None else (round(drop_val) == 1)
                     
-                    if not is_dropped:
-                        print(f" t = {task.r} => {task.task_id} SCHEDULED (Aperiodic)")
-                    else:
-                        print(f" t = {task.r} => {task.task_id} DROPPED! (資源耗盡，強行捨棄以保護排程)")
-                        self.missed_aperiodic.append(task.task_id)
-                        self.model += v[f"Drop_{j_id}"] == 1
+                    if is_dropped:
+                        print(f" t = {task.r} => {task.task_id} DROPPED (Aperiodic)")
+                        # ⚠️ [移除] 不要在這裡加進 missed_aperiodic，交給 72 小時後的總結算統一處理！
+                        
+                        # 物理封印：既然決定放棄，就強制變數歸零，節省後續求解時間
+                        self.model += v[f"Drop_{task.task_id}"] == 1
                         for t in self.time_steps:
-                            self.model += v["x"][j_id, t] == 0
+                            self.model += v["x"][task.task_id, t] == 0
+                    else: print(f" t = {task.r} => {task.task_id} SCHEDULED (Aperiodic)")
 
             else:
-                # => 真正的無解 (Infeasible)
-                # 由於我們已經加上了 Drop 與 Reject 的軟限制保護，理論上不應該再走到這一步。
-                # 但如果真的走進來了，絕對不能再加 x == 0，否則會產生 0 == e 的永久死鎖。
-                print(f"  => {task.task_id} FATAL INFEASIBLE! (模型結構崩潰)")
+                # [防呆補強] 如果 AI 求解器崩潰找不到解 (Infeasible)
+                print(f"  => {task.task_id} FATAL INFEASIBLE!")
                 if task.type == 1:
+                    # 強制判為 Rejected
                     self.rejected_sporadic.append(task.task_id)
+                    self.rejected_at_t[task.r].append(task.task_id)
+                    self.acceptance_log.append({
+                        "job_id": task.task_id,
+                        "status": "Rejected",
+                        "scheduled_time_steps": [],
+                        "reason": "Solver infeasible due to extreme resource conflict.",
+                        "constraint_violation": True
+                    })
+                    self.model += v[f"Reject_{task.task_id}"] == 1
+                    for t in self.time_steps:
+                        self.model += v["x"][task.task_id, t] == 0
                 else:
-                    self.missed_aperiodic.append(task.task_id)
+                    # 強制判為 Dropped (一樣留給總結算去抓 Miss)
+                    self.model += v[f"Drop_{task.task_id}"] == 1
+                    for t in self.time_steps:
+                        self.model += v["x"][task.task_id, t] == 0
 
     def _lock_past_states(self, current_r):                 # 鎖定非週期任務來之前的發電、再生能源、儲能設備結果
         v = self.vars
@@ -627,10 +661,7 @@ if __name__ == "__main__":
     if status_str == "Optimal":
         # 統計最終的 Missed Aperiodic 狀態
         v = scheduler.vars
-        for key, val in v.items():
-            if key.startswith("Miss_") and pulp.value(val) == 1:
-                base_id = key.split("_")[1]
-                scheduler.missed_aperiodic.append(base_id)
+
         cost_var_dict = {g.generator_id: g.cost_variable for g in generator_set}
         cost_fixed_dict = {g.generator_id: g.cost_fixed for g in generator_set}
         real_gen_cost = sum(
@@ -639,6 +670,21 @@ if __name__ == "__main__":
         )
         real_revenue = sum(pulp.value(v["Sell"][t]) * price_72[t-1] for t in scheduler.time_steps)
         real_net_cost = real_gen_cost - real_revenue
+
+        for key, val in v.items():
+            if key.startswith("Miss_") and pulp.value(val) is not None and round(pulp.value(val)) == 1:
+                base_id = key.replace("Miss_", "")
+                
+                if base_id not in scheduler.missed_aperiodic:
+                    scheduler.missed_aperiodic.append(base_id) # 紀錄總數
+                
+                # 透過 next() 從 list of dicts 找出目標任務的詳細資訊
+                target_job = next(job for job in scheduler.jobs if job["job_id"] == base_id)
+                abs_deadline = target_job["r"] + target_job["d"] - 1
+                
+                # 決定印出的時間點：abs_deadline 的下一個小時 (防呆: 最高不超過 72)
+                miss_log_time = min(abs_deadline + 1, scheduler.time_horizon)
+                scheduler.missed_at_t[miss_log_time].append(base_id)
 
         print(f"預估發電總成本: $ {real_gen_cost:.2f}")
         print(f"預估售電總收益: $ {real_revenue:.2f}")
@@ -652,17 +698,17 @@ if __name__ == "__main__":
         final_output = {
             "schedule_result": []
         }
-        
+
         for t in scheduler.time_steps:
             time_step_data = {
                 "t": t,
-                "P": {},
-                "k": {},
+                "P": {},  # 這邊後續你應該會寫入每個設備的發電量
+                "k": {},  # 這邊後續你應該會寫入每個任務的用電分配
                 "sell": 0.0,
                 "soc": {},                
-                # 這裡直接放入系統統計的拒絕/逾期名單
-                "missed_aperiodic": scheduler.missed_aperiodic,   
-                "rejected_sporadic": scheduler.rejected_sporadic   
+                # 直接拿 scheduler 裡面已經整理好的分類字典
+                "missed_aperiodic": scheduler.missed_at_t[t],   
+                "rejected_sporadic": scheduler.rejected_at_t[t]  
             }
             
             # 1. 填寫 P 矩陣 (傳統機組、再生能源，以及「儲能放電」)
@@ -685,7 +731,6 @@ if __name__ == "__main__":
 
                 task_k_dict = {}
                 for i in all_sources:
-                    # 注意：動態任務加進來時，某些早期的任務可能沒有某個設備的 key，所以用 .get() 比較安全
                     k_var = v["k"].get((j, i, t))
                     if k_var is not None:
                         val = pulp.value(k_var)
@@ -695,7 +740,6 @@ if __name__ == "__main__":
                 if task_k_dict:
                     time_step_data["k"][base_id] = task_k_dict
             
-            # 3. 處理電池充電 (沿用你原本優秀的剩餘電量分配邏輯)
             remaining_power = {}
             for i in gen_ids + res_ids: 
                 gen_p = time_step_data["P"].get(i, 0.0)

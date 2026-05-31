@@ -8,7 +8,7 @@
                 6,
                 7
             ],
-            "reason": "資源充足，可在 deadline 前完成。",
+            "reason": "Sufficient resources available",
             "constraint_violation": false
         },
         {
@@ -19,14 +19,14 @@
                 13,
                 14
             ],
-            "reason": "資源充足，可在 deadline 前完成。",
+            "reason": "Sufficient resources available",
             "constraint_violation": false
         },
         {
             "job_id": "boss",
             "status": "Rejected",
             "scheduled_time_steps": [],
-            "reason": "發電機或儲能資源達到物理極限，無法滿足任務需求。",
+            "reason": "Continuity and resource conflict: This task is non-preemptive. The system cannot allocate 1 continuous units of sufficient power capacity within the timeframe (t=16 to 16).",
             "constraint_violation": false
         },
         {
@@ -37,7 +37,7 @@
                 36,
                 37
             ],
-            "reason": "資源充足，可在 deadline 前完成。",
+            "reason": "Sufficient resources available",
             "constraint_violation": false
         },
         {
@@ -47,7 +47,7 @@
                 55,
                 56
             ],
-            "reason": "資源充足，可在 deadline 前完成。",
+            "reason": "Sufficient resources available",
             "constraint_violation": false
         },
         {
@@ -58,7 +58,7 @@
                 66,
                 67
             ],
-            "reason": "資源充足，可在 deadline 前完成。",
+            "reason": "Sufficient resources available",
             "constraint_violation": false
         }
     ]

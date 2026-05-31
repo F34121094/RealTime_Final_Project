@@ -3,12 +3,12 @@
     "soft_deadline_miss_rate": 0.0,
     "average_tardiness": 0.0,
     "max_tardiness": 0,
-    "average_response_time": 2.5686,
+    "average_response_time": 2.549,
     "max_response_time": 13,
-    "completion_time_jitter": 3.2857,
+    "completion_time_jitter": 3.4286,
     "sporadic_value_rate": 0.9333,
     "post_acceptance_violation_rate": 0.0,
-    "generator_cost": 307806.0,
-    "market_revenue": 381203.0,
-    "objective_value": -73397.0
+    "generator_cost": 307209.6,
+    "market_revenue": 380267.0,
+    "objective_value": -73057.4
 }
