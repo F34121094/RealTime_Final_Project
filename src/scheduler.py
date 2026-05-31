@@ -173,16 +173,6 @@ def load_environment():       # [FUNC] 將 input 中的 json 檔載入
     
     return generator_set,storage_set,renewable_set,price_72
 
-def renewable_generate(renewable_set):      # [FUNC] renewable 72小時產量計算 (可以知道哪個時間點可能不用產那麼多電)
-    hourly_renewable = [0.0] * 72
-
-    for re in renewable_set:
-        for t in range(72):
-            hourly_power = float(re.capacity) * float(re.pv_forecast[t])
-            hourly_renewable[t] += hourly_power
-        
-    return hourly_renewable
-
 class VPPScheduler:
     def __init__(self, generator_set, storage_set, renewable_set, price_72, time_horizon=72):
         self.generator_set = generator_set
@@ -341,15 +331,11 @@ class VPPScheduler:
         if job_dict["type"] == "aperiodic":
             v[f"Miss_{j}"] = pulp.LpVariable(f"Miss_{j}", cat='Binary')     
             v[f"Drop_{j}"] = pulp.LpVariable(f"Drop_{j}", cat='Binary')
-            
-            # 就算逾期，最晚也要在排程結束(H)前做完，除非真的連排程結束前都塞不下，只好 Drop
+            # 假設 drop => 執行時間為 0  沒有drop => 執行時間就要是execution time
             self.model += pulp.lpSum(v["x"][j, t] for t in range(r, self.time_horizon + 1)) == e * (1 - v[f"Drop_{j}"])
             
             # [Constraint 4] : Miss 的限制
-            if abs_deadline <= self.time_horizon:
-                self.model += pulp.lpSum(v["x"][j, t] for t in range(r, abs_deadline + 1)) >= e * (1 - v[f"Miss_{j}"] - v[f"Drop_{j}"])
-            else:
-                self.model += v[f"Miss_{j}"] == 1 - v[f"Drop_{j}"]
+            self.model += pulp.lpSum(v["x"][j, t] for t in range(r, min(abs_deadline, self.time_horizon) + 1)) >= e * (1 - v[f"Miss_{j}"])
                 
             for t in range(1, r): # [Constraint 2] Release time 前不可執行
                 self.model += v["x"][j, t] == 0
@@ -360,17 +346,15 @@ class VPPScheduler:
             abs_deadline = r + job_dict["d"] - 1
             
             # 關鍵修改：如果拒絕 (Reject=1)，等號右邊就會變成 0，任務就不用執行了！
-            if abs_deadline <= self.time_horizon:
-                self.model += pulp.lpSum(v["x"][j, t] for t in range(r, abs_deadline + 1)) == e * (1 - v[f"Reject_{j}"])
-            else:
-                self.model += pulp.lpSum(v["x"][j, t] for t in range(r, self.time_horizon + 1)) == e * (1 - v[f"Reject_{j}"])
+            self.model += pulp.lpSum(v["x"][j, t] for t in range(r, min(abs_deadline , self.time_horizon) + 1)) == e * (1 - v[f"Reject_{j}"])
                 
+            # [Constraint 2] Release time 前不可執行 + # [Constraint 3] 用電需求在 deadline 前做完
             for t in self.time_steps:
                 if t < r or t > abs_deadline:
                     self.model += v["x"][j, t] == 0
 
-        else: # Periodic & Sporadic
-            
+        else: # Periodic 
+            # [Constraint 3] 用電需求在 deadline 前做完
             self.model += pulp.lpSum(v["x"][j, t] for t in self.time_steps) == e                    # [Constraint 3] : deadline 前要做完所需的時間
             for t in self.time_steps:
                 # [Constraint 2] : Release time 之前不能執行
@@ -380,7 +364,7 @@ class VPPScheduler:
         # [Constraint 5] : non-preemptive 要連續執行
         if job_dict["preempt"] == 0:
             z_vars = []
-            for t in self.time_steps:
+            for t in range(r , self.time_steps):
                 z = pulp.LpVariable(f"z_{j}_{t}", lowBound=0, cat='Continuous')
                 z_vars.append(z)
                 x_curr = v["x"][j, t]

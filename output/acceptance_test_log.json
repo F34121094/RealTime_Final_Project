@@ -23,6 +23,13 @@
             "constraint_violation": false
         },
         {
+            "job_id": "boss",
+            "status": "Rejected",
+            "scheduled_time_steps": [],
+            "reason": "發電機或儲能資源達到物理極限，無法滿足任務需求。",
+            "constraint_violation": false
+        },
+        {
             "job_id": "s3",
             "status": "Accepted",
             "scheduled_time_steps": [
