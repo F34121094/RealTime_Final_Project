@@ -1,6 +1,7 @@
 import json
 import os
 import random
+import math
 
 OUTPUT_FILE_PATH = "output/task_set.json"
 
@@ -11,32 +12,27 @@ def generate_tasks():
         n = random.randint(6,10)
         task_set = {}
         for i in range(1, n + 1):       # 1-4
-            # p = period
-            if i == 1:
-                p = random.randint(6,12)
-            elif i == 2:
-                p = random.randint(13,18)
-            elif i == 3:
-                p = random.randint(19,24)
-            else:
-                p = random.randint(6,24)
-            # e = execution time
-            # pee = preemptive (0 or 1)
-            if i <= 2:
+            # 建議的修改邏輯概念：
+
+            if i <= 2: 
+                p = random.choice([8, 12, 16, 20, 24]) 
+                e = 4
+                d = 4
+                pee = random.choice([0, 1])
+
+            elif i <= 4:
+                p = random.randint(6, 24)
                 e = 2
-                pee = 0                 # 1-7
-            elif i <= 3:
-                e = random.randint(3,4)
-                pee = random.choice([0, 1])
-            else: 
-                e = random.randint(1,4)
-                pee = random.choice([0, 1])
-            
-            # d = relative deadline
-            if i <= 2:
-                d = e                   #1-6
+                pee = 0 
+                min_d = 2 * 4 - math.gcd(4, p) 
+                d = random.randint(min_d, p)
+
             else:
-                d = random.randint(e,p)
+                p = random.randint(6, 24)
+                e = random.randint(1, 3) 
+                pee = random.choice([0, 1])
+                min_d = 2 * 4 - math.gcd(4, p)
+                d = random.randint(min_d, p)
             
             # w = energy demand
             if i <= 2:           
@@ -56,7 +52,8 @@ def generate_tasks():
                 "w": w,             # energy demand
                 "preempt": pee      # preemptive / non-preemptive
             }
-        if check_workload_density(task_set) and check_job_count(task_set): return {"periodic":task_set}
+        unique_periods = len(set(task["p"] for task in task_set.values()))
+        if check_workload_density(task_set) and check_job_count(task_set) and unique_periods >= 3: return {"periodic":task_set}
     
 
 def check_workload_density(task_set):

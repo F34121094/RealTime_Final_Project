@@ -23,13 +23,6 @@
             "constraint_violation": false
         },
         {
-            "job_id": "boss",
-            "status": "Rejected",
-            "scheduled_time_steps": [],
-            "reason": "Continuity and resource conflict: This task is non-preemptive. The system cannot allocate 1 continuous units of sufficient power capacity within the timeframe (t=16 to 16).",
-            "constraint_violation": false
-        },
-        {
             "job_id": "s3",
             "status": "Accepted",
             "scheduled_time_steps": [

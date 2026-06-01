@@ -579,31 +579,51 @@ class VPPScheduler:
                         self.model += v["x"][task.task_id, t] == 0
 
     def _lock_past_states(self, current_r):                 # 鎖定非週期任務來之前的發電、再生能源、儲能設備結果
+        # 鎖定非週期任務來之前的發電、再生能源、儲能設備結果
         v = self.vars
         
         # 從上次鎖定到的時間點，一路鎖到 current_r - 1
         for t in range(self.locked_time + 1, current_r):
             
+            # 1. 傳統機組鎖定
             for i in self.gen_ids:
-                val = pulp.value(v["P"][i, t])
-                if val is not None:
-                    self.model += v["P"][i, t] == val, f"TimeLock_P_{i}_{t}"
-            
-            for sid in self.storage_ids:
-                soc_val = pulp.value(v["SOC"][sid, t])
-                if soc_val is not None:
-                    self.model += v["SOC"][sid, t] == soc_val, f"TimeLock_SOC_{sid}_{t}"
+                # 狀態 (Binary/整數) 不會有浮點數問題，維持絕對鎖死
+                u_val = pulp.value(v["U"][i, t])
+                if u_val is not None:
+                    self.model += v["U"][i, t] == round(u_val), f"TimeLock_U_{i}_{t}"
                 
+                # 發電量 (Continuous) 捨棄 ==，改用 ± 0.001 的避震器鎖定
+                p_val = pulp.value(v["P"][i, t])
+                if p_val is not None:
+                    p_val = max(0.0, p_val) # 確保不會低於0
+                    self.model += v["P"][i, t] >= p_val - 1e-3, f"TimeLock_P_lb_{i}_{t}"
+                    self.model += v["P"][i, t] <= p_val + 1e-3, f"TimeLock_P_ub_{i}_{t}"
+            
+            # 2. 儲能設備鎖定
+            for sid in self.storage_ids:
+                # 狀態 (Binary) 絕對鎖死
+                isch_val = pulp.value(v["IsCh"][sid, t])
+                if isch_val is not None:
+                    self.model += v["IsCh"][sid, t] == round(isch_val), f"TimeLock_IsCh_{sid}_{t}"
+
+                # ⚠️ [關鍵修正] 絕對不要鎖定 SOC！它會由 P_ch 和 P_dis 根據物理定律自動推導，鎖了會引發公式矛盾！
+                
+                # 充電量 (Continuous) 避震器鎖定
                 ch_val = pulp.value(v["P_ch"][sid, t])
                 if ch_val is not None:
-                    self.model += v["P_ch"][sid, t] == ch_val, f"TimeLock_Pch_{sid}_{t}"
+                    ch_val = max(0.0, ch_val)
+                    self.model += v["P_ch"][sid, t] >= ch_val - 1e-3, f"TimeLock_Pch_lb_{sid}_{t}"
+                    self.model += v["P_ch"][sid, t] <= ch_val + 1e-3, f"TimeLock_Pch_ub_{sid}_{t}"
                     
+                # 放電量 (Continuous) 避震器鎖定
                 dis_val = pulp.value(v["P_dis"][sid, t])
                 if dis_val is not None:
-                    self.model += v["P_dis"][sid, t] == dis_val, f"TimeLock_Pdis_{sid}_{t}"
+                    dis_val = max(0.0, dis_val)
+                    self.model += v["P_dis"][sid, t] >= dis_val - 1e-3, f"TimeLock_Pdis_lb_{sid}_{t}"
+                    self.model += v["P_dis"][sid, t] <= dis_val + 1e-3, f"TimeLock_Pdis_ub_{sid}_{t}"
         
         # 存檔 下次就直接從這個時間開始鎖定
-        self.locked_time = max(self.locked_time, current_r - 1)     
+        self.locked_time = max(self.locked_time, current_r - 1)    
 
 if __name__ == "__main__":
     # ==========================================
