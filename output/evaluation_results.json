@@ -1,14 +1,14 @@
 {
-    "hard_deadline_miss_rate": 0.0,
+    "hard_deadline_miss_rate": 0.0164,
     "soft_deadline_miss_rate": 0.0,
     "average_tardiness": 0.0,
     "max_tardiness": 0,
-    "average_response_time": 2.549,
-    "max_response_time": 13,
-    "completion_time_jitter": 3.4286,
-    "sporadic_value_rate": 0.9333,
+    "average_response_time": 3.7246,
+    "max_response_time": 16,
+    "completion_time_jitter": 5.8889,
+    "sporadic_value_rate": 1.0,
     "post_acceptance_violation_rate": 0.0,
-    "generator_cost": 307209.6,
-    "market_revenue": 380267.0,
-    "objective_value": -73057.4
+    "generator_cost": 307350.0,
+    "market_revenue": 355550.83,
+    "objective_value": -48200.83
 }
