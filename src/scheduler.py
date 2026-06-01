@@ -579,15 +579,11 @@ class VPPScheduler:
                         self.model += v["x"][task.task_id, t] == 0
 
     def _lock_past_states(self, current_r):                 # 鎖定非週期任務來之前的發電、再生能源、儲能設備結果
-        # 鎖定非週期任務來之前的發電、再生能源、儲能設備結果
         v = self.vars
         
-        # 從上次鎖定到的時間點，一路鎖到 current_r - 1
         for t in range(self.locked_time + 1, current_r):
             
-            # 1. 傳統機組鎖定
             for i in self.gen_ids:
-                # 狀態 (Binary/整數) 不會有浮點數問題，維持絕對鎖死
                 u_val = pulp.value(v["U"][i, t])
                 if u_val is not None:
                     self.model += v["U"][i, t] == round(u_val), f"TimeLock_U_{i}_{t}"
@@ -606,7 +602,6 @@ class VPPScheduler:
                 if isch_val is not None:
                     self.model += v["IsCh"][sid, t] == round(isch_val), f"TimeLock_IsCh_{sid}_{t}"
 
-                # ⚠️ [關鍵修正] 絕對不要鎖定 SOC！它會由 P_ch 和 P_dis 根據物理定律自動推導，鎖了會引發公式矛盾！
                 
                 # 充電量 (Continuous) 避震器鎖定
                 ch_val = pulp.value(v["P_ch"][sid, t])

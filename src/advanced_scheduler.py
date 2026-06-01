@@ -413,10 +413,18 @@ class VPPScheduler:
                 self.model += self.vars["x"][j, t] == fixed_x
 
     def process_unexpected_jobs(self, unexpected_tasks):    
+        
         v = self.vars
         unexpected_tasks.sort(key=lambda t: t.r)
         
+        self.base_u_states = {}     # 新增鎖定 開關機狀態
+        for i in self.gen_ids:
+            for t in self.time_steps:
+                val = pulp.value(v["U"][i, t])
+                self.base_u_states[(i, t)] = round(val) if val is not None else 0
+
         for task in unexpected_tasks:
+            print(f" t = {task.r} => {task.task_id}") 
             self._lock_past_states(task.r)
 
             
@@ -434,6 +442,67 @@ class VPPScheduler:
             self._build_job_constraints(job_dict)
             self._apply_dynamic_balance()
             self._update_objective()
+
+            # ==========================================
+            # === [Step 2-2 核心：加入 Frame 時間窗邊界] ===
+            # ==========================================
+            abs_deadline = task.r + task.d - 1
+            
+            # 初始化為新任務本身的 deadline
+            dynamic_window_end = abs_deadline 
+            
+            # 遍歷目前系統中所有的任務 (包含 Periodic 與已經 Accept 的 Sporadic/Aperiodic)
+            for job in self.jobs:
+                # 排除掉自己
+                if job["job_id"] == job_dict["job_id"]:
+                    continue
+                    
+                job_r = job["r"]
+                job_abs_d = job["r"] + job["d"] - 1
+                
+                # 判斷時間窗是否重疊 (交集檢查)：
+                # (既有任務的釋放時間 <= 新任務的 deadline) 且 (既有任務的 deadline >= 新任務的釋放時間)
+                if job_r <= abs_deadline and job_abs_d >= task.r:
+                    # 如果有重疊，且該任務的 deadline 更晚，就撐大 window_end
+                    if job_abs_d > dynamic_window_end:
+                        dynamic_window_end = job_abs_d
+            
+            # 確保不會超出排程總時長 (72)
+            window_end = min(self.time_horizon, dynamic_window_end) 
+            
+            self._apply_window_boundaries(task.r, window_end)
+            # ==========================================
+
+            # ==========================================
+            # === [Step 1-3 修改開始] 兩階段求解邏輯 ===
+            # ==========================================
+            print(f" [Phase 1] 嘗試局部調度 (不開新機組)...")
+            self._lock_all_U()
+            self.model.solve(pulp.PULP_CBC_CMD(msg=False)) 
+            
+            need_phase_2 = False
+            status_str = pulp.LpStatus[self.model.status]
+            
+            if status_str in ["Optimal", "Not Solved"]:
+                if task.type == 1:
+                    reject_val = pulp.value(v[f"Reject_{job_dict['job_id']}"])
+                    if reject_val is not None and round(reject_val) == 1:
+                        need_phase_2 = True # 資源枯竭，被迫 Reject，需要救援！
+                else:
+                    drop_val = pulp.value(v[f"Drop_{task.task_id}"])
+                    if drop_val is not None and round(drop_val) == 1:
+                        need_phase_2 = True # 資源枯竭，被迫 Drop，需要救援！
+            else:
+                need_phase_2 = True # Infeasible，連解都找不到，需要救援！
+
+            # 啟動 Phase 2 救援
+            if need_phase_2:
+                print(f" [Phase 2] 局部資源不足，解開未來機組狀態進行全域救援！")
+                self._unlock_future_U(task.r) # Phase 2: 拔掉未來的 U 鎖定
+                # 解開了 Binary 變數，給求解器 8 秒去想辦法
+                self.model.solve(pulp.PULP_CBC_CMD(msg=False, timeLimit=12)) 
+                status_str = pulp.LpStatus[self.model.status]
+            # ==========================================
             
             self.model.solve(pulp.PULP_CBC_CMD(msg=False, timeLimit=8))
             
@@ -443,7 +512,7 @@ class VPPScheduler:
                     is_rejected = True if reject_val is None else (round(reject_val) == 1)
                     
                     if not is_rejected:
-                        print(f" t = {task.r} => {task.task_id} ACCEPTED (Sporadic)")
+                        print("ACCEPTED (Sporadic)")
                         scheduled_times = [t for t in self.time_steps if round(pulp.value(v["x"][job_dict["job_id"], t])) == 1]
                         
                         self.acceptance_log.append({
@@ -511,6 +580,23 @@ class VPPScheduler:
                     self.model += v[f"Drop_{task.task_id}"] == 1
                     for t in self.time_steps:
                         self.model += v["x"][task.task_id, t] == 0
+            print()
+            self._remove_window_boundaries()
+
+    def _lock_all_U(self):  # 新增lock function
+        v = self.vars
+        for i in self.gen_ids:
+            for t in self.time_steps:
+                name = f"Phase1_U_Lock_{i}_{t}"
+                if name not in self.model.constraints:
+                    self.model += v["U"][i, t] == self.base_u_states[(i, t)], name
+
+    def _unlock_future_U(self, current_r):  # 新增 unlock function
+        for i in self.gen_ids:
+            for t in range(current_r, self.time_horizon + 1):
+                name = f"Phase1_U_Lock_{i}_{t}"
+                if name in self.model.constraints:
+                    del self.model.constraints[name]
 
     def _lock_past_states(self, current_r):                 
         v = self.vars
@@ -546,6 +632,51 @@ class VPPScheduler:
                     self.model += v["P_dis"][sid, t] <= dis_val + 1e-3, f"TimeLock_Pdis_ub_{sid}_{t}"
         
         self.locked_time = max(self.locked_time, current_r - 1)    
+
+    def _apply_window_boundaries(self, task_r, window_end):
+        v = self.vars
+        self.active_window_constraints = [] 
+
+        # 1. 鎖死 window_end 之後的 Periodic Tasks
+        for job in self.periodic_jobs:
+            # 如果這個 Periodic 任務是在 window_end 之後才 release，就把它鎖死在「上一輪算出的排程」
+            if job["r"] > window_end:
+                j = job["job_id"]
+                for t in range(window_end + 1, self.time_horizon + 1):
+                    x_val = pulp.value(v["x"][j, t])
+                    if x_val is not None:
+                        name = f"Window_x_Lock_{j}_{t}_{task_r}"
+                        self.model += v["x"][j, t] == round(x_val), name
+                        self.active_window_constraints.append(name)
+                        
+        # 2. SOC 邊界防護：確保局部重排不會榨乾未來的電池
+        for sid in self.storage_ids:
+            expected_soc = pulp.value(v["SOC"][sid, window_end])
+            if expected_soc is not None:
+                name = f"Window_SOC_Bound_{sid}_{task_r}"
+                self.model += v["SOC"][sid, window_end] >= expected_soc - 1e-3, name
+                self.active_window_constraints.append(name)
+
+        # 3. 傳統機組 Ramp-up 銜接：確保 window_end 的出力可以順利過渡到未來的排程
+        if window_end < self.time_horizon:
+            for g in self.generator_set:
+                i = g.generator_id
+                next_p = pulp.value(v["P"][i, window_end + 1])
+                if next_p is not None:
+                    name1 = f"Window_RampUp_{i}_{task_r}"
+                    name2 = f"Window_RampDown_{i}_{task_r}"
+                    self.model += next_p - v["P"][i, window_end] <= g.ramp_up_rate, name1
+                    self.model += v["P"][i, window_end] - next_p <= g.ramp_down_rate, name2
+                    self.active_window_constraints.append(name1)
+                    self.active_window_constraints.append(name2)
+
+    def _remove_window_boundaries(self):
+        # 任務處理完畢後，把剛剛加的局部邊界拆掉，迎接下一個時間點的新任務
+        if hasattr(self, 'active_window_constraints'):
+            for name in self.active_window_constraints:
+                if name in self.model.constraints:
+                    del self.model.constraints[name]
+            self.active_window_constraints = []
 
 if __name__ == "__main__":
     try:
