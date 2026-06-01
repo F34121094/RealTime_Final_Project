@@ -2,18 +2,18 @@ import json
 from dataclasses import dataclass
 from typing import List, Dict
 import pulp
-# pulp ¬O¤@­Ó±Mªù¥Î¨Ó¸Ñ¨M½u©Ê³W¹º°İÃDªº¨ç¦¡®w
+# pulp æ˜¯ä¸€å€‹å°ˆé–€ç”¨ä¾†è§£æ±ºç·šæ€§è¦åŠƒå•é¡Œçš„å‡½å¼åº«
 
 @dataclass
-class Task:         # [class] ¥ô°È²M³æ
+class Task:         # [class] ä»»å‹™æ¸…å–®
     task_id: str    # id
     r: int          # Release Time
     p: int          # Period
     e: int          # Execution Time
     d: int          # Deadline
-    d_count: int    # ·s¼W¯S½è - deadline ­Ë¼Æ¥Î©ó§â¥ô°È±q¥N¿ì²M³æ¤¤§R°£ 
-    e_last: int     # ·s¼W¯S½è - ³Ñ¤UÁÙ»İ­nªº°õ¦æ®É¶¡
-    w: int          # energy demand (¨C­Ó¤p®É)
+    d_count: int    # æ–°å¢ç‰¹è³ª - deadline å€’æ•¸ç”¨æ–¼æŠŠä»»å‹™å¾ä»£è¾¦æ¸…å–®ä¸­åˆªé™¤ 
+    e_last: int     # æ–°å¢ç‰¹è³ª - å‰©ä¸‹é‚„éœ€è¦çš„åŸ·è¡Œæ™‚é–“
+    w: int          # energy demand (æ¯å€‹å°æ™‚)
     preempt: int    # preemptable
 
 @dataclass
@@ -22,42 +22,42 @@ class Task_unexpected:         # [class] aperiodic / Sporadic task]
     r: int          # Release Time
     e: int          # Execution Time
     d: int          # Deadline
-    w: int          # energy demand (¨C­Ó¤p®É)
+    w: int          # energy demand (æ¯å€‹å°æ™‚)
     preempt: int    # preemptable
-    type: int       # ·s¼W¯S½è : 1 sporadic(hard)/ 0 aperiodic(soft)
+    type: int       # æ–°å¢ç‰¹è³ª : 1 sporadic(hard)/ 0 aperiodic(soft)
 
 @dataclass
-class Generator:            # [class] ¶Ç²Î¾÷²Õ
-    generator_id: str       # ½s¸¹
-    output_min: int         # ³Ì¤p¥X¤O
-    output_max: int         # ³Ì¤j¥X¤O
-    ramp_up_rate: int       # ¤@­Ó®É¶¡¶¡¹j ¥X¤O¥i¼W¥[ªº´T«×
-    ramp_down_rate: int     # ¤@­Ó®É¶¡¶¡¹j ¥X¤O¥i´î¤Öªº´T«×
-    min_up_time: int        # ³Ìµu¶}¾÷®É¶¡
-    min_down_time: int      # ³ÌµuÃö¾÷®É¶¡
-    cost_fixed: int         # ¨C¤p®Éªº©T©w¦¨¥»
-    cost_variable: int      # µo¥X 1 MWh ªº ¦¨¥»
-    initial_on_time: int    # ±Æµ{«e¾÷²Õ¤w¸g³sÄò¶}¾÷ªº®É¶¡ 
-    initial_off_time: int   # ±Æµ{«e¾÷²Õ¤w¸g³sÄòÃö¾÷ªº®É¶¡
-    initial_energy: int     # ¾÷²Õ¦b t = 0 ®É¥i¨ÑÀ³ªº¹q¶q
-    on_off: int             # ·s¼WÅÜ¼Æ - 0:Ãö¾÷ 1:¶}¾÷
-    current_energy: int     # ·s¼WÅÜ¼Æ - ¥Ø«e¥X¤O
+class Generator:            # [class] å‚³çµ±æ©Ÿçµ„
+    generator_id: str       # ç·¨è™Ÿ
+    output_min: int         # æœ€å°å‡ºåŠ›
+    output_max: int         # æœ€å¤§å‡ºåŠ›
+    ramp_up_rate: int       # ä¸€å€‹æ™‚é–“é–“éš” å‡ºåŠ›å¯å¢åŠ çš„å¹…åº¦
+    ramp_down_rate: int     # ä¸€å€‹æ™‚é–“é–“éš” å‡ºåŠ›å¯æ¸›å°‘çš„å¹…åº¦
+    min_up_time: int        # æœ€çŸ­é–‹æ©Ÿæ™‚é–“
+    min_down_time: int      # æœ€çŸ­é—œæ©Ÿæ™‚é–“
+    cost_fixed: int         # æ¯å°æ™‚çš„å›ºå®šæˆæœ¬
+    cost_variable: int      # ç™¼å‡º 1 MWh çš„ æˆæœ¬
+    initial_on_time: int    # æ’ç¨‹å‰æ©Ÿçµ„å·²ç¶“é€£çºŒé–‹æ©Ÿçš„æ™‚é–“ 
+    initial_off_time: int   # æ’ç¨‹å‰æ©Ÿçµ„å·²ç¶“é€£çºŒé—œæ©Ÿçš„æ™‚é–“
+    initial_energy: int     # æ©Ÿçµ„åœ¨ t = 0 æ™‚å¯ä¾›æ‡‰çš„é›»é‡
+    on_off: int             # æ–°å¢è®Šæ•¸ - 0:é—œæ©Ÿ 1:é–‹æ©Ÿ
+    current_energy: int     # æ–°å¢è®Šæ•¸ - ç›®å‰å‡ºåŠ›
 
 @dataclass
-class Storage:              # [class] Àx¯à³]³Æ
-    storage_id: str         # ½s¸¹
-    soc_min: int            # ¥²¶·«O¯dªº³Ì§C¹q¯à¶q
-    soc_max: int            # ¥i¥HÀx¦sªº³Ì°ª¹q¯à¶q
-    discharge_max: int      # ³Ì¤j©ñ¹q¥\²v
-    charge_max: int         # ³Ì¤j¥R¹q¥\²v
-    soc_init: int           # ªì©l¦s¶q
-    used: int               # ·s¼WÅÜ¼Æ - ©ñ¹L¹q 1 / ¨S©ñ¹L 0
+class Storage:              # [class] å„²èƒ½è¨­å‚™
+    storage_id: str         # ç·¨è™Ÿ
+    soc_min: int            # å¿…é ˆä¿ç•™çš„æœ€ä½é›»èƒ½é‡
+    soc_max: int            # å¯ä»¥å„²å­˜çš„æœ€é«˜é›»èƒ½é‡
+    discharge_max: int      # æœ€å¤§æ”¾é›»åŠŸç‡
+    charge_max: int         # æœ€å¤§å……é›»åŠŸç‡
+    soc_init: int           # åˆå§‹å­˜é‡
+    used: int               # æ–°å¢è®Šæ•¸ - æ”¾éé›» 1 / æ²’æ”¾é 0
 
 @dataclass
-class Renewable:            # [class] ¦A¥Í¯à·½
-    renewable_id: str       # ³æ¤@¦A¥Í¯à·½ªº½s¸¹
-    capacity: int           # ¦A¥Í¯à·½ªº³Ì¤j¥X¤O
-    pv_forecast: list       # ¤Ó¶§¯à¹w´ú¥X¤O¦Ê¤À¤ñ
+class Renewable:            # [class] å†ç”Ÿèƒ½æº
+    renewable_id: str       # å–®ä¸€å†ç”Ÿèƒ½æºçš„ç·¨è™Ÿ
+    capacity: int           # å†ç”Ÿèƒ½æºçš„æœ€å¤§å‡ºåŠ›
+    pv_forecast: list       # å¤ªé™½èƒ½é æ¸¬å‡ºåŠ›ç™¾åˆ†æ¯”
 
 def load_task():        
     task_set = []
@@ -392,17 +392,17 @@ class VPPScheduler:
         self.model.setObjective(total_gen_cost - total_revenue + penalty)
     
     def run_base_schedule(self):
-        print("\n--- ¥¿¦b­pºâ Base Schedule (Periodic) ---")
+        print("\n--- æ­£åœ¨è¨ˆç®— Base Schedule (Periodic) ---")
         
         self._apply_dynamic_balance()                       
         self.model.solve(pulp.PULP_CBC_CMD(msg=False))      
         
         if pulp.LpStatus[self.model.status] == "Optimal":
-            print("=> Base Schedule ¦¨¥\«Ø¥ß¡I")
-            self.lock_scheduled_jobs(self.periodic_jobs)    
+            print("=> Base Schedule æˆåŠŸå»ºç«‹ï¼")
+            self.lock_scheduled_jobs(self.periodic_jobs)
             return True
         else:
-            print("=> Base Schedule µL¸Ñ¡I½ĞÀË¬d°Ñ¼Æ¡C")
+            print("=> Base Schedule ç„¡è§£ï¼è«‹æª¢æŸ¥åƒæ•¸ã€‚")
             return False
 
     def lock_scheduled_jobs(self, current_jobs_to_lock):    
@@ -435,7 +435,7 @@ class VPPScheduler:
             self._apply_dynamic_balance()
             self._update_objective()
             
-            self.model.solve(pulp.PULP_CBC_CMD(msg=False))
+            self.model.solve(pulp.PULP_CBC_CMD(msg=False, timeLimit=8))
             
             if pulp.LpStatus[self.model.status] == "Optimal":
                 if task.type == 1: 
@@ -575,12 +575,12 @@ if __name__ == "__main__":
     success = scheduler.run_base_schedule()
 
     if success and unexpected_set:
-        print("\n--- ¶}©l³B²z°ÊºA¥ô°È (Acceptance Test) ---")
+        print("\n--- é–‹å§‹è™•ç†å‹•æ…‹ä»»å‹™ (Acceptance Test) ---")
         scheduler.process_unexpected_jobs(unexpected_set)
 
 
     status_str = pulp.LpStatus[scheduler.model.status]
-    print(f"\n³Ì²×¨D¸Ñª¬ºA: {status_str}")
+    print(f"\næœ€çµ‚æ±‚è§£ç‹€æ…‹: {status_str}")
 
 
     gen_ids = scheduler.gen_ids
@@ -613,11 +613,11 @@ if __name__ == "__main__":
                 miss_log_time = min(abs_deadline + 1, scheduler.time_horizon)
                 scheduler.missed_at_t[miss_log_time].append(base_id)
 
-        print(f"¹w¦ôµo¹qÁ`¦¨¥»: $ {real_gen_cost:.2f}")
-        print(f"¹w¦ô°â¹qÁ`¦¬¯q: $ {real_revenue:.2f}")
-        print(f"¨t²Î¯u¹ê²b¦¨¥» (¤£§tµêÀÀ»@´Ú): $ {real_net_cost:.2f}")
-        print(f"Rejected Sporadic ¼Æ¶q: {len(scheduler.rejected_sporadic)}")
-        print(f"Missed Aperiodic ¼Æ¶q: {len(scheduler.missed_aperiodic)}")
+        print(f"é ä¼°ç™¼é›»ç¸½æˆæœ¬: $ {real_gen_cost:.2f}")
+        print(f"é ä¼°å”®é›»ç¸½æ”¶ç›Š: $ {real_revenue:.2f}")
+        print(f"ç³»çµ±çœŸå¯¦æ·¨æˆæœ¬ (ä¸å«è™›æ“¬ç½°æ¬¾): $ {real_net_cost:.2f}")
+        print(f"Rejected Sporadic æ•¸é‡: {len(scheduler.rejected_sporadic)}")
+        print(f"Missed Aperiodic æ•¸é‡: {len(scheduler.missed_aperiodic)}")
 
         final_output = {
             "schedule_result": []
@@ -696,15 +696,15 @@ if __name__ == "__main__":
 
             final_output["schedule_result"].append(time_step_data)
 
-        output_path = "output/schedule_result_advanced.json"        # ³oÃä­×§ï¦¨ advanced ª©ªº scheduler_result_advanced.json
+        output_path = "output/schedule_result_advanced.json"        # é€™é‚Šä¿®æ”¹æˆ advanced ç‰ˆçš„ scheduler_result_advanced.json
         import os
         os.makedirs(os.path.dirname(output_path), exist_ok=True) 
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(final_output, f, indent=4, ensure_ascii=False)
             
-        print(f"\nJson ¦¨¥\¼g¤J¦Ü {output_path}")
+        print(f"\nJson æˆåŠŸå¯«å…¥è‡³ {output_path}")
 
-        log_output_path = "output/acceptance_test_log_advanced.json"    # ³oÃä­×§ï¦¨ advanced ª©ªº acceptance_test_log.json
+        log_output_path = "output/acceptance_test_log_advanced.json"    # é€™é‚Šä¿®æ”¹æˆ advanced ç‰ˆçš„ acceptance_test_log.json
         
         log_data = {
             "acceptance_test_log_advanced": scheduler.acceptance_log
@@ -713,8 +713,8 @@ if __name__ == "__main__":
         with open(log_output_path, "w", encoding="utf-8") as f:
             json.dump(log_data, f, indent=4, ensure_ascii=False)
             
-        print(f"Acceptance Test Log ¦¨¥\¼g¤J¦Ü {log_output_path}")
+        print(f"Acceptance Test Log æˆåŠŸå¯«å…¥è‡³ {log_output_path}")
     else:
-        print("Infeasible! ¼Ò«¬µL¸Ñ¡A½ĞÀË¬d¿é¤J°Ñ¼Æ»P­­¨î¦¡¡C")
+        print("Infeasible! æ¨¡å‹ç„¡è§£ï¼Œè«‹æª¢æŸ¥è¼¸å…¥åƒæ•¸èˆ‡é™åˆ¶å¼ã€‚")
 
    
