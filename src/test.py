@@ -321,6 +321,10 @@ class VPPScheduler:
                 limit_expr = s.charge_max * (1 - (v["SOC"][sid, t-1] - s.soc_max * 0.8) / (s.soc_max * 0.2)) + 0.01
                 self.model += v["P_ch"][sid, t] <= limit_expr
 
+                # [level 2] 中新增的電池放電保護機制
+                limit_expr_dis = s.discharge_max * (v["SOC"][sid, t-1] / (s.soc_max * 0.2)) + 0.01
+                self.model += v["P_dis"][sid, t] <= limit_expr_dis
+
                 # [Constraint 17] : 儲能設備的儲能 上下限
                 self.model += v["SOC"][sid, t] >= s.soc_min
                 self.model += v["SOC"][sid, t] <= s.soc_max
@@ -455,7 +459,7 @@ class VPPScheduler:
             total_revenue = pulp.lpSum(
                 self.commit_sell[t] * self.price_72[t-1] + 
                 v["Sell_Surplus"][t] * (self.price_72[t-1] * 0.7) - 
-                v["Sell_Deficit"][t] * 100
+                v["Sell_Deficit"][t] * (self.price_72[t-1] + 100)
                 for t in self.time_steps
             )
         else:
@@ -766,11 +770,10 @@ if __name__ == "__main__":
             
             
             # 依照實際電價結算收益
-            step_rev = (contract_qty * actual_price) + (surplus_qty * actual_price * 0.7)
+            step_rev = ((contract_qty - deficit_qty) * actual_price) + (surplus_qty * actual_price * 0.7)
             actual_revenue += step_rev
             
-            # 累加違約金 (違約金是固定的 1000 元，不隨電價波動)
-            penalty_cost += deficit_qty * 100
+            
             # --- 1. 填寫 P 矩陣 ---
             for i in gen_ids:
                 val = pulp.value(v["P"][i, t])
@@ -846,6 +849,10 @@ if __name__ == "__main__":
             # [修正 2] 實際售電 = 計畫售電 + 這小時多出來的電
             actual_sell = scheduled_sell + step_surplus_p 
             time_step_data["sell"] = round(actual_sell, 2)
+
+            # 累加違約金 (違約金是固定的 1000 元，不隨電價波動)
+            true_deficit = max(0.0, contract_qty - actual_sell)
+            penalty_cost += true_deficit * 100
             
             for sid in storage_ids:
                 soc_val = pulp.value(v["SOC"][sid, t])
