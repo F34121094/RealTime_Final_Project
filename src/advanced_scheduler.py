@@ -484,7 +484,7 @@ class VPPScheduler:
                 # 多賣的電 (遇到熱門時段乘 1.25，再乘 0.7 折價)
                 v["Sell_Surplus"][t] * (self.price_72[t-1] * (1.25 if t in self.peak_hours else 1.0) * 0.7) - 
                 # 違約金維持原來的扣款邏輯
-                v["Sell_Deficit"][t] * 100
+                v["Sell_Deficit"][t] * (self.price_72[t-1] * (1.25 if t in self.peak_hours else 1.0) + 100)
                 for t in self.time_steps
             )
         else:
