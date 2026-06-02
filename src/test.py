@@ -247,7 +247,6 @@ class VPPScheduler:
         #[level 2] 簽訂契約的變數
         v["Sell_Surplus"] = pulp.LpVariable.dicts("Sell_Surplus", self.time_steps, lowBound=0, cat='Continuous') 
         v["Sell_Deficit"] = pulp.LpVariable.dicts("Sell_Deficit", self.time_steps, lowBound=0, cat='Continuous')
-        v["Is_Deficit"] = pulp.LpVariable.dicts("Is_Deficit", self.time_steps, cat='Binary')
 
         # 任務 j 在時間點 t 從發電設備 i 拿了多少電 
         v["k"] = pulp.LpVariable.dicts("k", ((j, i, t) for j in self.job_ids for i in self.all_sources for t in self.time_steps), lowBound=0, cat='Continuous')
@@ -405,16 +404,11 @@ class VPPScheduler:
             
             if hasattr(self, 'commit_sell'):    # [level 2] 售電契約
                 constraint_name = f"Sell_Commitment_Balance_{t}"
-                link_name = f"Deficit_Link_{t}"
                 if constraint_name in self.model.constraints:
-                    del self.model.constraints[constraint_name]
-                if link_name in self.model.constraints:
-                    del self.model.constraints[link_name]
+                        del self.model.constraints[constraint_name]
                         
                 self.model += v["Sell"][t] == self.commit_sell[t] + v["Sell_Surplus"][t] - v["Sell_Deficit"][t], constraint_name
-                M = self.commit_sell[t] if self.commit_sell[t] > 0 else 0
-                self.model += v["Sell_Deficit"][t] <= M * v["Is_Deficit"][t], link_name
-
+        
             # ==========================================
             # 1. 拆除舊的動態限制式 (如果它們存在的話)
             # ==========================================
@@ -461,7 +455,7 @@ class VPPScheduler:
             total_revenue = pulp.lpSum(
                 self.commit_sell[t] * self.price_72[t-1] + 
                 v["Sell_Surplus"][t] * (self.price_72[t-1] * 0.7) - 
-                v["Is_Deficit"][t] * 1000
+                v["Sell_Deficit"][t] * 100
                 for t in self.time_steps
             )
         else:
@@ -752,27 +746,31 @@ if __name__ == "__main__":
         penalty_cost = 0.0
 
         for t in scheduler.time_steps:
-            time_step_data = {
-                "t": t,
-                "P": {},  
-                "k": {},  
-                "sell": 0.0,
-                "soc": {},                
-                "missed_aperiodic": scheduler.missed_at_t[t],   
-                "rejected_sporadic": scheduler.rejected_at_t[t]  
-            }
             actual_price = price_72[t-1] * random.uniform(0.95, 1.05)
             
             contract_qty = scheduler.commit_sell[t]
             surplus_qty = pulp.value(v["Sell_Surplus"][t]) or 0.0
             deficit_qty = pulp.value(v["Sell_Deficit"][t]) or 0.0
-            is_deficit_val = pulp.value(v["Is_Deficit"][t]) or 0.0
 
+            time_step_data = {
+                "t": t,
+                "P": {},  
+                "k": {},  
+                "sell": 0.0,
+                "contract_sell":round(contract_qty),
+                "actual_price":round(actual_price,2),
+                "soc": {},                
+                "missed_aperiodic": scheduler.missed_at_t[t],   
+                "rejected_sporadic": scheduler.rejected_at_t[t]  
+            }
+            
+            
             # 依照實際電價結算收益
             step_rev = (contract_qty * actual_price) + (surplus_qty * actual_price * 0.7)
             actual_revenue += step_rev
-            penalty_cost += round(is_deficit_val) * 1000
+            
             # 累加違約金 (違約金是固定的 1000 元，不隨電價波動)
+            penalty_cost += deficit_qty * 100
             # --- 1. 填寫 P 矩陣 ---
             for i in gen_ids:
                 val = pulp.value(v["P"][i, t])
