@@ -449,11 +449,34 @@ class VPPScheduler:
         
         if pulp.LpStatus[self.model.status] == "Optimal":
             print("=> Base Schedule 成功建立！")
+            self.lock_base_generators()    # 鎖定
             self.lock_scheduled_jobs(self.periodic_jobs)    # 鎖定
+
             return True
         else:
             print("=> Base Schedule 無解！請檢查參數。")
             return False
+
+    def lock_base_generators(self):    
+        """專門鎖定 Base Schedule 的發電機與再生能源狀態 (1~72小時全局鎖定)"""
+        for i in self.gen_ids:
+            for t in self.time_steps:
+                # 開關機是整數 (Binary)，可以直接用 == 鎖死
+                fixed_u = round(pulp.value(self.vars["U"][i, t]) or 0)
+                self.model += self.vars["U"][i, t] == fixed_u, f"BaseLock_U_{i}_{t}"
+                
+                # 發電量是連續變數 (Continuous)，加 ± 1e-3 避震器
+                fixed_p = pulp.value(self.vars["P"][i, t]) or 0.0
+                fixed_p = max(0.0, fixed_p)
+                self.model += self.vars["P"][i, t] >= fixed_p - 1e-3, f"BaseLock_P_lb_{i}_{t}"
+                self.model += self.vars["P"][i, t] <= fixed_p + 1e-3, f"BaseLock_P_ub_{i}_{t}"
+
+        for i in self.res_ids:
+            for t in self.time_steps:
+                fixed_pres = pulp.value(self.vars["P_res"][i, t]) or 0.0
+                fixed_pres = max(0.0, fixed_pres)
+                self.model += self.vars["P_res"][i, t] >= fixed_pres - 1e-3, f"BaseLock_Pres_lb_{i}_{t}"
+                self.model += self.vars["P_res"][i, t] <= fixed_pres + 1e-3, f"BaseLock_Pres_ub_{i}_{t}"
 
     def lock_scheduled_jobs(self, current_jobs_to_lock):    # 鎖定 periodic task 的排程結果
         for job_dict in current_jobs_to_lock:
@@ -461,6 +484,12 @@ class VPPScheduler:
             for t in self.time_steps:
                 fixed_x = round(pulp.value(self.vars["x"][j, t]))
                 self.model += self.vars["x"][j, t] == fixed_x
+
+                for src in self.all_sources:
+                    k_val = pulp.value(self.vars["k"].get((j, src, t))) or 0.0
+                    k_val = max(0.0 , k_val)
+                    self.model += self.vars["k"][j, src, t] >= k_val - 1e-3, f"BaseLock_k_lb_{j}_{src}_{t}"
+                    self.model += self.vars["k"][j, src, t] <= k_val + 1e-3, f"BaseLock_k_ub_{j}_{src}_{t}"
 
     def process_unexpected_jobs(self, unexpected_tasks):    # 用來處理非週期任務
         """[新增] Acceptance Test 核心引擎"""
@@ -583,25 +612,12 @@ class VPPScheduler:
         
         for t in range(self.locked_time + 1, current_r):
             
-            for i in self.gen_ids:
-                u_val = pulp.value(v["U"][i, t])
-                if u_val is not None:
-                    self.model += v["U"][i, t] == round(u_val), f"TimeLock_U_{i}_{t}"
-                
-                # 發電量 (Continuous) 捨棄 ==，改用 ± 0.001 的避震器鎖定
-                p_val = pulp.value(v["P"][i, t])
-                if p_val is not None:
-                    p_val = max(0.0, p_val) # 確保不會低於0
-                    self.model += v["P"][i, t] >= p_val - 1e-3, f"TimeLock_P_lb_{i}_{t}"
-                    self.model += v["P"][i, t] <= p_val + 1e-3, f"TimeLock_P_ub_{i}_{t}"
-            
-            # 2. 儲能設備鎖定
+            # 1. 儲能設備歷史鎖定
             for sid in self.storage_ids:
                 # 狀態 (Binary) 絕對鎖死
                 isch_val = pulp.value(v["IsCh"][sid, t])
                 if isch_val is not None:
                     self.model += v["IsCh"][sid, t] == round(isch_val), f"TimeLock_IsCh_{sid}_{t}"
-
                 
                 # 充電量 (Continuous) 避震器鎖定
                 ch_val = pulp.value(v["P_ch"][sid, t])
@@ -616,6 +632,16 @@ class VPPScheduler:
                     dis_val = max(0.0, dis_val)
                     self.model += v["P_dis"][sid, t] >= dis_val - 1e-3, f"TimeLock_Pdis_lb_{sid}_{t}"
                     self.model += v["P_dis"][sid, t] <= dis_val + 1e-3, f"TimeLock_Pdis_ub_{sid}_{t}"
+
+            # 2. [新增] 歷史售電量鎖定
+            sell_val = pulp.value(v["Sell"][t])
+            if sell_val is not None:
+                sell_val = max(0.0, sell_val)
+                self.model += v["Sell"][t] >= sell_val - 1e-3, f"TimeLock_Sell_lb_{t}"
+                self.model += v["Sell"][t] <= sell_val + 1e-3, f"TimeLock_Sell_ub_{t}"
+        
+        # 存檔，下次就直接從這個時間開始鎖定
+        self.locked_time = max(self.locked_time, current_r - 1)
         
         # 存檔 下次就直接從這個時間開始鎖定
         self.locked_time = max(self.locked_time, current_r - 1)    
