@@ -208,6 +208,19 @@ class VPPScheduler:
         self.missed_at_t = {t: [] for t in self.time_steps}
         self.rejected_at_t = {t: [] for t in self.time_steps}
 
+        self.peak_hours = set()
+        for day in range(3): # 把 72 小時切成 3 天
+            start_h = day * 24 + 1
+            end_h = start_h + 24
+            # 找出這 24 小時內，原本電價大於 0 的時段
+            valid_hours = [h for h in range(start_h, end_h) if self.price_72[h-1] > 0]
+            
+            # 從這些有效時段中隨機抽取 3 個 (如果大於等於 3 個的話)
+            if len(valid_hours) >= 3:
+                self.peak_hours.update(random.sample(valid_hours, 3))
+            else:
+                self.peak_hours.update(valid_hours)
+
     def init_base_model(self, periodic_task_set):
         for task in periodic_task_set:  # 將任務展開
             current_t = task.r
@@ -452,20 +465,32 @@ class VPPScheduler:
         v = self.vars
         cost_var_dict = {g.generator_id: g.cost_variable for g in self.generator_set}
         cost_fixed_dict = {g.generator_id: g.cost_fixed for g in self.generator_set}
-        
-        total_gen_cost = pulp.lpSum(v["P"][i, t] * cost_var_dict[i] + v["U"][i, t] * cost_fixed_dict[i] for i in self.gen_ids for t in self.time_steps)
+        overtime_hours = set(list(range(12, 19)) + list(range(36, 43)) + list(range(60, 67)))
+
+        total_gen_cost = pulp.lpSum(
+            # 1. 變動成本 (Variable Cost): 根據實際發電量 P 計算，不受加班費影響
+            v["P"][i, t] * cost_var_dict[i] + 
+            
+            # 2. 固定成本 (Fixed Cost): 如果有開機 (U=1)，且在加班時段內，固定成本乘上 1.25 倍
+            v["U"][i, t] * cost_fixed_dict[i] * (1.25 if t in overtime_hours else 1.0)
+            
+            for i in self.gen_ids for t in self.time_steps
+        )        
         if hasattr(self, 'commit_sell'):
             # 如果 commit_sell 存在，代表進入了第二階段 (動態重排程)
             total_revenue = pulp.lpSum(
-                self.commit_sell[t] * self.price_72[t-1] + 
-                v["Sell_Surplus"][t] * (self.price_72[t-1] * 0.7) - 
-                v["Sell_Deficit"][t] * (self.price_72[t-1] + 100)
+                # 合約售電量 (遇到熱門時段乘 1.25)
+                self.commit_sell[t] * (self.price_72[t-1] * (1.25 if t in self.peak_hours else 1.0)) + 
+                # 多賣的電 (遇到熱門時段乘 1.25，再乘 0.7 折價)
+                v["Sell_Surplus"][t] * (self.price_72[t-1] * (1.25 if t in self.peak_hours else 1.0) * 0.7) - 
+                # 違約金維持原來的扣款邏輯
+                v["Sell_Deficit"][t] * 100
                 for t in self.time_steps
             )
         else:
             # 如果 commit_sell 不存在，代表還在第一階段 (Base Schedule)
             total_revenue = pulp.lpSum(
-                v["Sell"][t] * self.price_72[t-1] 
+                v["Sell"][t] * (self.price_72[t-1] * (1.25 if t in self.peak_hours else 1.0))
                 for t in self.time_steps
             )
         
@@ -715,14 +740,7 @@ if __name__ == "__main__":
     if status_str == "Optimal":
         v = scheduler.vars
 
-        cost_var_dict = {g.generator_id: g.cost_variable for g in generator_set}
-        cost_fixed_dict = {g.generator_id: g.cost_fixed for g in generator_set}
-        real_gen_cost = sum(
-            pulp.value(v["P"][i, t]) * cost_var_dict[i] + pulp.value(v["U"][i, t]) * cost_fixed_dict[i]
-            for i in gen_ids for t in scheduler.time_steps
-        )
-        real_revenue = sum(pulp.value(v["Sell"][t]) * price_72[t-1] for t in scheduler.time_steps)
-        real_net_cost = real_gen_cost - real_revenue
+        
 
         for key, val in v.items():
             if key.startswith("Miss_") and pulp.value(val) is not None and round(pulp.value(val)) == 1:
@@ -748,10 +766,20 @@ if __name__ == "__main__":
         bonus_revenue = 0.0 # 記錄總共多出來的電拿去賣賺到的錢
         actual_revenue = 0.0  
         penalty_cost = 0.0
-
+        
+        cost_var_dict = {g.generator_id: g.cost_variable for g in generator_set}
+        cost_fixed_dict = {g.generator_id: g.cost_fixed for g in generator_set}
+        overtime_hours = set(list(range(12, 19)) + list(range(36, 43)) + list(range(60, 67)))
+        real_gen_cost = 0.0
+        real_revenue = sum(
+            pulp.value(v["Sell"][t]) * price_72[t-1] * (1.25 if t in scheduler.peak_hours else 1.0) 
+            for t in scheduler.time_steps
+        )
         for t in scheduler.time_steps:
             actual_price = price_72[t-1] * random.uniform(0.95, 1.05)
             
+            revenue_multiplier = 1.25 if t in scheduler.peak_hours else 1.0
+
             contract_qty = scheduler.commit_sell[t]
             surplus_qty = pulp.value(v["Sell_Surplus"][t]) or 0.0
             deficit_qty = pulp.value(v["Sell_Deficit"][t]) or 0.0
@@ -763,6 +791,7 @@ if __name__ == "__main__":
                 "sell": 0.0,
                 "contract_sell":round(contract_qty),
                 "actual_price":round(actual_price,2),
+                "is_peak_hour": True if t in scheduler.peak_hours else False,
                 "soc": {},                
                 "missed_aperiodic": scheduler.missed_at_t[t],   
                 "rejected_sporadic": scheduler.rejected_at_t[t]  
@@ -770,7 +799,7 @@ if __name__ == "__main__":
             
             
             # 依照實際電價結算收益
-            step_rev = ((contract_qty - deficit_qty) * actual_price) + (surplus_qty * actual_price * 0.7)
+            step_rev = (((contract_qty - deficit_qty) * actual_price) + (surplus_qty * actual_price * 0.7)) * revenue_multiplier
             actual_revenue += step_rev
             
             
@@ -795,9 +824,7 @@ if __name__ == "__main__":
                 
                 time_step_data["P"][i] = round(actual_p, 2)
                 
-            for sid in storage_ids:
-                val = pulp.value(v["P_dis"][sid, t])
-                time_step_data["P"][sid] = round(val, 2)
+                
             
             # --- 2. 填寫 k 矩陣 ---
             for job in scheduler.jobs:
@@ -825,6 +852,9 @@ if __name__ == "__main__":
                 remaining_power[i] = max(0.0, gen_p - used_p)
             
             for sid in storage_ids:
+                val = pulp.value(v["P_dis"][sid, t])
+                time_step_data["P"][sid] = round(val, 2)
+
                 chg_val = pulp.value(v["P_ch"][sid, t])
                 if chg_val is not None and chg_val > 0:
                     chg_val = round(chg_val, 2)
@@ -841,6 +871,8 @@ if __name__ == "__main__":
                                 time_step_data["k"][chg_key][i] = take
                                 chg_val = round(chg_val - take, 2)
                                 remaining_power[i] -= take
+                soc_val = pulp.value(v["SOC"][sid, t])
+                time_step_data["soc"][sid] = round(soc_val, 2) if soc_val else 0.0
 
             # --- 4. 填寫售電量與 SOC ---
             sell_val = pulp.value(v["Sell"][t])
@@ -853,10 +885,18 @@ if __name__ == "__main__":
             # 累加違約金 (違約金是固定的 1000 元，不隨電價波動)
             true_deficit = max(0.0, contract_qty - actual_sell)
             penalty_cost += true_deficit * 100
-            
-            for sid in storage_ids:
-                soc_val = pulp.value(v["SOC"][sid, t])
-                time_step_data["soc"][sid] = round(soc_val, 2) if soc_val else 0.0
+
+            penalty_multiplier = 1.25 if t in overtime_hours else 1.0
+
+
+            for g in scheduler.generator_set:
+                i = g.generator_id
+                p_val = pulp.value(scheduler.vars["P"][i, t]) or 0.0
+                u_val = pulp.value(scheduler.vars["U"][i, t]) or 0.0
+                
+                # 變動成本 + 固定成本 (乘上加班倍率)
+                step_cost = (p_val * g.cost_variable) + (u_val * g.cost_fixed * penalty_multiplier)
+                real_gen_cost += step_cost
 
             final_output["schedule_result"].append(time_step_data)
 
