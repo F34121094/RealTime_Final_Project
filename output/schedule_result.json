@@ -29,12 +29,8 @@
                 "battery_1": 5.0,
                 "battery_2": 0.0
             },
-            "k": {
-                "p1": {
-                    "thermal_1": 15.0
-                }
-            },
-            "sell": 20.0,
+            "k": {},
+            "sell": 35.0,
             "soc": {
                 "battery_1": 20.0,
                 "battery_2": 10.0
@@ -53,11 +49,11 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p1": {
-                    "thermal_1": 15.0
+                "p2": {
+                    "thermal_1": 18.0
                 },
                 "battery_1_chg": {
-                    "thermal_1": 15.0
+                    "thermal_1": 12.0
                 },
                 "battery_2_chg": {
                     "thermal_1": 15.0
@@ -65,7 +61,7 @@
             },
             "sell": 0.0,
             "soc": {
-                "battery_1": 35.0,
+                "battery_1": 32.0,
                 "battery_2": 25.0
             },
             "missed_aperiodic": [],
@@ -82,20 +78,17 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p1": {
-                    "thermal_1": 15.0
+                "p2": {
+                    "thermal_1": 18.0
                 },
                 "battery_1_chg": {
-                    "thermal_1": 5.0
-                },
-                "battery_2_chg": {
-                    "thermal_1": 2.6
+                    "thermal_1": 11.2
                 }
             },
-            "sell": 37.4,
+            "sell": 30.8,
             "soc": {
-                "battery_1": 40.0,
-                "battery_2": 27.6
+                "battery_1": 43.2,
+                "battery_2": 25.0
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -108,30 +101,26 @@
                 "pv_1": 0.0,
                 "pv_2": 0.0,
                 "battery_1": 0.0,
-                "battery_2": 3.0
+                "battery_2": 0.0
             },
             "k": {
-                "p1": {
-                    "thermal_1": 15.0
+                "p2": {
+                    "thermal_1": 18.0
                 },
-                "p3": {
-                    "thermal_1": 10.0,
-                    "battery_2": 3.0
+                "p7": {
+                    "thermal_1": 10.0
                 },
-                "a1": {
-                    "thermal_1": 15.0
-                },
-                "a2": {
-                    "thermal_1": 15.0
-                },
-                "s1": {
+                "battery_1_chg": {
                     "thermal_1": 20.0
+                },
+                "battery_2_chg": {
+                    "thermal_1": 15.0
                 }
             },
-            "sell": 0.0,
+            "sell": 12.0,
             "soc": {
-                "battery_1": 40.0,
-                "battery_2": 24.6
+                "battery_1": 63.2,
+                "battery_2": 40.0
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -147,29 +136,26 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p3": {
-                    "thermal_1": 13.0
-                },
-                "a1": {
+                "p1": {
                     "thermal_1": 15.0
                 },
-                "a2": {
-                    "thermal_1": 15.0
+                "p2": {
+                    "thermal_1": 18.0
                 },
-                "s1": {
-                    "thermal_1": 20.0
+                "p7": {
+                    "thermal_1": 10.0
                 },
                 "battery_1_chg": {
-                    "thermal_1": 16.6
+                    "thermal_1": 20.0
                 },
                 "battery_2_chg": {
-                    "thermal_1": 0.4
+                    "thermal_1": 15.0
                 }
             },
-            "sell": 0.0,
+            "sell": 2.0,
             "soc": {
-                "battery_1": 56.6,
-                "battery_2": 25.0
+                "battery_1": 83.2,
+                "battery_2": 55.0
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -181,31 +167,20 @@
                 "thermal_2": 0.0,
                 "pv_1": 1.8,
                 "pv_2": 2.4,
-                "battery_1": 0.0,
-                "battery_2": 0.0
+                "battery_1": 20.0,
+                "battery_2": 15.0
             },
             "k": {
-                "a1": {
-                    "thermal_1": 12.6,
-                    "pv_2": 2.4
+                "p1": {
+                    "thermal_1": 15.0
                 },
                 "a2": {
-                    "thermal_1": 13.2,
-                    "pv_1": 1.8
-                },
-                "s1": {
-                    "thermal_1": 20.0
-                },
-                "battery_1_chg": {
-                    "thermal_1": 3.4
-                },
-                "battery_2_chg": {
-                    "thermal_1": 15.0
+                    "thermal_1": 14.0
                 }
             },
-            "sell": 15.8,
+            "sell": 90.2,
             "soc": {
-                "battery_1": 60.0,
+                "battery_1": 63.2,
                 "battery_2": 40.0
             },
             "missed_aperiodic": [],
@@ -222,13 +197,13 @@
                 "battery_2": 15.0
             },
             "k": {
-                "a1": {
-                    "thermal_1": 15.0
+                "p1": {
+                    "battery_1": 15.0
                 }
             },
             "sell": 117.4,
             "soc": {
-                "battery_1": 40.0,
+                "battery_1": 43.2,
                 "battery_2": 25.0
             },
             "missed_aperiodic": [],
@@ -245,13 +220,16 @@
                 "battery_2": 15.0
             },
             "k": {
-                "p2": {
+                "p1": {
                     "thermal_1": 15.0
+                },
+                "a1": {
+                    "pv_2": 8.0
                 }
             },
-            "sell": 115.0,
+            "sell": 107.0,
             "soc": {
-                "battery_1": 20.0,
+                "battery_1": 23.2,
                 "battery_2": 10.0
             },
             "missed_aperiodic": [],
@@ -268,24 +246,26 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p2": {
-                    "thermal_1": 15.0
+                "p3": {
+                    "thermal_1": 8.0
                 },
-                "p8": {
-                    "thermal_1": 11.0
+                "a1": {
+                    "thermal_1": 8.0
+                },
+                "a3": {
+                    "pv_2": 8.0
                 },
                 "battery_1_chg": {
-                    "thermal_1": 19.0,
-                    "pv_1": 1.0
+                    "thermal_1": 1.6
                 },
                 "battery_2_chg": {
-                    "pv_1": 4.6
+                    "thermal_1": 15.0
                 }
             },
-            "sell": 36.4,
+            "sell": 46.4,
             "soc": {
-                "battery_1": 40.0,
-                "battery_2": 14.6
+                "battery_1": 24.81,
+                "battery_2": 25.0
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -293,7 +273,7 @@
         {
             "t": 11,
             "P": {
-                "thermal_1": 30.0,
+                "thermal_1": 47.8,
                 "thermal_2": 0.0,
                 "pv_1": 13.8,
                 "pv_2": 18.4,
@@ -301,28 +281,34 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p2": {
-                    "thermal_1": 15.0
+                "p3": {
+                    "thermal_1": 8.0
+                },
+                "p4": {
+                    "pv_2": 11.0
                 },
                 "p6": {
-                    "thermal_1": 1.2,
-                    "pv_1": 13.8
+                    "pv_1": 11.0
                 },
-                "p9": {
+                "a3": {
+                    "thermal_1": 8.0
+                },
+                "a4": {
                     "thermal_1": 7.0
                 },
                 "battery_1_chg": {
-                    "thermal_1": 6.8,
-                    "pv_2": 3.4
+                    "thermal_1": 20.0
                 },
                 "battery_2_chg": {
-                    "pv_2": 15.0
+                    "thermal_1": 4.8,
+                    "pv_1": 2.8,
+                    "pv_2": 7.4
                 }
             },
             "sell": 0.0,
             "soc": {
-                "battery_1": 50.2,
-                "battery_2": 29.6
+                "battery_1": 44.81,
+                "battery_2": 40.0
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -330,37 +316,42 @@
         {
             "t": 12,
             "P": {
-                "thermal_1": 18.2,
+                "thermal_1": 44.2,
                 "thermal_2": 0.0,
                 "pv_1": 16.2,
                 "pv_2": 21.6,
                 "battery_1": 0.0,
-                "battery_2": 15.0
+                "battery_2": 0.0
             },
             "k": {
-                "p2": {
-                    "thermal_1": 15.0
+                "p4": {
+                    "pv_1": 9.2,
+                    "pv_2": 1.8
                 },
-                "p9": {
-                    "pv_2": 6.6,
-                    "battery_2": 0.4
+                "p6": {
+                    "thermal_1": 1.2,
+                    "pv_2": 9.8
+                },
+                "p7": {
+                    "pv_2": 10.0
                 },
                 "a3": {
-                    "pv_2": 15.0
+                    "thermal_1": 8.0
                 },
                 "a4": {
-                    "thermal_1": 3.2,
-                    "battery_2": 10.8
+                    "pv_1": 7.0
                 },
-                "s2": {
-                    "pv_1": 16.2,
-                    "battery_2": 3.8
+                "battery_1_chg": {
+                    "thermal_1": 20.0
+                },
+                "battery_2_chg": {
+                    "thermal_1": 15.0
                 }
             },
             "sell": 0.0,
             "soc": {
-                "battery_1": 50.2,
-                "battery_2": 14.6
+                "battery_1": 64.81,
+                "battery_2": 55.0
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -368,40 +359,40 @@
         {
             "t": 13,
             "P": {
-                "thermal_1": 27.2,
+                "thermal_1": 30.0,
                 "thermal_2": 0.0,
                 "pv_1": 16.2,
                 "pv_2": 21.6,
-                "battery_1": 20.0,
-                "battery_2": 0.0
+                "battery_1": 0.0,
+                "battery_2": 3.4
             },
             "k": {
                 "p5": {
-                    "thermal_1": 7.8,
-                    "pv_1": 1.2,
-                    "battery_1": 5.0
+                    "pv_1": 16.2,
+                    "pv_2": 1.8
                 },
                 "p6": {
-                    "pv_1": 15.0
+                    "thermal_1": 4.8,
+                    "pv_2": 6.2
                 },
-                "p9": {
-                    "pv_2": 7.0
+                "p7": {
+                    "pv_2": 10.0
                 },
                 "a3": {
-                    "battery_1": 15.0
+                    "thermal_1": 8.0
                 },
                 "a4": {
-                    "thermal_1": 14.0
+                    "pv_2": 3.6,
+                    "battery_2": 3.4
                 },
-                "s2": {
-                    "thermal_1": 5.4,
-                    "pv_2": 14.6
+                "battery_1_chg": {
+                    "thermal_1": 17.2
                 }
             },
             "sell": 0.0,
             "soc": {
-                "battery_1": 30.2,
-                "battery_2": 14.6
+                "battery_1": 82.01,
+                "battery_2": 51.6
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -409,7 +400,7 @@
         {
             "t": 14,
             "P": {
-                "thermal_1": 32.6,
+                "thermal_1": 15.0,
                 "thermal_2": 0.0,
                 "pv_1": 9.6,
                 "pv_2": 12.8,
@@ -417,22 +408,22 @@
                 "battery_2": 0.0
             },
             "k": {
-                "a3": {
-                    "thermal_1": 15.0
+                "p1": {
+                    "pv_1": 2.2,
+                    "pv_2": 12.8
                 },
-                "s2": {
-                    "pv_1": 9.6,
-                    "pv_2": 10.4
+                "a4": {
+                    "thermal_1": 7.0
                 },
                 "battery_1_chg": {
-                    "thermal_1": 17.6,
-                    "pv_2": 2.4
+                    "thermal_1": 8.0,
+                    "pv_1": 7.4
                 }
             },
             "sell": 0.0,
             "soc": {
-                "battery_1": 50.2,
-                "battery_2": 14.6
+                "battery_1": 97.41,
+                "battery_2": 51.6
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -440,36 +431,28 @@
         {
             "t": 15,
             "P": {
-                "thermal_1": 47.6,
+                "thermal_1": 0.0,
                 "thermal_2": 0.0,
                 "pv_1": 6.6,
                 "pv_2": 8.8,
-                "battery_1": 0.0,
-                "battery_2": 0.0
+                "battery_1": 2.6,
+                "battery_2": 15.0
             },
             "k": {
-                "p3": {
-                    "thermal_1": 6.4,
-                    "pv_1": 6.6
+                "p1": {
+                    "pv_1": 3.6,
+                    "pv_2": 8.8,
+                    "battery_1": 2.6
                 },
-                "p7": {
-                    "thermal_1": 7.0
-                },
-                "a3": {
-                    "thermal_1": 15.0
-                },
-                "a4": {
-                    "thermal_1": 5.2,
-                    "pv_2": 8.8
-                },
-                "battery_2_chg": {
-                    "thermal_1": 14.0
+                "p2": {
+                    "pv_1": 3.0,
+                    "battery_2": 15.0
                 }
             },
             "sell": 0.0,
             "soc": {
-                "battery_1": 50.2,
-                "battery_2": 28.6
+                "battery_1": 94.81,
+                "battery_2": 36.6
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -477,37 +460,28 @@
         {
             "t": 16,
             "P": {
-                "thermal_1": 40.6,
+                "thermal_1": 0.0,
                 "thermal_2": 0.0,
                 "pv_1": 3.6,
                 "pv_2": 4.8,
-                "battery_1": 0.0,
-                "battery_2": 5.8
+                "battery_1": 20.0,
+                "battery_2": 4.6
             },
             "k": {
-                "p3": {
-                    "thermal_1": 5.8,
-                    "pv_1": 2.4,
-                    "pv_2": 4.8
+                "p1": {
+                    "pv_1": 3.6,
+                    "battery_1": 6.8,
+                    "battery_2": 4.6
                 },
-                "p4": {
-                    "thermal_1": 11.0
-                },
-                "p9": {
-                    "pv_1": 1.2,
-                    "battery_2": 5.8
-                },
-                "a4": {
-                    "thermal_1": 14.0
-                },
-                "battery_1_chg": {
-                    "thermal_1": 9.8
+                "p2": {
+                    "pv_2": 4.8,
+                    "battery_1": 13.2
                 }
             },
             "sell": 0.0,
             "soc": {
-                "battery_1": 60.0,
-                "battery_2": 22.8
+                "battery_1": 74.81,
+                "battery_2": 32.0
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -515,36 +489,29 @@
         {
             "t": 17,
             "P": {
-                "thermal_1": 55.6,
+                "thermal_1": 15.0,
                 "thermal_2": 0.0,
                 "pv_1": 2.4,
                 "pv_2": 3.2,
-                "battery_1": 0.0,
+                "battery_1": 12.4,
                 "battery_2": 0.0
             },
             "k": {
-                "p4": {
-                    "thermal_1": 7.8,
-                    "pv_2": 3.2
+                "p1": {
+                    "pv_2": 3.2,
+                    "battery_1": 11.8
                 },
-                "p8": {
-                    "thermal_1": 8.6,
-                    "pv_1": 2.4
+                "p2": {
+                    "thermal_1": 15.0,
+                    "pv_1": 2.4,
+                    "battery_1": 0.6
                 },
-                "p9": {
-                    "thermal_1": 7.0
-                },
-                "battery_1_chg": {
-                    "thermal_1": 20.0
-                },
-                "battery_2_chg": {
-                    "thermal_1": 12.2
-                }
+                "battery_2_chg": {}
             },
             "sell": 0.0,
             "soc": {
-                "battery_1": 80.0,
-                "battery_2": 35.0
+                "battery_1": 62.41,
+                "battery_2": 32.0
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -552,33 +519,31 @@
         {
             "t": 18,
             "P": {
-                "thermal_1": 54.2,
+                "thermal_1": 30.0,
                 "thermal_2": 0.0,
                 "pv_1": 1.2,
                 "pv_2": 1.6,
                 "battery_1": 0.0,
-                "battery_2": 0.0
+                "battery_2": 7.0
             },
             "k": {
-                "p3": {
-                    "thermal_1": 13.0
+                "p2": {
+                    "thermal_1": 8.2,
+                    "pv_1": 1.2,
+                    "pv_2": 1.6,
+                    "battery_2": 7.0
                 },
                 "p5": {
-                    "thermal_1": 14.0
+                    "thermal_1": 18.0
                 },
-                "p6": {
-                    "thermal_1": 12.2,
-                    "pv_1": 1.2,
-                    "pv_2": 1.6
-                },
-                "battery_2_chg": {
-                    "thermal_1": 15.0
+                "battery_1_chg": {
+                    "thermal_1": 3.8
                 }
             },
             "sell": 0.0,
             "soc": {
-                "battery_1": 80.0,
-                "battery_2": 50.0
+                "battery_1": 66.21,
+                "battery_2": 25.0
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -586,7 +551,7 @@
         {
             "t": 19,
             "P": {
-                "thermal_1": 65.0,
+                "thermal_1": 45.0,
                 "thermal_2": 0.0,
                 "pv_1": 0.0,
                 "pv_2": 0.0,
@@ -594,26 +559,23 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p3": {
-                    "thermal_1": 13.0
+                "p5": {
+                    "thermal_1": 18.0
                 },
-                "p6": {
-                    "thermal_1": 15.0
-                },
-                "p9": {
+                "a5": {
                     "thermal_1": 7.0
                 },
                 "battery_1_chg": {
-                    "thermal_1": 20.0
+                    "thermal_1": 5.0
                 },
                 "battery_2_chg": {
-                    "thermal_1": 10.0
+                    "thermal_1": 15.0
                 }
             },
             "sell": 0.0,
             "soc": {
-                "battery_1": 100.0,
-                "battery_2": 60.0
+                "battery_1": 71.21,
+                "battery_2": 40.0
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -621,18 +583,25 @@
         {
             "t": 20,
             "P": {
-                "thermal_1": 80.0,
+                "thermal_1": 60.0,
                 "thermal_2": 0.0,
                 "pv_1": 0.0,
                 "pv_2": 0.0,
                 "battery_1": 0.0,
                 "battery_2": 0.0
             },
-            "k": {},
-            "sell": 80.0,
+            "k": {
+                "battery_1_chg": {
+                    "thermal_1": 20.0
+                },
+                "battery_2_chg": {
+                    "thermal_1": 15.0
+                }
+            },
+            "sell": 25.0,
             "soc": {
-                "battery_1": 100.0,
-                "battery_2": 60.0
+                "battery_1": 91.21,
+                "battery_2": 55.0
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -640,22 +609,18 @@
         {
             "t": 21,
             "P": {
-                "thermal_1": 80.0,
+                "thermal_1": 75.0,
                 "thermal_2": 20.0,
                 "pv_1": 0.0,
                 "pv_2": 0.0,
                 "battery_1": 20.0,
                 "battery_2": 15.0
             },
-            "k": {
-                "p2": {
-                    "battery_1": 15.0
-                }
-            },
-            "sell": 120.0,
+            "k": {},
+            "sell": 130.0,
             "soc": {
-                "battery_1": 80.0,
-                "battery_2": 45.0
+                "battery_1": 71.21,
+                "battery_2": 40.0
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -671,14 +636,14 @@
                 "battery_2": 15.0
             },
             "k": {
-                "p2": {
+                "p1": {
                     "battery_1": 15.0
                 }
             },
             "sell": 140.0,
             "soc": {
-                "battery_1": 60.0,
-                "battery_2": 30.0
+                "battery_1": 51.21,
+                "battery_2": 25.0
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -694,14 +659,14 @@
                 "battery_2": 15.0
             },
             "k": {
-                "p2": {
-                    "thermal_2": 15.0
+                "p1": {
+                    "thermal_1": 15.0
                 }
             },
             "sell": 145.0,
             "soc": {
-                "battery_1": 40.0,
-                "battery_2": 15.0
+                "battery_1": 31.21,
+                "battery_2": 10.0
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -717,14 +682,20 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p2": {
+                "p1": {
                     "thermal_1": 15.0
                 },
+                "s1": {
+                    "thermal_1": 9.0
+                },
+                "battery_1_chg": {
+                    "thermal_1": 8.79
+                },
                 "battery_2_chg": {
-                    "thermal_1": 10.0
+                    "thermal_1": 15.0
                 }
             },
-            "sell": 100.0,
+            "sell": 77.21,
             "soc": {
                 "battery_1": 40.0,
                 "battery_2": 25.0
@@ -742,8 +713,12 @@
                 "battery_1": 20.0,
                 "battery_2": 15.0
             },
-            "k": {},
-            "sell": 155.0,
+            "k": {
+                "p1": {
+                    "battery_1": 15.0
+                }
+            },
+            "sell": 140.0,
             "soc": {
                 "battery_1": 20.0,
                 "battery_2": 10.0
@@ -762,12 +737,6 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p1": {
-                    "thermal_1": 15.0
-                },
-                "p8": {
-                    "thermal_1": 11.0
-                },
                 "battery_1_chg": {
                     "thermal_1": 20.0
                 },
@@ -775,7 +744,7 @@
                     "thermal_1": 15.0
                 }
             },
-            "sell": 39.0,
+            "sell": 65.0,
             "soc": {
                 "battery_1": 40.0,
                 "battery_2": 25.0
@@ -791,17 +760,20 @@
                 "pv_1": 0.0,
                 "pv_2": 0.0,
                 "battery_1": 20.0,
-                "battery_2": 15.0
+                "battery_2": 13.8
             },
             "k": {
-                "p1": {
-                    "battery_1": 15.0
+                "p2": {
+                    "thermal_1": 18.0
+                },
+                "p7": {
+                    "thermal_1": 10.0
                 }
             },
-            "sell": 100.0,
+            "sell": 85.8,
             "soc": {
                 "battery_1": 20.0,
-                "battery_2": 10.0
+                "battery_2": 11.2
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -817,23 +789,26 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p1": {
-                    "thermal_1": 15.0
+                "p2": {
+                    "thermal_1": 18.0
                 },
-                "p3": {
-                    "thermal_1": 13.0
+                "p5": {
+                    "thermal_1": 18.0
+                },
+                "p7": {
+                    "thermal_1": 10.0
                 },
                 "battery_1_chg": {
-                    "thermal_1": 20.0
+                    "thermal_1": 19.0
                 },
                 "battery_2_chg": {
                     "thermal_1": 15.0
                 }
             },
-            "sell": 17.0,
+            "sell": 0.0,
             "soc": {
-                "battery_1": 40.0,
-                "battery_2": 25.0
+                "battery_1": 39.0,
+                "battery_2": 26.2
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -849,23 +824,26 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p1": {
-                    "thermal_1": 15.0
+                "p2": {
+                    "thermal_1": 18.0
                 },
-                "p3": {
-                    "thermal_1": 13.0
+                "p4": {
+                    "thermal_1": 11.0
+                },
+                "p5": {
+                    "thermal_1": 18.0
                 },
                 "battery_1_chg": {
-                    "thermal_1": 20.0
+                    "thermal_1": 18.0
                 },
                 "battery_2_chg": {
                     "thermal_1": 15.0
                 }
             },
-            "sell": 17.0,
+            "sell": 0.0,
             "soc": {
-                "battery_1": 60.0,
-                "battery_2": 40.0
+                "battery_1": 57.0,
+                "battery_2": 41.2
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -881,6 +859,15 @@
                 "battery_2": 0.0
             },
             "k": {
+                "p1": {
+                    "thermal_1": 15.0
+                },
+                "p2": {
+                    "thermal_1": 18.0
+                },
+                "p4": {
+                    "thermal_1": 11.0
+                },
                 "battery_1_chg": {
                     "thermal_1": 20.0
                 },
@@ -888,10 +875,10 @@
                     "thermal_1": 15.0
                 }
             },
-            "sell": 45.0,
+            "sell": 1.0,
             "soc": {
-                "battery_1": 80.0,
-                "battery_2": 55.0
+                "battery_1": 77.0,
+                "battery_2": 56.2
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -903,14 +890,18 @@
                 "thermal_2": 0.0,
                 "pv_1": 1.2,
                 "pv_2": 1.6,
-                "battery_1": 20.0,
-                "battery_2": 15.0
+                "battery_1": 0.0,
+                "battery_2": 12.2
             },
-            "k": {},
-            "sell": 117.8,
+            "k": {
+                "p1": {
+                    "thermal_1": 15.0
+                }
+            },
+            "sell": 80.0,
             "soc": {
-                "battery_1": 60.0,
-                "battery_2": 40.0
+                "battery_1": 77.0,
+                "battery_2": 43.99
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -918,18 +909,22 @@
         {
             "t": 32,
             "P": {
-                "thermal_1": 80.0,
+                "thermal_1": 75.0,
                 "thermal_2": 0.0,
                 "pv_1": 4.8,
                 "pv_2": 6.4,
                 "battery_1": 20.0,
                 "battery_2": 15.0
             },
-            "k": {},
-            "sell": 126.2,
+            "k": {
+                "p1": {
+                    "thermal_1": 15.0
+                }
+            },
+            "sell": 106.2,
             "soc": {
-                "battery_1": 40.0,
-                "battery_2": 25.0
+                "battery_1": 57.0,
+                "battery_2": 29.0
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -937,7 +932,7 @@
         {
             "t": 33,
             "P": {
-                "thermal_1": 75.0,
+                "thermal_1": 60.0,
                 "thermal_2": 0.0,
                 "pv_1": 9.6,
                 "pv_2": 12.8,
@@ -945,14 +940,17 @@
                 "battery_2": 15.0
             },
             "k": {
-                "p2": {
-                    "thermal_1": 15.0
+                "p1": {
+                    "battery_2": 15.0
+                },
+                "p3": {
+                    "battery_1": 8.0
                 }
             },
-            "sell": 117.4,
+            "sell": 94.4,
             "soc": {
-                "battery_1": 20.0,
-                "battery_2": 10.0
+                "battery_1": 37.0,
+                "battery_2": 13.99
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -960,7 +958,7 @@
         {
             "t": 34,
             "P": {
-                "thermal_1": 60.0,
+                "thermal_1": 45.0,
                 "thermal_2": 0.0,
                 "pv_1": 6.0,
                 "pv_2": 8.0,
@@ -968,31 +966,28 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p2": {
-                    "thermal_1": 15.0
-                },
                 "p3": {
-                    "thermal_1": 13.0
+                    "thermal_1": 8.0
                 },
                 "p5": {
-                    "thermal_1": 6.0,
-                    "pv_2": 8.0
+                    "thermal_1": 18.0
                 },
-                "p6": {
-                    "thermal_1": 9.0,
+                "p7": {
+                    "thermal_1": 4.0,
                     "pv_1": 6.0
                 },
-                "p9": {
-                    "thermal_1": 7.0
+                "battery_1_chg": {
+                    "thermal_1": 8.0
                 },
                 "battery_2_chg": {
-                    "thermal_1": 10.0
+                    "thermal_1": 7.0,
+                    "pv_2": 8.0
                 }
             },
             "sell": 0.0,
             "soc": {
-                "battery_1": 20.0,
-                "battery_2": 20.0
+                "battery_1": 45.0,
+                "battery_2": 28.99
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -1000,7 +995,7 @@
         {
             "t": 35,
             "P": {
-                "thermal_1": 45.0,
+                "thermal_1": 30.0,
                 "thermal_2": 0.0,
                 "pv_1": 16.8,
                 "pv_2": 22.4,
@@ -1008,37 +1003,23 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p2": {
-                    "pv_1": 15.0
+                "p6": {
+                    "pv_2": 11.0
                 },
-                "p3": {
-                    "thermal_1": 13.0
-                },
-                "p8": {
-                    "thermal_1": 9.2,
-                    "pv_1": 1.8
-                },
-                "p9": {
-                    "thermal_1": 7.0
-                },
-                "a5": {
-                    "thermal_1": 15.0
-                },
-                "s3": {
-                    "pv_2": 20.0
+                "p7": {
+                    "thermal_1": 10.0
                 },
                 "battery_1_chg": {
-                    "thermal_1": 0.8,
-                    "pv_2": 1.7
+                    "thermal_1": 20.0
                 },
                 "battery_2_chg": {
-                    "pv_2": 0.7
+                    "pv_1": 15.0
                 }
             },
-            "sell": 0.0,
+            "sell": 13.2,
             "soc": {
-                "battery_1": 22.5,
-                "battery_2": 20.7
+                "battery_1": 65.0,
+                "battery_2": 43.99
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -1046,38 +1027,30 @@
         {
             "t": 36,
             "P": {
-                "thermal_1": 40.3,
+                "thermal_1": 15.0,
                 "thermal_2": 0.0,
                 "pv_1": 7.2,
                 "pv_2": 9.6,
-                "battery_1": 2.5,
-                "battery_2": 10.4
+                "battery_1": 0.0,
+                "battery_2": 0.0
             },
             "k": {
-                "p2": {
-                    "thermal_1": 12.4,
-                    "pv_1": 2.6
+                "p6": {
+                    "pv_1": 7.2,
+                    "pv_2": 3.8
                 },
-                "p9": {
-                    "pv_2": 7.0
+                "battery_1_chg": {
+                    "thermal_1": 15.0,
+                    "pv_2": 5.0
                 },
-                "a5": {
-                    "pv_1": 4.6,
-                    "battery_2": 10.4
-                },
-                "a6": {
-                    "thermal_1": 13.0
-                },
-                "s3": {
-                    "thermal_1": 14.9,
-                    "pv_2": 2.6,
-                    "battery_1": 2.5
+                "battery_2_chg": {
+                    "pv_2": 0.8
                 }
             },
             "sell": 0.0,
             "soc": {
-                "battery_1": 20.0,
-                "battery_2": 10.3
+                "battery_1": 85.0,
+                "battery_2": 44.8
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -1085,31 +1058,26 @@
         {
             "t": 37,
             "P": {
-                "thermal_1": 25.3,
+                "thermal_1": 0.0,
                 "thermal_2": 0.0,
                 "pv_1": 9.6,
                 "pv_2": 12.8,
                 "battery_1": 0.0,
-                "battery_2": 0.3
+                "battery_2": 0.0
             },
             "k": {
-                "a5": {
-                    "thermal_1": 15.0
-                },
-                "a6": {
-                    "pv_2": 12.8,
-                    "battery_2": 0.2
-                },
-                "s3": {
-                    "thermal_1": 10.3,
+                "p6": {
                     "pv_1": 9.6,
-                    "battery_2": 0.1
+                    "pv_2": 1.4
+                },
+                "battery_2_chg": {
+                    "pv_2": 11.4
                 }
             },
             "sell": 0.0,
             "soc": {
-                "battery_1": 20.0,
-                "battery_2": 10.0
+                "battery_1": 85.0,
+                "battery_2": 56.2
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -1117,30 +1085,25 @@
         {
             "t": 38,
             "P": {
-                "thermal_1": 27.8,
+                "thermal_1": 0.0,
                 "thermal_2": 0.0,
                 "pv_1": 4.8,
                 "pv_2": 6.4,
                 "battery_1": 0.0,
-                "battery_2": 0.0
+                "battery_2": 3.8
             },
             "k": {
-                "p4": {
-                    "thermal_1": 11.0
-                },
-                "a5": {
-                    "thermal_1": 8.6,
-                    "pv_2": 6.4
-                },
-                "a6": {
-                    "thermal_1": 8.2,
-                    "pv_1": 4.8
+                "p1": {
+                    "pv_1": 4.8,
+                    "pv_2": 6.4,
+                    "battery_1": 0.0,
+                    "battery_2": 3.8
                 }
             },
             "sell": 0.0,
             "soc": {
-                "battery_1": 20.0,
-                "battery_2": 10.0
+                "battery_1": 85.0,
+                "battery_2": 52.4
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -1148,30 +1111,31 @@
         {
             "t": 39,
             "P": {
-                "thermal_1": 15.0,
+                "thermal_1": 0.0,
                 "thermal_2": 0.0,
                 "pv_1": 7.8,
                 "pv_2": 10.4,
-                "battery_1": 0.0,
-                "battery_2": 0.0
+                "battery_1": 12.8,
+                "battery_2": 15.0
             },
             "k": {
-                "p4": {
-                    "thermal_1": 7.8,
-                    "pv_1": 3.2
+                "p1": {
+                    "pv_2": 10.4,
+                    "battery_2": 4.6
                 },
-                "p6": {
-                    "pv_1": 4.6,
-                    "pv_2": 10.4
+                "p2": {
+                    "pv_1": 5.2,
+                    "battery_1": 12.8
                 },
-                "battery_2_chg": {
-                    "thermal_1": 7.2
+                "a6": {
+                    "pv_1": 2.6,
+                    "battery_2": 10.4
                 }
             },
             "sell": 0.0,
             "soc": {
-                "battery_1": 20.0,
-                "battery_2": 17.2
+                "battery_1": 72.2,
+                "battery_2": 37.4
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -1179,30 +1143,32 @@
         {
             "t": 40,
             "P": {
-                "thermal_1": 24.6,
+                "thermal_1": 15.0,
                 "thermal_2": 0.0,
                 "pv_1": 4.8,
                 "pv_2": 6.4,
-                "battery_1": 0.0,
-                "battery_2": 0.0
+                "battery_1": 11.6,
+                "battery_2": 8.2
             },
             "k": {
-                "p9": {
-                    "thermal_1": 0.6,
+                "p1": {
+                    "thermal_1": 8.4,
+                    "battery_1": 6.6
+                },
+                "p2": {
+                    "pv_1": 4.8,
+                    "battery_1": 5.0,
+                    "battery_2": 8.2
+                },
+                "a6": {
+                    "thermal_1": 6.6,
                     "pv_2": 6.4
-                },
-                "battery_1_chg": {
-                    "thermal_1": 20.0
-                },
-                "battery_2_chg": {
-                    "thermal_1": 4.0,
-                    "pv_1": 4.8
                 }
             },
             "sell": 0.0,
             "soc": {
-                "battery_1": 40.0,
-                "battery_2": 26.0
+                "battery_1": 60.6,
+                "battery_2": 29.2
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -1210,33 +1176,32 @@
         {
             "t": 41,
             "P": {
-                "thermal_1": 39.6,
+                "thermal_1": 30.0,
                 "thermal_2": 0.0,
                 "pv_1": 3.6,
                 "pv_2": 4.8,
                 "battery_1": 0.0,
-                "battery_2": 0.0
+                "battery_2": 5.6
             },
             "k": {
-                "p7": {
-                    "pv_1": 2.2,
-                    "pv_2": 4.8
+                "p1": {
+                    "thermal_1": 6.6,
+                    "pv_1": 3.6,
+                    "pv_2": 4.8,
+                    "battery_1": 0.0
                 },
-                "p9": {
-                    "thermal_1": 7.0
+                "p2": {
+                    "thermal_1": 12.4,
+                    "battery_2": 5.6
                 },
-                "battery_1_chg": {
-                    "thermal_1": 20.0
-                },
-                "battery_2_chg": {
-                    "thermal_1": 12.6,
-                    "pv_1": 1.4
+                "p4": {
+                    "thermal_1": 11.0
                 }
             },
             "sell": 0.0,
             "soc": {
-                "battery_1": 60.0,
-                "battery_2": 40.0
+                "battery_1": 60.6,
+                "battery_2": 23.6
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -1244,7 +1209,7 @@
         {
             "t": 42,
             "P": {
-                "thermal_1": 54.6,
+                "thermal_1": 45.0,
                 "thermal_2": 0.0,
                 "pv_1": 3.6,
                 "pv_2": 4.8,
@@ -1252,28 +1217,25 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p3": {
-                    "thermal_1": 4.6,
-                    "pv_1": 3.6,
+                "p2": {
+                    "thermal_1": 18.0
+                },
+                "p4": {
+                    "thermal_1": 6.2,
                     "pv_2": 4.8
                 },
-                "p5": {
-                    "thermal_1": 14.0
-                },
-                "p8": {
-                    "thermal_1": 11.0
-                },
                 "battery_1_chg": {
-                    "thermal_1": 20.0
+                    "thermal_1": 9.4
                 },
                 "battery_2_chg": {
-                    "thermal_1": 5.0
+                    "thermal_1": 11.4,
+                    "pv_1": 3.6
                 }
             },
             "sell": 0.0,
             "soc": {
-                "battery_1": 80.0,
-                "battery_2": 45.0
+                "battery_1": 70.0,
+                "battery_2": 38.6
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -1281,7 +1243,7 @@
         {
             "t": 43,
             "P": {
-                "thermal_1": 68.6,
+                "thermal_1": 51.6,
                 "thermal_2": 0.0,
                 "pv_1": 0.6,
                 "pv_2": 0.8,
@@ -1289,28 +1251,22 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p3": {
-                    "thermal_1": 11.6,
-                    "pv_1": 0.6,
-                    "pv_2": 0.8
-                },
-                "p6": {
-                    "thermal_1": 15.0
-                },
-                "p9": {
-                    "thermal_1": 7.0
+                "p5": {
+                    "thermal_1": 18.0
                 },
                 "battery_1_chg": {
                     "thermal_1": 20.0
                 },
                 "battery_2_chg": {
-                    "thermal_1": 15.0
+                    "thermal_1": 13.6,
+                    "pv_1": 0.6,
+                    "pv_2": 0.8
                 }
             },
             "sell": 0.0,
             "soc": {
-                "battery_1": 100.0,
-                "battery_2": 60.0
+                "battery_1": 90.0,
+                "battery_2": 53.6
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -1318,7 +1274,7 @@
         {
             "t": 44,
             "P": {
-                "thermal_1": 80.0,
+                "thermal_1": 66.6,
                 "thermal_2": 0.0,
                 "pv_1": 0.0,
                 "pv_2": 0.0,
@@ -1326,11 +1282,17 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p6": {
-                    "thermal_1": 15.0
+                "p5": {
+                    "thermal_1": 18.0
+                },
+                "battery_1_chg": {
+                    "thermal_1": 10.0
+                },
+                "battery_2_chg": {
+                    "thermal_1": 6.4
                 }
             },
-            "sell": 65.0,
+            "sell": 32.19,
             "soc": {
                 "battery_1": 100.0,
                 "battery_2": 60.0
@@ -1349,11 +1311,11 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p2": {
-                    "thermal_1": 15.0
-                },
                 "p5": {
-                    "thermal_1": 14.0
+                    "thermal_1": 18.0
+                },
+                "a7": {
+                    "thermal_1": 11.0
                 }
             },
             "sell": 51.0,
@@ -1375,11 +1337,14 @@
                 "battery_2": 15.0
             },
             "k": {
-                "p2": {
-                    "battery_1": 15.0
+                "p1": {
+                    "thermal_1": 15.0
+                },
+                "a7": {
+                    "thermal_1": 11.0
                 }
             },
-            "sell": 100.0,
+            "sell": 89.0,
             "soc": {
                 "battery_1": 80.0,
                 "battery_2": 45.0
@@ -1398,14 +1363,14 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p2": {
+                "p1": {
                     "thermal_1": 15.0
                 },
-                "p4": {
-                    "thermal_1": 11.0
+                "p7": {
+                    "thermal_1": 10.0
                 }
             },
-            "sell": 54.0,
+            "sell": 55.0,
             "soc": {
                 "battery_1": 80.0,
                 "battery_2": 45.0
@@ -1424,14 +1389,14 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p2": {
+                "p1": {
                     "thermal_1": 15.0
                 },
-                "p4": {
-                    "thermal_1": 11.0
+                "p3": {
+                    "thermal_1": 8.0
                 },
-                "p8": {
-                    "thermal_1": 11.0
+                "p7": {
+                    "thermal_1": 10.0
                 },
                 "battery_1_chg": {
                     "thermal_1": 20.0
@@ -1440,7 +1405,7 @@
                     "thermal_1": 15.0
                 }
             },
-            "sell": 8.0,
+            "sell": 12.0,
             "soc": {
                 "battery_1": 100.0,
                 "battery_2": 60.0
@@ -1458,8 +1423,15 @@
                 "battery_1": 20.0,
                 "battery_2": 15.0
             },
-            "k": {},
-            "sell": 115.0,
+            "k": {
+                "p1": {
+                    "thermal_1": 15.0
+                },
+                "p3": {
+                    "thermal_1": 8.0
+                }
+            },
+            "sell": 92.0,
             "soc": {
                 "battery_1": 80.0,
                 "battery_2": 45.0
@@ -1478,11 +1450,11 @@
                 "battery_2": 15.0
             },
             "k": {
-                "p1": {
-                    "battery_1": 15.0
+                "s3": {
+                    "thermal_1": 13.0
                 }
             },
-            "sell": 100.0,
+            "sell": 102.0,
             "soc": {
                 "battery_1": 60.0,
                 "battery_2": 30.0
@@ -1501,26 +1473,23 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p1": {
-                    "thermal_1": 15.0
+                "p2": {
+                    "thermal_1": 18.0
                 },
-                "p3": {
+                "s2": {
+                    "thermal_1": 8.0
+                },
+                "s3": {
                     "thermal_1": 13.0
                 },
-                "p9": {
-                    "thermal_1": 7.0
-                },
-                "battery_1_chg": {
-                    "thermal_1": 20.0
-                },
-                "battery_2_chg": {
-                    "thermal_1": 15.0
+                "a8": {
+                    "thermal_1": 5.0
                 }
             },
-            "sell": 10.0,
+            "sell": 36.0,
             "soc": {
-                "battery_1": 80.0,
-                "battery_2": 45.0
+                "battery_1": 60.0,
+                "battery_2": 30.0
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -1536,20 +1505,32 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p1": {
-                    "thermal_1": 15.0
+                "p2": {
+                    "thermal_1": 18.0
                 },
-                "p3": {
-                    "thermal_1": 13.0
+                "s2": {
+                    "thermal_1": 8.0
                 },
-                "p9": {
-                    "thermal_1": 7.0
+                "a8": {
+                    "thermal_1": 5.0
+                },
+                "a9": {
+                    "thermal_1": 8.0
+                },
+                "a10": {
+                    "thermal_1": 10.0
+                },
+                "battery_1_chg": {
+                    "thermal_1": 20.0
+                },
+                "battery_2_chg": {
+                    "thermal_1": 11.0
                 }
             },
-            "sell": 45.0,
+            "sell": 0.0,
             "soc": {
                 "battery_1": 80.0,
-                "battery_2": 45.0
+                "battery_2": 41.0
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -1565,11 +1546,17 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p1": {
-                    "thermal_1": 15.0
+                "p2": {
+                    "thermal_1": 18.0
                 },
-                "p9": {
-                    "thermal_1": 7.0
+                "s2": {
+                    "thermal_1": 8.0
+                },
+                "a9": {
+                    "thermal_1": 8.0
+                },
+                "a10": {
+                    "thermal_1": 10.0
                 },
                 "battery_1_chg": {
                     "thermal_1": 20.0
@@ -1578,10 +1565,10 @@
                     "thermal_1": 15.0
                 }
             },
-            "sell": 43.0,
+            "sell": 21.0,
             "soc": {
                 "battery_1": 100.0,
-                "battery_2": 60.0
+                "battery_2": 56.0
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -1596,8 +1583,21 @@
                 "battery_1": 0.0,
                 "battery_2": 0.0
             },
-            "k": {},
-            "sell": 121.4,
+            "k": {
+                "p1": {
+                    "thermal_1": 15.0
+                },
+                "p2": {
+                    "thermal_1": 18.0
+                },
+                "a9": {
+                    "thermal_1": 8.0
+                },
+                "battery_2_chg": {
+                    "thermal_1": 4.0
+                }
+            },
+            "sell": 76.4,
             "soc": {
                 "battery_1": 100.0,
                 "battery_2": 60.0
@@ -1616,14 +1616,14 @@
                 "battery_2": 15.0
             },
             "k": {
-                "a7": {
-                    "thermal_1": 15.0
+                "p1": {
+                    "thermal_2": 15.0
                 },
-                "s4": {
-                    "thermal_2": 20.0
+                "a9": {
+                    "thermal_2": 8.0
                 }
             },
-            "sell": 144.6,
+            "sell": 156.6,
             "soc": {
                 "battery_1": 80.0,
                 "battery_2": 45.0
@@ -1642,14 +1642,11 @@
                 "battery_2": 15.0
             },
             "k": {
-                "a7": {
+                "p1": {
                     "battery_1": 15.0
-                },
-                "s4": {
-                    "thermal_2": 20.0
                 }
             },
-            "sell": 174.0,
+            "sell": 194.0,
             "soc": {
                 "battery_1": 60.0,
                 "battery_2": 30.0
@@ -1668,14 +1665,11 @@
                 "battery_2": 15.0
             },
             "k": {
-                "p2": {
-                    "thermal_2": 15.0
-                },
-                "a7": {
-                    "thermal_2": 15.0
+                "p1": {
+                    "pv_2": 15.0
                 }
             },
-            "sell": 204.8,
+            "sell": 219.8,
             "soc": {
                 "battery_1": 40.0,
                 "battery_2": 15.0
@@ -1693,15 +1687,8 @@
                 "battery_1": 20.0,
                 "battery_2": 5.0
             },
-            "k": {
-                "p2": {
-                    "pv_2": 15.0
-                },
-                "a7": {
-                    "thermal_2": 15.0
-                }
-            },
-            "sell": 207.0,
+            "k": {},
+            "sell": 237.0,
             "soc": {
                 "battery_1": 20.0,
                 "battery_2": 10.0
@@ -1720,11 +1707,11 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p2": {
-                    "thermal_2": 15.0
+                "a11": {
+                    "thermal_1": 8.0
                 }
             },
-            "sell": 184.4,
+            "sell": 191.4,
             "soc": {
                 "battery_1": 20.0,
                 "battery_2": 10.0
@@ -1743,14 +1730,14 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p2": {
-                    "pv_1": 15.0
-                },
-                "p8": {
+                "p4": {
                     "pv_1": 11.0
+                },
+                "a11": {
+                    "pv_1": 8.0
                 }
             },
-            "sell": 141.2,
+            "sell": 148.2,
             "soc": {
                 "battery_1": 20.0,
                 "battery_2": 10.0
@@ -1769,14 +1756,24 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p5": {
-                    "thermal_1": 14.0
+                "p4": {
+                    "pv_1": 11.0
+                },
+                "p7": {
+                    "pv_2": 10.0
+                },
+                "a11": {
+                    "pv_2": 8.0
+                },
+                "battery_1_chg": {},
+                "battery_2_chg": {
+                    "thermal_1": 5.6
                 }
             },
-            "sell": 141.0,
+            "sell": 120.4,
             "soc": {
                 "battery_1": 20.0,
-                "battery_2": 10.0
+                "battery_2": 15.6
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -1792,20 +1789,29 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p9": {
-                    "pv_2": 7.0
+                "p1": {
+                    "pv_2": 15.0
+                },
+                "p5": {
+                    "pv_2": 18.0
+                },
+                "p6": {
+                    "pv_2": 11.0
+                },
+                "p7": {
+                    "pv_2": 10.0
                 },
                 "battery_1_chg": {
                     "pv_1": 20.0
                 },
                 "battery_2_chg": {
-                    "pv_1": 10.0
+                    "pv_1": 15.0
                 }
             },
-            "sell": 96.0,
+            "sell": 44.0,
             "soc": {
                 "battery_1": 40.0,
-                "battery_2": 20.0
+                "battery_2": 30.6
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -1821,39 +1827,29 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p3": {
-                    "pv_1": 13.0
+                "p1": {
+                    "pv_2": 15.0
                 },
-                "p4": {
-                    "pv_2": 11.0
+                "p2": {
+                    "pv_2": 18.0
                 },
                 "p5": {
-                    "pv_1": 14.0
+                    "pv_2": 18.0
                 },
                 "p6": {
-                    "pv_1": 14.0,
-                    "pv_2": 1.0
-                },
-                "p7": {
-                    "pv_1": 7.0
-                },
-                "p8": {
                     "pv_2": 11.0
                 },
-                "p9": {
-                    "pv_2": 7.0
-                },
                 "battery_1_chg": {
-                    "pv_2": 20.0
+                    "pv_1": 20.0
                 },
                 "battery_2_chg": {
-                    "pv_2": 14.0
+                    "pv_1": 15.0
                 }
             },
-            "sell": 0.0,
+            "sell": 15.0,
             "soc": {
                 "battery_1": 60.0,
-                "battery_2": 34.0
+                "battery_2": 45.6
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -1861,7 +1857,7 @@
         {
             "t": 64,
             "P": {
-                "thermal_1": 0.0,
+                "thermal_1": 15.0,
                 "thermal_2": 0.0,
                 "pv_1": 36.0,
                 "pv_2": 48.0,
@@ -1869,33 +1865,30 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p3": {
-                    "pv_1": 13.0
+                "p1": {
+                    "pv_2": 15.0
                 },
-                "p4": {
-                    "pv_1": 11.0
+                "p2": {
+                    "pv_1": 18.0
+                },
+                "p5": {
+                    "pv_1": 18.0
                 },
                 "p6": {
-                    "pv_1": 5.0,
-                    "pv_2": 10.0
+                    "pv_2": 11.0
                 },
-                "p7": {
-                    "pv_2": 7.0
-                },
-                "p9": {
-                    "pv_1": 7.0
+                "s4": {
+                    "pv_2": 17.0
                 },
                 "battery_1_chg": {
-                    "pv_2": 20.0
-                },
-                "battery_2_chg": {
-                    "pv_2": 11.0
+                    "thermal_1": 15.0,
+                    "pv_2": 5.0
                 }
             },
             "sell": 0.0,
             "soc": {
                 "battery_1": 80.0,
-                "battery_2": 45.0
+                "battery_2": 45.6
             },
             "missed_aperiodic": [],
             "rejected_sporadic": []
@@ -1903,7 +1896,7 @@
         {
             "t": 65,
             "P": {
-                "thermal_1": 15.0,
+                "thermal_1": 30.0,
                 "thermal_2": 0.0,
                 "pv_1": 21.6,
                 "pv_2": 28.8,
@@ -1911,24 +1904,27 @@
                 "battery_2": 0.0
             },
             "k": {
-                "a8": {
-                    "pv_1": 15.0
+                "p1": {
+                    "pv_1": 4.2,
+                    "pv_2": 10.8
                 },
-                "s5": {
-                    "pv_1": 6.6,
-                    "pv_2": 11.4
+                "p2": {
+                    "pv_2": 18.0
+                },
+                "s4": {
+                    "thermal_1": 17.0
                 },
                 "battery_1_chg": {
-                    "thermal_1": 15.0,
-                    "pv_2": 2.4
+                    "thermal_1": 13.0,
+                    "pv_1": 3.0
                 },
                 "battery_2_chg": {
-                    "pv_2": 15.0
+                    "pv_1": 14.4
                 }
             },
             "sell": 0.0,
             "soc": {
-                "battery_1": 97.4,
+                "battery_1": 96.0,
                 "battery_2": 60.0
             },
             "missed_aperiodic": [],
@@ -1937,7 +1933,7 @@
         {
             "t": 66,
             "P": {
-                "thermal_1": 30.0,
+                "thermal_1": 45.0,
                 "thermal_2": 0.0,
                 "pv_1": 7.2,
                 "pv_2": 9.6,
@@ -1945,24 +1941,16 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p3": {
-                    "pv_1": 7.2,
-                    "pv_2": 5.8
-                },
-                "a8": {
-                    "thermal_1": 12.0,
-                    "pv_2": 3.0
-                },
-                "s5": {
+                "p2": {
                     "thermal_1": 18.0
                 },
                 "battery_1_chg": {
-                    "pv_2": 0.8
+                    "thermal_1": 4.0
                 }
             },
-            "sell": 0.0,
+            "sell": 39.8,
             "soc": {
-                "battery_1": 98.2,
+                "battery_1": 100.0,
                 "battery_2": 60.0
             },
             "missed_aperiodic": [],
@@ -1971,7 +1959,7 @@
         {
             "t": 67,
             "P": {
-                "thermal_1": 45.0,
+                "thermal_1": 60.0,
                 "thermal_2": 20.0,
                 "pv_1": 0.6,
                 "pv_2": 0.8,
@@ -1979,18 +1967,11 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p3": {
-                    "thermal_1": 13.0
-                },
-                "s5": {
-                    "thermal_1": 17.2,
-                    "pv_2": 0.8
-                },
-                "battery_1_chg": {
-                    "thermal_1": 1.8
+                "p7": {
+                    "thermal_1": 10.0
                 }
             },
-            "sell": 33.6,
+            "sell": 71.4,
             "soc": {
                 "battery_1": 100.0,
                 "battery_2": 60.0
@@ -2001,15 +1982,19 @@
         {
             "t": 68,
             "P": {
-                "thermal_1": 60.0,
+                "thermal_1": 75.0,
                 "thermal_2": 40.0,
                 "pv_1": 0.0,
                 "pv_2": 0.0,
                 "battery_1": 20.0,
                 "battery_2": 5.0
             },
-            "k": {},
-            "sell": 125.0,
+            "k": {
+                "p7": {
+                    "thermal_2": 10.0
+                }
+            },
+            "sell": 130.0,
             "soc": {
                 "battery_1": 80.0,
                 "battery_2": 55.0
@@ -2020,19 +2005,15 @@
         {
             "t": 69,
             "P": {
-                "thermal_1": 75.0,
+                "thermal_1": 80.0,
                 "thermal_2": 45.0,
                 "pv_1": 0.0,
                 "pv_2": 0.0,
                 "battery_1": 20.0,
                 "battery_2": 15.0
             },
-            "k": {
-                "p2": {
-                    "battery_2": 15.0
-                }
-            },
-            "sell": 140.0,
+            "k": {},
+            "sell": 160.0,
             "soc": {
                 "battery_1": 60.0,
                 "battery_2": 40.0
@@ -2050,12 +2031,8 @@
                 "battery_1": 20.0,
                 "battery_2": 15.0
             },
-            "k": {
-                "p2": {
-                    "battery_2": 15.0
-                }
-            },
-            "sell": 145.0,
+            "k": {},
+            "sell": 160.0,
             "soc": {
                 "battery_1": 40.0,
                 "battery_2": 25.0
@@ -2074,14 +2051,14 @@
                 "battery_2": 15.0
             },
             "k": {
-                "p2": {
-                    "battery_1": 15.0
+                "p3": {
+                    "thermal_1": 8.0
                 },
-                "p6": {
-                    "thermal_2": 15.0
+                "p4": {
+                    "battery_1": 11.0
                 }
             },
-            "sell": 130.0,
+            "sell": 141.0,
             "soc": {
                 "battery_1": 20.0,
                 "battery_2": 10.0
@@ -2100,20 +2077,14 @@
                 "battery_2": 0.0
             },
             "k": {
-                "p2": {
-                    "thermal_1": 15.0
+                "p3": {
+                    "thermal_2": 8.0
                 },
-                "p5": {
-                    "thermal_1": 14.0
-                },
-                "p6": {
-                    "thermal_1": 15.0
-                },
-                "p8": {
-                    "thermal_1": 11.0
+                "p4": {
+                    "thermal_2": 11.0
                 }
             },
-            "sell": 70.0,
+            "sell": 106.0,
             "soc": {
                 "battery_1": 20.0,
                 "battery_2": 10.0

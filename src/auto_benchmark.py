@@ -7,19 +7,21 @@ import os
 from datetime import datetime
 
 # ==========================================
-# 1. °t¸m°Ï (½Ğ½T»{³o¨ÇÀÉ¦W»P§AªºÀÉ®×¤@­P)
+# 1. é…ç½®å€ (è«‹ç¢ºèªé€™äº›æª”åèˆ‡ä½ çš„æª”æ¡ˆä¸€è‡´)
 # ==========================================
-FILE_GENERATE = "task_generate.py"  # ²£¥Í¥ô°Èªº¸}¥»
-FILE_LEVEL1 = "scheduler_v1_1.py"        # Level 1 ¸}¥»
-FILE_LEVEL2 = "scheduler_v2_0.py"             # Level 2 ¸}¥»
-FILE_EVALUATE = "evaluator.py"
-FILE_READ = "evaluation_results.json"
-OUTPUT_CSV = "benchmark_results.csv" # ¿é¥Xªº³øªí¦WºÙ
+FILE_GENERATE = "src/task_generator.py"              # âš ï¸ è£œä¸Š src/ï¼Œä¸”æª”åæ˜¯ generator
+FILE_GENERATE_2 = "src/task_generate_unexpected.py"  # âš ï¸ è£œä¸Š src/
+FILE_LEVEL1 = "src/scheduler.py"                # âš ï¸ è£œä¸Š src/
+FILE_LEVEL2 = "src/scheduler_v2_0.py"                # âš ï¸ è£œä¸Š src/
+FILE_EVALUATE = "src/evaluator.py"                   # âš ï¸ è£œä¸Š src/
 
-TOTAL_RUNS = 500  # §A·Q­n°õ¦æªºÁ`¦¸¼Æ (ºÎÄ±«e¥i¥H³] 500 ©Î 1000)
+FILE_READ = "output/evaluation_results.json"         # âš ï¸ è£œä¸Š output/
+OUTPUT_CSV = "output/benchmark_results.csv"          # (é¸æ“‡æ€§) å»ºè­°ä¸€èµ·æ”¾é€² output è³‡æ–™å¤¾æ¯”è¼ƒä¹¾æ·¨
+
+TOTAL_RUNS = 500  # ä½ æƒ³è¦åŸ·è¡Œçš„ç¸½æ¬¡æ•¸ (ç¡è¦ºå‰å¯ä»¥è¨­ 500 æˆ– 1000)
 
 def remove_stale_file(filepath):
-    """¨¾¤îÅª¨ì¤W¤@½üªºÂÂ¦¨ÁZ¡A°õ¦æ«e¥ı§R°£ÂÂÀÉ®×"""
+    """é˜²æ­¢è®€åˆ°ä¸Šä¸€è¼ªçš„èˆŠæˆç¸¾ï¼ŒåŸ·è¡Œå‰å…ˆåˆªé™¤èˆŠæª”æ¡ˆ"""
     if os.path.exists(filepath):
         try:
             os.remove(filepath)
@@ -36,67 +38,68 @@ def read_evaluation():
         return None
     
 # ==========================================
-# 3. ¥D´`Àô
+# 3. ä¸»å¾ªç’°
 # ==========================================
 def main():
     
-    # ¬ö¿ı¬O§_¤w¸g¼g¤J¹L CSV ªº¼ĞÃD (Header)
+    # ç´€éŒ„æ˜¯å¦å·²ç¶“å¯«å…¥é CSV çš„æ¨™é¡Œ (Header)
     header_written = False
     fieldnames = []
 
-    # ¨Ï¥Î utf-8-sig ½T«O Excel ¥´¶}¤£·|¶Ã½X
+    # ä½¿ç”¨ utf-8-sig ç¢ºä¿ Excel æ‰“é–‹ä¸æœƒäº‚ç¢¼
     with open(OUTPUT_CSV, mode='a', newline='', encoding='utf-8-sig') as csvfile:
         writer = None
 
         for i in range(1, TOTAL_RUNS + 1):
             print(f"\n[Iteration {i} / {TOTAL_RUNS}] {datetime.now().strftime('%H:%M:%S')}")
             
-            # ³o¦^¦X­n¼g¤J CSV ªº¤@¾ã¦C¸ê®Æ
+            # é€™å›åˆè¦å¯«å…¥ CSV çš„ä¸€æ•´åˆ—è³‡æ–™
             row_data = {
                 'Iteration': i, 
             }
 
             # --------------------------------------------------
-            # ¨BÆJ A¡G²£¥Í·s¥ô°È
+            # æ­¥é©Ÿ Aï¼šç”¢ç”Ÿæ–°ä»»å‹™
             # --------------------------------------------------
             subprocess.run(["python", FILE_GENERATE], capture_output=True)
+            if((i-1) % 10 == 0): subprocess.run(["python", FILE_GENERATE_2], capture_output=True)
 
             # --------------------------------------------------
-            # ¨BÆJ B¡G°õ¦æ Level 1 ¨Ãµû¦ô
+            # æ­¥é©Ÿ Bï¼šåŸ·è¡Œ Level 1 ä¸¦è©•ä¼°
             # --------------------------------------------------
             print("  -> Level 1")
-            remove_stale_file(FILE_READ) # ²M°£ÂÂ¦¨ÁZ
-            subprocess.run(["python", FILE_LEVEL1], capture_output=True)   # ¶] L1
-            subprocess.run(["python", FILE_EVALUATE], capture_output=True) # µû¦ô L1
+            remove_stale_file(FILE_READ) # æ¸…é™¤èˆŠæˆç¸¾
+            subprocess.run(["python", FILE_LEVEL1], capture_output=True)   # è·‘ L1
+            subprocess.run(["python", FILE_EVALUATE], capture_output=True) # è©•ä¼° L1
             
             l1_data = read_evaluation()
             if l1_data:
-                # °ÊºA±N JSON ¸Ì­±ªº©Ò¦³ key ¥[¤W L1_ «eºó¦s°_¨Ó
+                # å‹•æ…‹å°‡ JSON è£¡é¢çš„æ‰€æœ‰ key åŠ ä¸Š L1_ å‰ç¶´å­˜èµ·ä¾†
                 for k, v in l1_data.items():
                     row_data[f"L1_{k}"] = v
             else:
                 row_data["L1_Status"] = "Failed"
 
             # --------------------------------------------------
-            # ¨BÆJ C¡G°õ¦æ Level 2 ¨Ãµû¦ô (¨Ï¥Î¬Û¦Pªº¥ô°È)
+            # æ­¥é©Ÿ Cï¼šåŸ·è¡Œ Level 2 ä¸¦è©•ä¼° (ä½¿ç”¨ç›¸åŒçš„ä»»å‹™)
             # --------------------------------------------------
             print("  -> Level 2")
-            remove_stale_file(FILE_READ) # ²M°£ L1 ªº¦¨ÁZ
-            subprocess.run(["python", FILE_LEVEL2], capture_output=True)   # ¶] L2
-            subprocess.run(["python", FILE_EVALUATE], capture_output=True) # µû¦ô L2
+            remove_stale_file(FILE_READ) # æ¸…é™¤ L1 çš„æˆç¸¾
+            subprocess.run(["python", FILE_LEVEL2], capture_output=True)   # è·‘ L2
+            subprocess.run(["python", FILE_EVALUATE], capture_output=True) # è©•ä¼° L2
             
             l2_data = read_evaluation()
             if l2_data:
-                # °ÊºA±N JSON ¸Ì­±ªº©Ò¦³ key ¥[¤W L2_ «eºó¦s°_¨Ó
+                # å‹•æ…‹å°‡ JSON è£¡é¢çš„æ‰€æœ‰ key åŠ ä¸Š L2_ å‰ç¶´å­˜èµ·ä¾†
                 for k, v in l2_data.items():
                     row_data[f"L2_{k}"] = v
             else:
                 row_data["L2_Status"] = "Failed"
 
             # --------------------------------------------------
-            # ¨BÆJ D¡G°ÊºA«Ø¥ß CSV ¼ĞÃD¨Ã¼g¤J
+            # æ­¥é©Ÿ Dï¼šå‹•æ…‹å»ºç«‹ CSV æ¨™é¡Œä¸¦å¯«å…¥
             # --------------------------------------------------
-            # ¦pªG¬O²Ä¤@¦¸¦¨¥\®³¨ì L1 ©M L2 ªº§¹¾ã¸ê®Æ¡A´N§Q¥Î¥¦­Ì¨Ó¥Í¦¨ CSV Äæ¦ì¦WºÙ
+            # å¦‚æœæ˜¯ç¬¬ä¸€æ¬¡æˆåŠŸæ‹¿åˆ° L1 å’Œ L2 çš„å®Œæ•´è³‡æ–™ï¼Œå°±åˆ©ç”¨å®ƒå€‘ä¾†ç”Ÿæˆ CSV æ¬„ä½åç¨±
             if not header_written and l1_data and l2_data:
                 fieldnames = ['Iteration', 'Timestamp']
                 fieldnames += [f"L1_{k}" for k in l1_data.keys()]
@@ -104,24 +107,24 @@ def main():
                 
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
                 
-                # ÀË¬dÀÉ®×¬O§_¬OªÅªº¡A¬Oªº¸Ü¤~¼g¤J¼ĞÃD¡AÁ×§KÄò¶Ç®É­«½Æ¼g¤J¼ĞÃD
+                # æª¢æŸ¥æª”æ¡ˆæ˜¯å¦æ˜¯ç©ºçš„ï¼Œæ˜¯çš„è©±æ‰å¯«å…¥æ¨™é¡Œï¼Œé¿å…çºŒå‚³æ™‚é‡è¤‡å¯«å…¥æ¨™é¡Œ
                 if os.path.getsize(OUTPUT_CSV) == 0:
                     writer.writeheader()
                 header_written = True
 
-            # ¼g¤J¸ê®Æ (¦pªGÁÙ¨S¦¨¥\«Ø¥ß Header ´N¥ı¸õ¹L¼g¤J¡Aª½¨ì¦³¦¨¥\ªº¤@½ü)
+            # å¯«å…¥è³‡æ–™ (å¦‚æœé‚„æ²’æˆåŠŸå»ºç«‹ Header å°±å…ˆè·³éå¯«å…¥ï¼Œç›´åˆ°æœ‰æˆåŠŸçš„ä¸€è¼ª)
             if writer:
-                # ¥u«O¯d¦s¦b©ó fieldnames ¸Ì­±ªº¸ê®Æ¡A¦pªG¹J¨ì failed¡A¶ñ¸É N/A
+                # åªä¿ç•™å­˜åœ¨æ–¼ fieldnames è£¡é¢çš„è³‡æ–™ï¼Œå¦‚æœé‡åˆ° failedï¼Œå¡«è£œ N/A
                 safe_row = {k: row_data.get(k, "N/A") for k in fieldnames}
                 writer.writerow(safe_row)
-                csvfile.flush() # ¥ß¨è¦sÀÉ¡I´Nºâ§AºÎÄ±¤£¤p¤ß½ğ¨ì¹q·½½u¡A«e­±ªº¸ê®Æ³£¦b
+                csvfile.flush() # ç«‹åˆ»å­˜æª”ï¼å°±ç®—ä½ ç¡è¦ºä¸å°å¿ƒè¸¢åˆ°é›»æºç·šï¼Œå‰é¢çš„è³‡æ–™éƒ½åœ¨
                 
-                # Â²³æ¦L­Ó­«ÂIÅı§A¬İ¶i«× (¦pªG json ¸Ì­±¦³ objective_value ªº¸Ü)
+                # ç°¡å–®å°å€‹é‡é»è®“ä½ çœ‹é€²åº¦ (å¦‚æœ json è£¡é¢æœ‰ objective_value çš„è©±)
                 l1_obj = row_data.get("L1_objective_value", "N/A")
                 l2_obj = row_data.get("L2_objective_value", "N/A")
                 print(f"  [Complete] L1 obj : {l1_obj} | L2 obj: {l2_obj}")
 
-            # Åı CPU ³İ®§¤@¤p¤U¡AÁ×§K IO ½Ä¬ğ
+            # è®“ CPU å–˜æ¯ä¸€å°ä¸‹ï¼Œé¿å… IO è¡çª
             time.sleep(0.1)
 
 if __name__ == "__main__":
