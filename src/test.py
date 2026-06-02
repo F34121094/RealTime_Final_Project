@@ -2,6 +2,7 @@ import json
 from dataclasses import dataclass
 from typing import List, Dict
 import pulp
+import random
 # pulp 是一個專門用來解決線性規劃問題的函式庫
 
 @dataclass
@@ -134,6 +135,7 @@ def load_environment():       # [FUNC] 將 input 中的 json 檔載入
     # 儲能設備
     storage_set = []
     for info in data["storage"]:
+        
         storage_set.append(Storage(
                 storage_id =  info["storage_id"],         
                 soc_min =  info["soc_min"], 
@@ -156,10 +158,11 @@ def load_environment():       # [FUNC] 將 input 中的 json 檔載入
             if id in forecast_group:
                 forecast = [hour["pv_forecast"] for hour in forecast_group[id]]
         
+
         renewable_set.append(Renewable(
             renewable_id = id,
             capacity= c,
-            pv_forecast= forecast
+            pv_forecast= forecast,
         ))
     print("[renewable loading] success")
     
@@ -310,6 +313,13 @@ class VPPScheduler:
                 # [Constraint 14] : 最大放電限制
                 self.model += v["P_dis"][sid, t] <= s.discharge_max * (1 - v["IsCh"][sid, t])
                 
+                # =======================================================
+                # [新增] 第 10 點：電池保護機制 (代表公式中的 B)
+                # =======================================================
+                limit_expr = s.charge_max * (1 - (v["SOC"][sid, t-1] - s.soc_max * 0.8) / (s.soc_max * 0.2))
+                self.model += v["P_ch"][sid, t] <= limit_expr
+                # =======================================================
+
                 # [Constraint 17] : 儲能設備的儲能 上下限
                 self.model += v["SOC"][sid, t] >= s.soc_min
                 self.model += v["SOC"][sid, t] <= s.soc_max
@@ -318,11 +328,12 @@ class VPPScheduler:
                 self.model += v["P_dis"][sid, t] <= v["SOC"][sid, t-1] - s.soc_min
                 
                 # [Constraint 16] : 電量守恆限制
-                self.model += v["SOC"][sid, t] == v["SOC"][sid, t-1] + v["P_ch"][sid, t] - v["P_dis"][sid, t]
+                sigma = 0.01
+                self.model += v["SOC"][sid, t] == v["SOC"][sid, t-1] * (1 - sigma) + v["P_ch"][sid, t] - v["P_dis"][sid, t]
             
             # [Constraint 13] : 再生能源預測電量限制
             for re in self.renewable_set:
-                self.model += v["P_res"][re.renewable_id, t] <= re.capacity * re.pv_forecast[t-1]
+                self.model += v["P_res"][re.renewable_id, t] <= re.capacity * re.pv_forecast[t-1] * 0.95
 
     def _build_job_constraints(self, job_dict):
         v = self.vars
@@ -431,6 +442,14 @@ class VPPScheduler:
         total_gen_cost = pulp.lpSum(v["P"][i, t] * cost_var_dict[i] + v["U"][i, t] * cost_fixed_dict[i] for i in self.gen_ids for t in self.time_steps)
         total_revenue = pulp.lpSum(v["Sell"][t] * self.price_72[t-1] for t in self.time_steps)
         
+        # --- [新增] 電池老化成本 ---
+        deg_cost_per_mwh = 5  
+        total_deg_cost = pulp.lpSum(
+            (v["P_ch"][sid, t] + v["P_dis"][sid, t]) * deg_cost_per_mwh 
+            for sid in self.storage_ids for t in self.time_steps
+        )
+        # ------------------------
+
         miss_vars = [val for key, val in v.items() if key.startswith("Miss_")]
         reject_vars = [val for key, val in v.items() if key.startswith("Reject_")]
         drop_vars = [val for key, val in v.items() if key.startswith("Drop_")] # [修改] 抓出 Drop 變數
@@ -439,13 +458,14 @@ class VPPScheduler:
                   (1000000 * pulp.lpSum(reject_vars) if reject_vars else 0) + \
                   (1000000 * pulp.lpSum(drop_vars) if drop_vars else 0) # [修改] 加入 Drop 懲罰
 
-        self.model.setObjective(total_gen_cost - total_revenue + penalty)
+        # [修改] 將 total_deg_cost 加進目標函數中
+        self.model.setObjective(total_gen_cost + total_deg_cost - total_revenue + penalty)
     
     def run_base_schedule(self):
         print("\n--- 正在計算 Base Schedule (Periodic) ---")
         
         self._apply_dynamic_balance()                       # 綁定能量平衡限制式
-        self.model.solve(pulp.PULP_CBC_CMD(msg=False))      # 求解
+        self.model.solve(pulp.PULP_CBC_CMD(msg=False, timeLimit= 15, gapRel=0.02))      # 求解
         
         if pulp.LpStatus[self.model.status] == "Optimal":
             print("=> Base Schedule 成功建立！")
@@ -490,7 +510,7 @@ class VPPScheduler:
             self._update_objective()
             
             # 3. 嘗試求解 (Acceptance Test)
-            self.model.solve(pulp.PULP_CBC_CMD(msg=False))
+            self.model.solve(pulp.PULP_CBC_CMD(msg=False, timeLimit = 15,gapRel=0.02))
             
             if pulp.LpStatus[self.model.status] == "Optimal":
                 if task.type == 1: # Sporadic
@@ -621,9 +641,6 @@ class VPPScheduler:
         self.locked_time = max(self.locked_time, current_r - 1)    
 
 if __name__ == "__main__":
-    # ==========================================
-    # 1. 讀取資料
-    # ==========================================
     try:
         task_set = load_task()
         print("[task loading] success")
@@ -632,7 +649,6 @@ if __name__ == "__main__":
         task_set = []
         
     try:
-        # [新增] 讀取突發任務 (Sporadic & Aperiodic)
         unexpected_set = load_un_task()
         print("[unexpected task loading] success")
     except Exception as e:
@@ -646,24 +662,15 @@ if __name__ == "__main__":
         print(f"[environment loading] fail:{e}")
         generator_set, storage_set, renewable_set, price_72 = [], [], [], []
 
-    # ==========================================
-    # 2. 初始化與執行排程 (Incremental LP)
-    # ==========================================
-    # 實例化排程器
     scheduler = VPPScheduler(generator_set, storage_set, renewable_set, price_72)
     
-    # 建立並執行 Base Schedule (處理 Periodic tasks)
     scheduler.init_base_model(task_set)
     success = scheduler.run_base_schedule()
 
-    # 執行 Acceptance Test (處理突發任務)
     if success and unexpected_set:
         print("\n--- 開始處理動態任務 (Acceptance Test) ---")
         scheduler.process_unexpected_jobs(unexpected_set)
 
-    # ==========================================
-    # 3. 整理與印出結果
-    # ==========================================
     status_str = pulp.LpStatus[scheduler.model.status]
     print(f"\n最終求解狀態: {status_str}")
 
@@ -674,7 +681,6 @@ if __name__ == "__main__":
     all_sources = scheduler.all_sources
 
     if status_str == "Optimal":
-        # 統計最終的 Missed Aperiodic 狀態
         v = scheduler.vars
 
         cost_var_dict = {g.generator_id: g.cost_variable for g in generator_set}
@@ -701,45 +707,51 @@ if __name__ == "__main__":
                 miss_log_time = min(abs_deadline + 1, scheduler.time_horizon)
                 scheduler.missed_at_t[miss_log_time].append(base_id)
 
-        print(f"預估發電總成本: $ {real_gen_cost:.2f}")
-        print(f"預估售電總收益: $ {real_revenue:.2f}")
-        print(f"系統真實淨成本 (不含虛擬罰款): $ {real_net_cost:.2f}")
-        print(f"Rejected Sporadic 數量: {len(scheduler.rejected_sporadic)}")
-        print(f"Missed Aperiodic 數量: {len(scheduler.missed_aperiodic)}")
-
         # ==========================================
         # 4. 建立 JSON 匯出結構
         # ==========================================
         final_output = {
             "schedule_result": []
         }
+        bonus_revenue = 0.0 # 記錄總共多出來的電拿去賣賺到的錢
 
         for t in scheduler.time_steps:
             time_step_data = {
                 "t": t,
-                "P": {},  # 這邊後續你應該會寫入每個設備的發電量
-                "k": {},  # 這邊後續你應該會寫入每個任務的用電分配
+                "P": {},  
+                "k": {},  
                 "sell": 0.0,
                 "soc": {},                
-                # 直接拿 scheduler 裡面已經整理好的分類字典
                 "missed_aperiodic": scheduler.missed_at_t[t],   
                 "rejected_sporadic": scheduler.rejected_at_t[t]  
             }
             
-            # 1. 填寫 P 矩陣 (傳統機組、再生能源，以及「儲能放電」)
+            # --- 1. 填寫 P 矩陣 ---
             for i in gen_ids:
                 val = pulp.value(v["P"][i, t])
                 time_step_data["P"][i] = round(val, 2)
             
+            step_surplus_p = 0.0  # [修正 1] 新增：紀錄「這一個小時」多出來的總電量
+            
             for i in res_ids:
-                val = pulp.value(v["P_res"][i, t])
-                time_step_data["P"][i] = round(val, 2)
+                scheduled_p = pulp.value(v["P_res"][i, t])
+                target_re = next(re for re in generator_set + renewable_set if getattr(re, 'renewable_id', None) == i) 
+                
+                # 實際天氣波動
+                actual_weather_ratio = random.uniform(0.95, 1.05)
+                actual_p = target_re.capacity * target_re.pv_forecast[t-1] * actual_weather_ratio
+                
+                surplus_p = max(0.0, actual_p - scheduled_p)
+                step_surplus_p += surplus_p                    # 累加這個小時的溢出電量
+                bonus_revenue += surplus_p * price_72[t-1]     # 累加總溢出收益
+                
+                time_step_data["P"][i] = round(actual_p, 2)
                 
             for sid in storage_ids:
                 val = pulp.value(v["P_dis"][sid, t])
                 time_step_data["P"][sid] = round(val, 2)
             
-            # 2. 填寫 k 矩陣 (每個 Job 從每個設備拿了多少電)
+            # --- 2. 填寫 k 矩陣 ---
             for job in scheduler.jobs:
                 j = job["job_id"]
                 base_id = j.rsplit('_', 1)[0]
@@ -755,6 +767,7 @@ if __name__ == "__main__":
                 if task_k_dict:
                     time_step_data["k"][base_id] = task_k_dict
             
+            # --- 3. 計算剩餘電量與電池充電 ---
             remaining_power = {}
             for i in gen_ids + res_ids: 
                 gen_p = time_step_data["P"].get(i, 0.0)
@@ -781,9 +794,13 @@ if __name__ == "__main__":
                                 chg_val = round(chg_val - take, 2)
                                 remaining_power[i] -= take
 
-            # 4. 填寫售電量與 SOC
+            # --- 4. 填寫售電量與 SOC ---
             sell_val = pulp.value(v["Sell"][t])
-            time_step_data["sell"] = round(sell_val, 2) if sell_val else 0.0
+            scheduled_sell = sell_val if sell_val else 0.0
+            
+            # [修正 2] 實際售電 = 計畫售電 + 這小時多出來的電
+            actual_sell = scheduled_sell + step_surplus_p 
+            time_step_data["sell"] = round(actual_sell, 2)
             
             for sid in storage_ids:
                 soc_val = pulp.value(v["SOC"][sid, t])
@@ -791,6 +808,24 @@ if __name__ == "__main__":
 
             final_output["schedule_result"].append(time_step_data)
 
+        # [新增] 結算實際電池老化成本
+        deg_cost_per_mwh = 5
+        real_deg_cost = sum(
+            (pulp.value(v["P_ch"][sid, t]) + pulp.value(v["P_dis"][sid, t])) * deg_cost_per_mwh
+            for sid in storage_ids for t in scheduler.time_steps
+            if pulp.value(v["P_ch"][sid, t]) is not None and pulp.value(v["P_dis"][sid, t]) is not None
+        )
+
+        # 淨成本要加上老化成本
+        real_net_cost = real_gen_cost + real_deg_cost - real_revenue - bonus_revenue
+
+        print(f"預估發電總成本: $ {real_gen_cost:.2f}")
+        print(f"電池老化總成本: $ {real_deg_cost:.2f}")
+        print(f"預估售電總收益 (排程內): $ {real_revenue:.2f}")
+        print(f"真實天氣溢出收益 (Bonus): $ {bonus_revenue:.2f}")
+        print(f"系統真實淨成本 (含 Bonus): $ {real_net_cost:.2f}")
+        print(f"Rejected Sporadic 數量: {len(scheduler.rejected_sporadic)}")
+        print(f"Missed Aperiodic 數量: {len(scheduler.missed_aperiodic)}")
         # 5. 匯出檔案
         output_path = "output/schedule_result.json"
         import os
