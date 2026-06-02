@@ -244,6 +244,11 @@ class VPPScheduler:
         # 電池 s 在時間點 t 是充電還是放電狀態 [Constraint 19]
         v["IsCh"] = pulp.LpVariable.dicts("IsCharging", ((s, t) for s in self.storage_ids for t in self.time_steps), cat='Binary')
 
+        #[level 2] 簽訂契約的變數
+        v["Sell_Surplus"] = pulp.LpVariable.dicts("Sell_Surplus", self.time_steps, lowBound=0, cat='Continuous') 
+        v["Sell_Deficit"] = pulp.LpVariable.dicts("Sell_Deficit", self.time_steps, lowBound=0, cat='Continuous')
+        v["Is_Deficit"] = pulp.LpVariable.dicts("Is_Deficit", self.time_steps, cat='Binary')
+
         # 任務 j 在時間點 t 從發電設備 i 拿了多少電 
         v["k"] = pulp.LpVariable.dicts("k", ((j, i, t) for j in self.job_ids for i in self.all_sources for t in self.time_steps), lowBound=0, cat='Continuous')
         # 任務 j 在時間點 t 是否在執行
@@ -313,19 +318,16 @@ class VPPScheduler:
                 # [Constraint 14] : 最大放電限制
                 self.model += v["P_dis"][sid, t] <= s.discharge_max * (1 - v["IsCh"][sid, t])
                 
-                # =======================================================
-                # [新增] 第 10 點：電池保護機制 (代表公式中的 B)
-                # =======================================================
-                limit_expr = s.charge_max * (1 - (v["SOC"][sid, t-1] - s.soc_max * 0.8) / (s.soc_max * 0.2))
+                # [level 2] 中新增的電池充電保護機制
+                limit_expr = s.charge_max * (1 - (v["SOC"][sid, t-1] - s.soc_max * 0.8) / (s.soc_max * 0.2)) + 0.01
                 self.model += v["P_ch"][sid, t] <= limit_expr
-                # =======================================================
 
                 # [Constraint 17] : 儲能設備的儲能 上下限
                 self.model += v["SOC"][sid, t] >= s.soc_min
                 self.model += v["SOC"][sid, t] <= s.soc_max
                 
                 # [Constraint 18] : 不能放出超過最低存量的電能 
-                self.model += v["P_dis"][sid, t] <= v["SOC"][sid, t-1] - s.soc_min
+                self.model += v["P_dis"][sid, t] <= v["SOC"][sid, t-1] - s.soc_min + 0.01
                 
                 # [Constraint 16] : 電量守恆限制
                 sigma = 0.01
@@ -398,8 +400,21 @@ class VPPScheduler:
 
     def _apply_dynamic_balance(self):
         v = self.vars
+
         for t in self.time_steps:
-        
+            
+            if hasattr(self, 'commit_sell'):    # [level 2] 售電契約
+                constraint_name = f"Sell_Commitment_Balance_{t}"
+                link_name = f"Deficit_Link_{t}"
+                if constraint_name in self.model.constraints:
+                    del self.model.constraints[constraint_name]
+                if link_name in self.model.constraints:
+                    del self.model.constraints[link_name]
+                        
+                self.model += v["Sell"][t] == self.commit_sell[t] + v["Sell_Surplus"][t] - v["Sell_Deficit"][t], constraint_name
+                M = self.commit_sell[t] if self.commit_sell[t] > 0 else 0
+                self.model += v["Sell_Deficit"][t] <= M * v["Is_Deficit"][t], link_name
+
             # ==========================================
             # 1. 拆除舊的動態限制式 (如果它們存在的話)
             # ==========================================
@@ -422,7 +437,8 @@ class VPPScheduler:
                 self.model += pulp.lpSum(v["k"].get((j, i, t), 0) for j in self.job_ids) <= v["P_res"][i, t], f"ResLimit_{i}_{t}"
             for sid in self.storage_ids:
                 self.model += pulp.lpSum(v["k"].get((j, sid, t), 0) for j in self.job_ids) <= v["P_dis"][sid, t], f"StoLimit_{sid}_{t}"
-
+            
+                        
             # [Constraint 21]: 電池防弊
             gen_res = self.gen_ids + self.res_ids
             task_use = pulp.lpSum(v["k"].get((j, src, t), 0) for j in self.job_ids for src in gen_res)
@@ -440,15 +456,28 @@ class VPPScheduler:
         cost_fixed_dict = {g.generator_id: g.cost_fixed for g in self.generator_set}
         
         total_gen_cost = pulp.lpSum(v["P"][i, t] * cost_var_dict[i] + v["U"][i, t] * cost_fixed_dict[i] for i in self.gen_ids for t in self.time_steps)
-        total_revenue = pulp.lpSum(v["Sell"][t] * self.price_72[t-1] for t in self.time_steps)
+        if hasattr(self, 'commit_sell'):
+            # 如果 commit_sell 存在，代表進入了第二階段 (動態重排程)
+            total_revenue = pulp.lpSum(
+                self.commit_sell[t] * self.price_72[t-1] + 
+                v["Sell_Surplus"][t] * (self.price_72[t-1] * 0.7) - 
+                v["Is_Deficit"][t] * 1000
+                for t in self.time_steps
+            )
+        else:
+            # 如果 commit_sell 不存在，代表還在第一階段 (Base Schedule)
+            total_revenue = pulp.lpSum(
+                v["Sell"][t] * self.price_72[t-1] 
+                for t in self.time_steps
+            )
         
-        # --- [新增] 電池老化成本 ---
+        # --- [level 2] 電池老化成本 ---
         deg_cost_per_mwh = 5  
         total_deg_cost = pulp.lpSum(
             (v["P_ch"][sid, t] + v["P_dis"][sid, t]) * deg_cost_per_mwh 
             for sid in self.storage_ids for t in self.time_steps
         )
-        # ------------------------
+        # -----------------------------
 
         miss_vars = [val for key, val in v.items() if key.startswith("Miss_")]
         reject_vars = [val for key, val in v.items() if key.startswith("Reject_")]
@@ -466,7 +495,11 @@ class VPPScheduler:
         
         self._apply_dynamic_balance()                       # 綁定能量平衡限制式
         self.model.solve(pulp.PULP_CBC_CMD(msg=False, timeLimit= 15, gapRel=0.02))      # 求解
-        
+        self.commit_sell = {}       # [level 2] 簽訂契約
+        for t in self.time_steps:
+            sell_val = pulp.value(self.vars["Sell"][t])
+            self.commit_sell[t] = sell_val if sell_val is not None else 0.0
+
         if pulp.LpStatus[self.model.status] == "Optimal":
             print("=> Base Schedule 成功建立！")
             # self.lock_scheduled_jobs(self.periodic_jobs)    # 鎖定
@@ -490,7 +523,7 @@ class VPPScheduler:
         
         for task in unexpected_tasks:
             self._lock_past_states(task.r)
-
+            print(f" t = {task.r} => {task.task_id}")
             
             job_dict = {
                 "job_id": task.task_id, "w": task.w, "e": task.e, "r": task.r,
@@ -518,7 +551,7 @@ class VPPScheduler:
                     is_rejected = True if reject_val is None else (round(reject_val) == 1)
                     
                     if not is_rejected:
-                        print(f" t = {task.r} => {task.task_id} ACCEPTED (Sporadic)")
+                        print(f"ACCEPTED (Sporadic)\n")
                         scheduled_times = [t for t in self.time_steps if round(pulp.value(v["x"][job_dict["job_id"], t])) == 1]
                         
                         self.acceptance_log.append({
@@ -530,7 +563,7 @@ class VPPScheduler:
                         })
                         # self.lock_scheduled_jobs([job_dict])
                     else:
-                        print(f" t = {task.r} => {task.task_id} REJECTED (Sporadic)")
+                        print(f"REJECTED (Sporadic)\n")
                         self.rejected_sporadic.append(task.task_id)
                         # [新增] 直接利用當下的 task.r，把任務丟進正確的時間分類裡！
                         self.rejected_at_t[task.r].append(task.task_id)
@@ -566,18 +599,19 @@ class VPPScheduler:
                     is_dropped = True if drop_val is None else (round(drop_val) == 1)
                     
                     if is_dropped:
-                        print(f" t = {task.r} => {task.task_id} DROPPED (Aperiodic)")
+                        print(f"DROPPED (Aperiodic)\n")
+                        
                         # ⚠️ [移除] 不要在這裡加進 missed_aperiodic，交給 72 小時後的總結算統一處理！
                         
                         # 物理封印：既然決定放棄，就強制變數歸零，節省後續求解時間
                         self.model += v[f"Drop_{task.task_id}"] == 1
                         for t in self.time_steps:
                             self.model += v["x"][task.task_id, t] == 0
-                    else: print(f" t = {task.r} => {task.task_id} SCHEDULED (Aperiodic)")
+                    else: print(f"SCHEDULED (Aperiodic)\n")
 
             else:
                 # [防呆補強] 如果 AI 求解器崩潰找不到解 (Infeasible)
-                print(f"  => {task.task_id} FATAL INFEASIBLE!")
+                print(f"FATAL INFEASIBLE!\n")
                 if task.type == 1:
                     # 強制判為 Rejected
                     self.rejected_sporadic.append(task.task_id)
@@ -714,6 +748,8 @@ if __name__ == "__main__":
             "schedule_result": []
         }
         bonus_revenue = 0.0 # 記錄總共多出來的電拿去賣賺到的錢
+        actual_revenue = 0.0  
+        penalty_cost = 0.0
 
         for t in scheduler.time_steps:
             time_step_data = {
@@ -725,7 +761,18 @@ if __name__ == "__main__":
                 "missed_aperiodic": scheduler.missed_at_t[t],   
                 "rejected_sporadic": scheduler.rejected_at_t[t]  
             }
+            actual_price = price_72[t-1] * random.uniform(0.95, 1.05)
             
+            contract_qty = scheduler.commit_sell[t]
+            surplus_qty = pulp.value(v["Sell_Surplus"][t]) or 0.0
+            deficit_qty = pulp.value(v["Sell_Deficit"][t]) or 0.0
+            is_deficit_val = pulp.value(v["Is_Deficit"][t]) or 0.0
+
+            # 依照實際電價結算收益
+            step_rev = (contract_qty * actual_price) + (surplus_qty * actual_price * 0.7)
+            actual_revenue += step_rev
+            penalty_cost += round(is_deficit_val) * 1000
+            # 累加違約金 (違約金是固定的 1000 元，不隨電價波動)
             # --- 1. 填寫 P 矩陣 ---
             for i in gen_ids:
                 val = pulp.value(v["P"][i, t])
@@ -817,11 +864,13 @@ if __name__ == "__main__":
         )
 
         # 淨成本要加上老化成本
-        real_net_cost = real_gen_cost + real_deg_cost - real_revenue - bonus_revenue
+        real_net_cost = real_gen_cost + real_deg_cost - actual_revenue + penalty_cost - bonus_revenue
 
         print(f"預估發電總成本: $ {real_gen_cost:.2f}")
         print(f"電池老化總成本: $ {real_deg_cost:.2f}")
         print(f"預估售電總收益 (排程內): $ {real_revenue:.2f}")
+        print(f"實際售電總收益 (含 +-5% 波動與 0.7 倍折價): $ {actual_revenue:.2f}")
+        print(f"售電違約總罰金: $ {penalty_cost:.2f}")
         print(f"真實天氣溢出收益 (Bonus): $ {bonus_revenue:.2f}")
         print(f"系統真實淨成本 (含 Bonus): $ {real_net_cost:.2f}")
         print(f"Rejected Sporadic 數量: {len(scheduler.rejected_sporadic)}")
