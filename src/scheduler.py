@@ -756,15 +756,15 @@ if __name__ == "__main__":
             # 1. 填寫 P 矩陣 (傳統機組、再生能源，以及「儲能放電」)
             for i in gen_ids:
                 val = pulp.value(v["P"][i, t])
-                time_step_data["P"][i] = round(val, 2)
+                time_step_data["P"][i] = round(val, 4)
             
             for i in res_ids:
                 val = pulp.value(v["P_res"][i, t])
-                time_step_data["P"][i] = round(val, 2)
+                time_step_data["P"][i] = round(val, 4)
                 
             for sid in storage_ids:
                 val = pulp.value(v["P_dis"][sid, t])
-                time_step_data["P"][sid] = round(val, 2)
+                time_step_data["P"][sid] = round(val, 4)
             
             # 2. 填寫 k 矩陣 (每個 Job 從每個設備拿了多少電)
             for job in scheduler.jobs:
@@ -777,7 +777,7 @@ if __name__ == "__main__":
                     if k_var is not None:
                         val = pulp.value(k_var)
                         if val is not None and val > 0:
-                            task_k_dict[i] = round(val, 2)
+                            task_k_dict[i] = round(val, 4)
                 
                 if task_k_dict:
                     time_step_data["k"][base_id] = task_k_dict
@@ -793,7 +793,7 @@ if __name__ == "__main__":
             for sid in storage_ids:
                 chg_val = pulp.value(v["P_ch"][sid, t])
                 if chg_val is not None and chg_val > 0:
-                    chg_val = round(chg_val, 2)
+                    chg_val = round(chg_val, 4)
                     chg_key = f"{sid}_chg"
                     time_step_data["k"][chg_key] = {}
                     
@@ -802,19 +802,19 @@ if __name__ == "__main__":
                             break
                         if avail > 0:
                             take = min(avail, chg_val)
-                            take = round(take, 2)
+                            take = round(take, 4)
                             if take > 0:
                                 time_step_data["k"][chg_key][i] = take
-                                chg_val = round(chg_val - take, 2)
+                                chg_val = round(chg_val - take, 4)
                                 remaining_power[i] -= take
 
             # 4. 填寫售電量與 SOC
             sell_val = pulp.value(v["Sell"][t])
-            time_step_data["sell"] = round(sell_val, 2) if sell_val else 0.0
+            time_step_data["sell"] = round(sell_val, 4) if sell_val else 0.0
             
             for sid in storage_ids:
                 soc_val = pulp.value(v["SOC"][sid, t])
-                time_step_data["soc"][sid] = round(soc_val, 2) if soc_val else 0.0
+                time_step_data["soc"][sid] = round(soc_val, 4) if soc_val else 0.0
 
             final_output["schedule_result"].append(time_step_data)
 

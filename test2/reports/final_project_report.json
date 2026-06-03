@@ -1,0 +1,6975 @@
+{
+  "metadata": {
+    "checker_name": "Level 2 RTS/VPP auxiliary checker",
+    "submission_root": "D:\\Desktop\\114_2\\即時系統導論\\final_project",
+    "submission_path": "D:\\Desktop\\114_2\\即時系統導論\\final_project",
+    "output_path": "D:\\Desktop\\114_2\\即時系統導論\\final_project\\test2\\reports",
+    "package_name": "test2",
+    "tolerance": 0.001,
+    "purpose": "inspection_support_only"
+  },
+  "loaded_files": {
+    "processor_settings": {
+      "path": "input\\processor_settings.json",
+      "required": true,
+      "exists": true,
+      "loaded": true
+    },
+    "price_72hr": {
+      "path": "input\\price_72hr.json",
+      "required": true,
+      "exists": true,
+      "loaded": true
+    },
+    "task_set": {
+      "path": "output\\task_set.json",
+      "required": true,
+      "exists": true,
+      "loaded": true
+    },
+    "schedule_result": {
+      "path": "output\\schedule_result.json",
+      "required": true,
+      "exists": true,
+      "loaded": true
+    },
+    "evaluation_results": {
+      "path": "output\\evaluation_results.json",
+      "required": true,
+      "exists": true,
+      "loaded": true
+    },
+    "acceptance_test_log": {
+      "path": "output\\acceptance_test_log.json",
+      "required": true,
+      "exists": true,
+      "loaded": true
+    },
+    "event_file": {
+      "path": "input\\aperiodic_n_sporadic.json",
+      "required": false,
+      "exists": true,
+      "loaded": true
+    }
+  },
+  "auxiliary_artifacts": {
+    "README.md": {
+      "patterns": [
+        "README.md"
+      ],
+      "exists": true,
+      "paths": [
+        "README.md"
+      ]
+    },
+    "report.pdf": {
+      "patterns": [
+        "report.pdf"
+      ],
+      "exists": false,
+      "paths": []
+    },
+    "src": {
+      "patterns": [
+        "src"
+      ],
+      "exists": true,
+      "paths": [
+        "src"
+      ]
+    },
+    "src/task_generator.*": {
+      "patterns": [
+        "src/task_generator.*"
+      ],
+      "exists": true,
+      "paths": [
+        "src\\task_generator.py"
+      ]
+    },
+    "src/scheduler.*": {
+      "patterns": [
+        "src/scheduler.*"
+      ],
+      "exists": true,
+      "paths": [
+        "src\\scheduler.py"
+      ]
+    },
+    "src/evaluator.*": {
+      "patterns": [
+        "src/evaluator.*"
+      ],
+      "exists": true,
+      "paths": [
+        "src\\evaluator.py"
+      ]
+    },
+    "src/advanced_scheduler.*": {
+      "patterns": [
+        "src/advanced_scheduler.*"
+      ],
+      "exists": true,
+      "paths": [
+        "src\\advanced_scheduler.py"
+      ]
+    },
+    "runtime_config.*": {
+      "patterns": [
+        "runtime_config.*"
+      ],
+      "exists": false,
+      "paths": []
+    },
+    "crontab.txt": {
+      "patterns": [
+        "crontab.txt"
+      ],
+      "exists": false,
+      "paths": []
+    },
+    "src/runtime_config.*": {
+      "patterns": [
+        "src/runtime_config.*"
+      ],
+      "exists": false,
+      "paths": []
+    },
+    "src/crontab.txt": {
+      "patterns": [
+        "src/crontab.txt"
+      ],
+      "exists": false,
+      "paths": []
+    }
+  },
+  "schema_check": {
+    "errors": [
+      {
+        "file": "output/evaluation_results.json",
+        "field": "acceptance_test",
+        "message": "required evaluation field missing"
+      }
+    ],
+    "warnings": [],
+    "extra_field_evidence": []
+  },
+  "parsed_job_summary": {
+    "jobs": [
+      {
+        "job_id": "a1",
+        "job_type": "aperiodic",
+        "task_id": "a1",
+        "r": 4,
+        "e": 3,
+        "d": 12,
+        "deadline_window_end": 15,
+        "absolute_deadline": 15,
+        "w": 14.0,
+        "preempt": null,
+        "executed_slots": [
+          5,
+          6,
+          10
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 10,
+        "response_time": 6,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "a2",
+        "job_type": "aperiodic",
+        "task_id": "a2",
+        "r": 11,
+        "e": 2,
+        "d": 6,
+        "deadline_window_end": 16,
+        "absolute_deadline": 16,
+        "w": 5.0,
+        "preempt": null,
+        "executed_slots": [
+          11,
+          12
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 12,
+        "response_time": 1,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "a3",
+        "job_type": "aperiodic",
+        "task_id": "a3",
+        "r": 20,
+        "e": 4,
+        "d": 14,
+        "deadline_window_end": 33,
+        "absolute_deadline": 33,
+        "w": 13.0,
+        "preempt": null,
+        "executed_slots": [
+          26,
+          28,
+          29,
+          30
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 30,
+        "response_time": 10,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "a4",
+        "job_type": "aperiodic",
+        "task_id": "a4",
+        "r": 25,
+        "e": 2,
+        "d": 7,
+        "deadline_window_end": 31,
+        "absolute_deadline": 31,
+        "w": 9.0,
+        "preempt": null,
+        "executed_slots": [
+          26,
+          29
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 29,
+        "response_time": 4,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "a5",
+        "job_type": "aperiodic",
+        "task_id": "a5",
+        "r": 32,
+        "e": 1,
+        "d": 5,
+        "deadline_window_end": 36,
+        "absolute_deadline": 36,
+        "w": 11.0,
+        "preempt": null,
+        "executed_slots": [
+          34
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 34,
+        "response_time": 2,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "a6",
+        "job_type": "aperiodic",
+        "task_id": "a6",
+        "r": 38,
+        "e": 3,
+        "d": 11,
+        "deadline_window_end": 48,
+        "absolute_deadline": 48,
+        "w": 7.0,
+        "preempt": null,
+        "executed_slots": [
+          38,
+          39,
+          44
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 44,
+        "response_time": 6,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "a7",
+        "job_type": "aperiodic",
+        "task_id": "a7",
+        "r": 47,
+        "e": 4,
+        "d": 15,
+        "deadline_window_end": 61,
+        "absolute_deadline": 61,
+        "w": 11.0,
+        "preempt": null,
+        "executed_slots": [
+          48,
+          59,
+          60,
+          61
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 61,
+        "response_time": 14,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "a8",
+        "job_type": "aperiodic",
+        "task_id": "a8",
+        "r": 54,
+        "e": 2,
+        "d": 12,
+        "deadline_window_end": 65,
+        "absolute_deadline": 65,
+        "w": 12.0,
+        "preempt": null,
+        "executed_slots": [
+          64,
+          65
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 65,
+        "response_time": 11,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "a9",
+        "job_type": "aperiodic",
+        "task_id": "a9",
+        "r": 62,
+        "e": 3,
+        "d": 9,
+        "deadline_window_end": 70,
+        "absolute_deadline": 70,
+        "w": 6.0,
+        "preempt": null,
+        "executed_slots": [
+          62,
+          63,
+          65
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 65,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "battery_1_chg",
+        "job_type": "charging",
+        "task_id": null,
+        "r": null,
+        "e": null,
+        "d": null,
+        "deadline_window_end": null,
+        "absolute_deadline": null,
+        "w": null,
+        "preempt": null,
+        "executed_slots": [
+          3,
+          4,
+          5,
+          6,
+          10,
+          11,
+          12,
+          14,
+          20,
+          21,
+          24,
+          26,
+          28,
+          29,
+          30,
+          34,
+          35,
+          36,
+          37,
+          42,
+          44,
+          48,
+          52,
+          53,
+          61,
+          62,
+          63,
+          64,
+          65
+        ],
+        "total_executed_slots": 29,
+        "completion_time": 65,
+        "response_time": null,
+        "tardiness": null,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "battery_2_chg",
+        "job_type": "charging",
+        "task_id": null,
+        "r": null,
+        "e": null,
+        "d": null,
+        "deadline_window_end": null,
+        "absolute_deadline": null,
+        "w": null,
+        "preempt": null,
+        "executed_slots": [
+          3,
+          4,
+          5,
+          6,
+          11,
+          12,
+          13,
+          17,
+          24,
+          26,
+          28,
+          29,
+          30,
+          34,
+          35,
+          37,
+          40,
+          41,
+          43,
+          44,
+          48,
+          52,
+          53,
+          62,
+          63,
+          64,
+          65,
+          66
+        ],
+        "total_executed_slots": 28,
+        "completion_time": 66,
+        "response_time": null,
+        "tardiness": null,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p1_1",
+        "job_type": "periodic",
+        "task_id": "p1",
+        "r": 6,
+        "p": 24,
+        "e": 4,
+        "d": 4,
+        "deadline_window_end": 9,
+        "absolute_deadline": 9,
+        "w": 16.0,
+        "preempt": 0,
+        "executed_slots": [
+          6,
+          7,
+          8,
+          9
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 9,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p1_2",
+        "job_type": "periodic",
+        "task_id": "p1",
+        "r": 30,
+        "p": 24,
+        "e": 4,
+        "d": 4,
+        "deadline_window_end": 33,
+        "absolute_deadline": 33,
+        "w": 16.0,
+        "preempt": 0,
+        "executed_slots": [
+          30,
+          31,
+          32,
+          33
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 33,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p1_3",
+        "job_type": "periodic",
+        "task_id": "p1",
+        "r": 54,
+        "p": 24,
+        "e": 4,
+        "d": 4,
+        "deadline_window_end": 57,
+        "absolute_deadline": 57,
+        "w": 16.0,
+        "preempt": 0,
+        "executed_slots": [
+          54,
+          55,
+          56,
+          57
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 57,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p2_1",
+        "job_type": "periodic",
+        "task_id": "p2",
+        "r": 1,
+        "p": 12,
+        "e": 4,
+        "d": 4,
+        "deadline_window_end": 4,
+        "absolute_deadline": 4,
+        "w": 17.0,
+        "preempt": 1,
+        "executed_slots": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 4,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p2_2",
+        "job_type": "periodic",
+        "task_id": "p2",
+        "r": 13,
+        "p": 12,
+        "e": 4,
+        "d": 4,
+        "deadline_window_end": 16,
+        "absolute_deadline": 16,
+        "w": 17.0,
+        "preempt": 1,
+        "executed_slots": [
+          13,
+          14,
+          15,
+          16
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 16,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p2_3",
+        "job_type": "periodic",
+        "task_id": "p2",
+        "r": 25,
+        "p": 12,
+        "e": 4,
+        "d": 4,
+        "deadline_window_end": 28,
+        "absolute_deadline": 28,
+        "w": 17.0,
+        "preempt": 1,
+        "executed_slots": [
+          25,
+          26,
+          27,
+          28
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 28,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p2_4",
+        "job_type": "periodic",
+        "task_id": "p2",
+        "r": 37,
+        "p": 12,
+        "e": 4,
+        "d": 4,
+        "deadline_window_end": 40,
+        "absolute_deadline": 40,
+        "w": 17.0,
+        "preempt": 1,
+        "executed_slots": [
+          37,
+          38,
+          39,
+          40
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 40,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p2_5",
+        "job_type": "periodic",
+        "task_id": "p2",
+        "r": 49,
+        "p": 12,
+        "e": 4,
+        "d": 4,
+        "deadline_window_end": 52,
+        "absolute_deadline": 52,
+        "w": 17.0,
+        "preempt": 1,
+        "executed_slots": [
+          49,
+          50,
+          51,
+          52
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 52,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p2_6",
+        "job_type": "periodic",
+        "task_id": "p2",
+        "r": 61,
+        "p": 12,
+        "e": 4,
+        "d": 4,
+        "deadline_window_end": 64,
+        "absolute_deadline": 64,
+        "w": 17.0,
+        "preempt": 1,
+        "executed_slots": [
+          61,
+          62,
+          63,
+          64
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 64,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p3_1",
+        "job_type": "periodic",
+        "task_id": "p3",
+        "r": 10,
+        "p": 20,
+        "e": 2,
+        "d": 15,
+        "deadline_window_end": 24,
+        "absolute_deadline": 24,
+        "w": 17.0,
+        "preempt": 0,
+        "executed_slots": [
+          18,
+          19
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 19,
+        "response_time": 9,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p3_2",
+        "job_type": "periodic",
+        "task_id": "p3",
+        "r": 30,
+        "p": 20,
+        "e": 2,
+        "d": 15,
+        "deadline_window_end": 44,
+        "absolute_deadline": 44,
+        "w": 17.0,
+        "preempt": 0,
+        "executed_slots": [
+          42,
+          43
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 43,
+        "response_time": 13,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p3_3",
+        "job_type": "periodic",
+        "task_id": "p3",
+        "r": 50,
+        "p": 20,
+        "e": 2,
+        "d": 15,
+        "deadline_window_end": 64,
+        "absolute_deadline": 64,
+        "w": 17.0,
+        "preempt": 0,
+        "executed_slots": [
+          62,
+          63
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 63,
+        "response_time": 13,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p3_4",
+        "job_type": "periodic",
+        "task_id": "p3",
+        "r": 70,
+        "p": 20,
+        "e": 2,
+        "d": 15,
+        "deadline_window_end": 72,
+        "absolute_deadline": 84,
+        "w": 17.0,
+        "preempt": 0,
+        "executed_slots": [
+          71,
+          72
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 72,
+        "response_time": 2,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p4_1",
+        "job_type": "periodic",
+        "task_id": "p4",
+        "r": 7,
+        "p": 10,
+        "e": 2,
+        "d": 10,
+        "deadline_window_end": 16,
+        "absolute_deadline": 16,
+        "w": 13.0,
+        "preempt": 0,
+        "executed_slots": [
+          11,
+          12
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 12,
+        "response_time": 5,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p4_2",
+        "job_type": "periodic",
+        "task_id": "p4",
+        "r": 17,
+        "p": 10,
+        "e": 2,
+        "d": 10,
+        "deadline_window_end": 26,
+        "absolute_deadline": 26,
+        "w": 13.0,
+        "preempt": 0,
+        "executed_slots": [
+          19,
+          20
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 20,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p4_3",
+        "job_type": "periodic",
+        "task_id": "p4",
+        "r": 27,
+        "p": 10,
+        "e": 2,
+        "d": 10,
+        "deadline_window_end": 36,
+        "absolute_deadline": 36,
+        "w": 13.0,
+        "preempt": 0,
+        "executed_slots": [
+          34,
+          35
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 35,
+        "response_time": 8,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p4_4",
+        "job_type": "periodic",
+        "task_id": "p4",
+        "r": 37,
+        "p": 10,
+        "e": 2,
+        "d": 10,
+        "deadline_window_end": 46,
+        "absolute_deadline": 46,
+        "w": 13.0,
+        "preempt": 0,
+        "executed_slots": [
+          41,
+          42
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 42,
+        "response_time": 5,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p4_5",
+        "job_type": "periodic",
+        "task_id": "p4",
+        "r": 47,
+        "p": 10,
+        "e": 2,
+        "d": 10,
+        "deadline_window_end": 56,
+        "absolute_deadline": 56,
+        "w": 13.0,
+        "preempt": 0,
+        "executed_slots": [
+          47,
+          48
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 48,
+        "response_time": 1,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p4_6",
+        "job_type": "periodic",
+        "task_id": "p4",
+        "r": 57,
+        "p": 10,
+        "e": 2,
+        "d": 10,
+        "deadline_window_end": 66,
+        "absolute_deadline": 66,
+        "w": 13.0,
+        "preempt": 0,
+        "executed_slots": [
+          62,
+          63
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 63,
+        "response_time": 6,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p4_7",
+        "job_type": "periodic",
+        "task_id": "p4",
+        "r": 67,
+        "p": 10,
+        "e": 2,
+        "d": 10,
+        "deadline_window_end": 72,
+        "absolute_deadline": 76,
+        "w": 13.0,
+        "preempt": 0,
+        "executed_slots": [
+          67,
+          68
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 68,
+        "response_time": 1,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p5_1",
+        "job_type": "periodic",
+        "task_id": "p5",
+        "r": 6,
+        "p": 23,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 12,
+        "absolute_deadline": 12,
+        "w": 16.0,
+        "preempt": 0,
+        "executed_slots": [
+          10
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 10,
+        "response_time": 4,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p5_2",
+        "job_type": "periodic",
+        "task_id": "p5",
+        "r": 29,
+        "p": 23,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 35,
+        "absolute_deadline": 35,
+        "w": 16.0,
+        "preempt": 0,
+        "executed_slots": [
+          35
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 35,
+        "response_time": 6,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p5_3",
+        "job_type": "periodic",
+        "task_id": "p5",
+        "r": 52,
+        "p": 23,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 58,
+        "absolute_deadline": 58,
+        "w": 16.0,
+        "preempt": 0,
+        "executed_slots": [
+          52
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 52,
+        "response_time": 0,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p6_1",
+        "job_type": "periodic",
+        "task_id": "p6",
+        "r": 15,
+        "p": 23,
+        "e": 1,
+        "d": 22,
+        "deadline_window_end": 36,
+        "absolute_deadline": 36,
+        "w": 6.0,
+        "preempt": 1,
+        "executed_slots": [
+          36
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 36,
+        "response_time": 21,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p6_2",
+        "job_type": "periodic",
+        "task_id": "p6",
+        "r": 38,
+        "p": 23,
+        "e": 1,
+        "d": 22,
+        "deadline_window_end": 59,
+        "absolute_deadline": 59,
+        "w": 6.0,
+        "preempt": 1,
+        "executed_slots": [
+          41
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 41,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p6_3",
+        "job_type": "periodic",
+        "task_id": "p6",
+        "r": 61,
+        "p": 23,
+        "e": 1,
+        "d": 22,
+        "deadline_window_end": 72,
+        "absolute_deadline": 82,
+        "w": 6.0,
+        "preempt": 1,
+        "executed_slots": [
+          64
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 64,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p7_1",
+        "job_type": "periodic",
+        "task_id": "p7",
+        "r": 5,
+        "p": 20,
+        "e": 3,
+        "d": 20,
+        "deadline_window_end": 24,
+        "absolute_deadline": 24,
+        "w": 16.0,
+        "preempt": 1,
+        "executed_slots": [
+          10,
+          11,
+          13
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 13,
+        "response_time": 8,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p7_2",
+        "job_type": "periodic",
+        "task_id": "p7",
+        "r": 25,
+        "p": 20,
+        "e": 3,
+        "d": 20,
+        "deadline_window_end": 44,
+        "absolute_deadline": 44,
+        "w": 16.0,
+        "preempt": 1,
+        "executed_slots": [
+          34,
+          36,
+          43
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 43,
+        "response_time": 18,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p7_3",
+        "job_type": "periodic",
+        "task_id": "p7",
+        "r": 45,
+        "p": 20,
+        "e": 3,
+        "d": 20,
+        "deadline_window_end": 64,
+        "absolute_deadline": 64,
+        "w": 16.0,
+        "preempt": 1,
+        "executed_slots": [
+          62,
+          63,
+          64
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 64,
+        "response_time": 19,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p7_4",
+        "job_type": "periodic",
+        "task_id": "p7",
+        "r": 65,
+        "p": 20,
+        "e": 3,
+        "d": 20,
+        "deadline_window_end": 72,
+        "absolute_deadline": 84,
+        "w": 16.0,
+        "preempt": 1,
+        "executed_slots": [
+          65,
+          66,
+          67
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 67,
+        "response_time": 2,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p8_1",
+        "job_type": "periodic",
+        "task_id": "p8",
+        "r": 7,
+        "p": 9,
+        "e": 3,
+        "d": 8,
+        "deadline_window_end": 14,
+        "absolute_deadline": 14,
+        "w": 12.0,
+        "preempt": 0,
+        "executed_slots": [
+          10,
+          11,
+          12
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 12,
+        "response_time": 5,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p8_2",
+        "job_type": "periodic",
+        "task_id": "p8",
+        "r": 16,
+        "p": 9,
+        "e": 3,
+        "d": 8,
+        "deadline_window_end": 23,
+        "absolute_deadline": 23,
+        "w": 12.0,
+        "preempt": 0,
+        "executed_slots": [
+          17,
+          18,
+          19
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 19,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p8_3",
+        "job_type": "periodic",
+        "task_id": "p8",
+        "r": 25,
+        "p": 9,
+        "e": 3,
+        "d": 8,
+        "deadline_window_end": 32,
+        "absolute_deadline": 32,
+        "w": 12.0,
+        "preempt": 0,
+        "executed_slots": [
+          28,
+          29,
+          30
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 30,
+        "response_time": 5,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p8_4",
+        "job_type": "periodic",
+        "task_id": "p8",
+        "r": 34,
+        "p": 9,
+        "e": 3,
+        "d": 8,
+        "deadline_window_end": 41,
+        "absolute_deadline": 41,
+        "w": 12.0,
+        "preempt": 0,
+        "executed_slots": [
+          34,
+          35,
+          36
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 36,
+        "response_time": 2,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p8_5",
+        "job_type": "periodic",
+        "task_id": "p8",
+        "r": 43,
+        "p": 9,
+        "e": 3,
+        "d": 8,
+        "deadline_window_end": 50,
+        "absolute_deadline": 50,
+        "w": 12.0,
+        "preempt": 0,
+        "executed_slots": [
+          43,
+          44,
+          45
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 45,
+        "response_time": 2,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p8_6",
+        "job_type": "periodic",
+        "task_id": "p8",
+        "r": 52,
+        "p": 9,
+        "e": 3,
+        "d": 8,
+        "deadline_window_end": 59,
+        "absolute_deadline": 59,
+        "w": 12.0,
+        "preempt": 0,
+        "executed_slots": [
+          52,
+          53,
+          54
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 54,
+        "response_time": 2,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p8_7",
+        "job_type": "periodic",
+        "task_id": "p8",
+        "r": 61,
+        "p": 9,
+        "e": 3,
+        "d": 8,
+        "deadline_window_end": 68,
+        "absolute_deadline": 68,
+        "w": 12.0,
+        "preempt": 0,
+        "executed_slots": [
+          62,
+          63,
+          64
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 64,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p8_8",
+        "job_type": "periodic",
+        "task_id": "p8",
+        "r": 70,
+        "p": 9,
+        "e": 3,
+        "d": 8,
+        "deadline_window_end": 72,
+        "absolute_deadline": 77,
+        "w": 12.0,
+        "preempt": 0,
+        "executed_slots": [
+          70,
+          71,
+          72
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 72,
+        "response_time": 2,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p9_1",
+        "job_type": "periodic",
+        "task_id": "p9",
+        "r": 7,
+        "p": 7,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 13,
+        "absolute_deadline": 13,
+        "w": 9.0,
+        "preempt": 1,
+        "executed_slots": [
+          10
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 10,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p9_10",
+        "job_type": "periodic",
+        "task_id": "p9",
+        "r": 70,
+        "p": 7,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 72,
+        "absolute_deadline": 76,
+        "w": 9.0,
+        "preempt": 1,
+        "executed_slots": [
+          72
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 72,
+        "response_time": 2,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p9_2",
+        "job_type": "periodic",
+        "task_id": "p9",
+        "r": 14,
+        "p": 7,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 20,
+        "absolute_deadline": 20,
+        "w": 9.0,
+        "preempt": 1,
+        "executed_slots": [
+          20
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 20,
+        "response_time": 6,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p9_3",
+        "job_type": "periodic",
+        "task_id": "p9",
+        "r": 21,
+        "p": 7,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 27,
+        "absolute_deadline": 27,
+        "w": 9.0,
+        "preempt": 1,
+        "executed_slots": [
+          26
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 26,
+        "response_time": 5,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p9_4",
+        "job_type": "periodic",
+        "task_id": "p9",
+        "r": 28,
+        "p": 7,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 34,
+        "absolute_deadline": 34,
+        "w": 9.0,
+        "preempt": 1,
+        "executed_slots": [
+          34
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 34,
+        "response_time": 6,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p9_5",
+        "job_type": "periodic",
+        "task_id": "p9",
+        "r": 35,
+        "p": 7,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 41,
+        "absolute_deadline": 41,
+        "w": 9.0,
+        "preempt": 1,
+        "executed_slots": [
+          35
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 35,
+        "response_time": 0,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p9_6",
+        "job_type": "periodic",
+        "task_id": "p9",
+        "r": 42,
+        "p": 7,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 48,
+        "absolute_deadline": 48,
+        "w": 9.0,
+        "preempt": 1,
+        "executed_slots": [
+          43
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 43,
+        "response_time": 1,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p9_7",
+        "job_type": "periodic",
+        "task_id": "p9",
+        "r": 49,
+        "p": 7,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 55,
+        "absolute_deadline": 55,
+        "w": 9.0,
+        "preempt": 1,
+        "executed_slots": [
+          51
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 51,
+        "response_time": 2,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p9_8",
+        "job_type": "periodic",
+        "task_id": "p9",
+        "r": 56,
+        "p": 7,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 62,
+        "absolute_deadline": 62,
+        "w": 9.0,
+        "preempt": 1,
+        "executed_slots": [
+          62
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 62,
+        "response_time": 6,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "p9_9",
+        "job_type": "periodic",
+        "task_id": "p9",
+        "r": 63,
+        "p": 7,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 69,
+        "absolute_deadline": 69,
+        "w": 9.0,
+        "preempt": 1,
+        "executed_slots": [
+          63
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 63,
+        "response_time": 0,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "s1",
+        "job_type": "sporadic",
+        "task_id": "s1",
+        "r": 6,
+        "e": 2,
+        "d": 8,
+        "deadline_window_end": 13,
+        "absolute_deadline": 13,
+        "w": 11.0,
+        "preempt": null,
+        "executed_slots": [
+          6,
+          10
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 10,
+        "response_time": 4,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "s2",
+        "job_type": "sporadic",
+        "task_id": "s2",
+        "r": 17,
+        "e": 3,
+        "d": 6,
+        "deadline_window_end": 22,
+        "absolute_deadline": 22,
+        "w": 19.0,
+        "preempt": null,
+        "executed_slots": [
+          18,
+          19,
+          20
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 20,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "s3",
+        "job_type": "sporadic",
+        "task_id": "s3",
+        "r": 29,
+        "e": 1,
+        "d": 4,
+        "deadline_window_end": 32,
+        "absolute_deadline": 32,
+        "w": 6.0,
+        "preempt": null,
+        "executed_slots": [
+          29
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 29,
+        "response_time": 0,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "s4",
+        "job_type": "sporadic",
+        "task_id": "s4",
+        "r": 44,
+        "e": 2,
+        "d": 5,
+        "deadline_window_end": 48,
+        "absolute_deadline": 48,
+        "w": 16.0,
+        "preempt": null,
+        "executed_slots": [
+          44,
+          45
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 45,
+        "response_time": 1,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      {
+        "job_id": "s5",
+        "job_type": "sporadic",
+        "task_id": "s5",
+        "r": 60,
+        "e": 3,
+        "d": 9,
+        "deadline_window_end": 68,
+        "absolute_deadline": 68,
+        "w": 8.0,
+        "preempt": null,
+        "executed_slots": [
+          61,
+          62,
+          65
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 65,
+        "response_time": 5,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      }
+    ],
+    "jobs_by_id": {
+      "a1": {
+        "job_id": "a1",
+        "job_type": "aperiodic",
+        "task_id": "a1",
+        "r": 4,
+        "e": 3,
+        "d": 12,
+        "deadline_window_end": 15,
+        "absolute_deadline": 15,
+        "w": 14.0,
+        "preempt": null,
+        "executed_slots": [
+          5,
+          6,
+          10
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 10,
+        "response_time": 6,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "a2": {
+        "job_id": "a2",
+        "job_type": "aperiodic",
+        "task_id": "a2",
+        "r": 11,
+        "e": 2,
+        "d": 6,
+        "deadline_window_end": 16,
+        "absolute_deadline": 16,
+        "w": 5.0,
+        "preempt": null,
+        "executed_slots": [
+          11,
+          12
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 12,
+        "response_time": 1,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "a3": {
+        "job_id": "a3",
+        "job_type": "aperiodic",
+        "task_id": "a3",
+        "r": 20,
+        "e": 4,
+        "d": 14,
+        "deadline_window_end": 33,
+        "absolute_deadline": 33,
+        "w": 13.0,
+        "preempt": null,
+        "executed_slots": [
+          26,
+          28,
+          29,
+          30
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 30,
+        "response_time": 10,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "a4": {
+        "job_id": "a4",
+        "job_type": "aperiodic",
+        "task_id": "a4",
+        "r": 25,
+        "e": 2,
+        "d": 7,
+        "deadline_window_end": 31,
+        "absolute_deadline": 31,
+        "w": 9.0,
+        "preempt": null,
+        "executed_slots": [
+          26,
+          29
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 29,
+        "response_time": 4,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "a5": {
+        "job_id": "a5",
+        "job_type": "aperiodic",
+        "task_id": "a5",
+        "r": 32,
+        "e": 1,
+        "d": 5,
+        "deadline_window_end": 36,
+        "absolute_deadline": 36,
+        "w": 11.0,
+        "preempt": null,
+        "executed_slots": [
+          34
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 34,
+        "response_time": 2,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "a6": {
+        "job_id": "a6",
+        "job_type": "aperiodic",
+        "task_id": "a6",
+        "r": 38,
+        "e": 3,
+        "d": 11,
+        "deadline_window_end": 48,
+        "absolute_deadline": 48,
+        "w": 7.0,
+        "preempt": null,
+        "executed_slots": [
+          38,
+          39,
+          44
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 44,
+        "response_time": 6,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "a7": {
+        "job_id": "a7",
+        "job_type": "aperiodic",
+        "task_id": "a7",
+        "r": 47,
+        "e": 4,
+        "d": 15,
+        "deadline_window_end": 61,
+        "absolute_deadline": 61,
+        "w": 11.0,
+        "preempt": null,
+        "executed_slots": [
+          48,
+          59,
+          60,
+          61
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 61,
+        "response_time": 14,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "a8": {
+        "job_id": "a8",
+        "job_type": "aperiodic",
+        "task_id": "a8",
+        "r": 54,
+        "e": 2,
+        "d": 12,
+        "deadline_window_end": 65,
+        "absolute_deadline": 65,
+        "w": 12.0,
+        "preempt": null,
+        "executed_slots": [
+          64,
+          65
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 65,
+        "response_time": 11,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "a9": {
+        "job_id": "a9",
+        "job_type": "aperiodic",
+        "task_id": "a9",
+        "r": 62,
+        "e": 3,
+        "d": 9,
+        "deadline_window_end": 70,
+        "absolute_deadline": 70,
+        "w": 6.0,
+        "preempt": null,
+        "executed_slots": [
+          62,
+          63,
+          65
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 65,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "battery_1_chg": {
+        "job_id": "battery_1_chg",
+        "job_type": "charging",
+        "task_id": null,
+        "r": null,
+        "e": null,
+        "d": null,
+        "deadline_window_end": null,
+        "absolute_deadline": null,
+        "w": null,
+        "preempt": null,
+        "executed_slots": [
+          3,
+          4,
+          5,
+          6,
+          10,
+          11,
+          12,
+          14,
+          20,
+          21,
+          24,
+          26,
+          28,
+          29,
+          30,
+          34,
+          35,
+          36,
+          37,
+          42,
+          44,
+          48,
+          52,
+          53,
+          61,
+          62,
+          63,
+          64,
+          65
+        ],
+        "total_executed_slots": 29,
+        "completion_time": 65,
+        "response_time": null,
+        "tardiness": null,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "battery_2_chg": {
+        "job_id": "battery_2_chg",
+        "job_type": "charging",
+        "task_id": null,
+        "r": null,
+        "e": null,
+        "d": null,
+        "deadline_window_end": null,
+        "absolute_deadline": null,
+        "w": null,
+        "preempt": null,
+        "executed_slots": [
+          3,
+          4,
+          5,
+          6,
+          11,
+          12,
+          13,
+          17,
+          24,
+          26,
+          28,
+          29,
+          30,
+          34,
+          35,
+          37,
+          40,
+          41,
+          43,
+          44,
+          48,
+          52,
+          53,
+          62,
+          63,
+          64,
+          65,
+          66
+        ],
+        "total_executed_slots": 28,
+        "completion_time": 66,
+        "response_time": null,
+        "tardiness": null,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p1_1": {
+        "job_id": "p1_1",
+        "job_type": "periodic",
+        "task_id": "p1",
+        "r": 6,
+        "p": 24,
+        "e": 4,
+        "d": 4,
+        "deadline_window_end": 9,
+        "absolute_deadline": 9,
+        "w": 16.0,
+        "preempt": 0,
+        "executed_slots": [
+          6,
+          7,
+          8,
+          9
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 9,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p1_2": {
+        "job_id": "p1_2",
+        "job_type": "periodic",
+        "task_id": "p1",
+        "r": 30,
+        "p": 24,
+        "e": 4,
+        "d": 4,
+        "deadline_window_end": 33,
+        "absolute_deadline": 33,
+        "w": 16.0,
+        "preempt": 0,
+        "executed_slots": [
+          30,
+          31,
+          32,
+          33
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 33,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p1_3": {
+        "job_id": "p1_3",
+        "job_type": "periodic",
+        "task_id": "p1",
+        "r": 54,
+        "p": 24,
+        "e": 4,
+        "d": 4,
+        "deadline_window_end": 57,
+        "absolute_deadline": 57,
+        "w": 16.0,
+        "preempt": 0,
+        "executed_slots": [
+          54,
+          55,
+          56,
+          57
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 57,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p2_1": {
+        "job_id": "p2_1",
+        "job_type": "periodic",
+        "task_id": "p2",
+        "r": 1,
+        "p": 12,
+        "e": 4,
+        "d": 4,
+        "deadline_window_end": 4,
+        "absolute_deadline": 4,
+        "w": 17.0,
+        "preempt": 1,
+        "executed_slots": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 4,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p2_2": {
+        "job_id": "p2_2",
+        "job_type": "periodic",
+        "task_id": "p2",
+        "r": 13,
+        "p": 12,
+        "e": 4,
+        "d": 4,
+        "deadline_window_end": 16,
+        "absolute_deadline": 16,
+        "w": 17.0,
+        "preempt": 1,
+        "executed_slots": [
+          13,
+          14,
+          15,
+          16
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 16,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p2_3": {
+        "job_id": "p2_3",
+        "job_type": "periodic",
+        "task_id": "p2",
+        "r": 25,
+        "p": 12,
+        "e": 4,
+        "d": 4,
+        "deadline_window_end": 28,
+        "absolute_deadline": 28,
+        "w": 17.0,
+        "preempt": 1,
+        "executed_slots": [
+          25,
+          26,
+          27,
+          28
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 28,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p2_4": {
+        "job_id": "p2_4",
+        "job_type": "periodic",
+        "task_id": "p2",
+        "r": 37,
+        "p": 12,
+        "e": 4,
+        "d": 4,
+        "deadline_window_end": 40,
+        "absolute_deadline": 40,
+        "w": 17.0,
+        "preempt": 1,
+        "executed_slots": [
+          37,
+          38,
+          39,
+          40
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 40,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p2_5": {
+        "job_id": "p2_5",
+        "job_type": "periodic",
+        "task_id": "p2",
+        "r": 49,
+        "p": 12,
+        "e": 4,
+        "d": 4,
+        "deadline_window_end": 52,
+        "absolute_deadline": 52,
+        "w": 17.0,
+        "preempt": 1,
+        "executed_slots": [
+          49,
+          50,
+          51,
+          52
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 52,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p2_6": {
+        "job_id": "p2_6",
+        "job_type": "periodic",
+        "task_id": "p2",
+        "r": 61,
+        "p": 12,
+        "e": 4,
+        "d": 4,
+        "deadline_window_end": 64,
+        "absolute_deadline": 64,
+        "w": 17.0,
+        "preempt": 1,
+        "executed_slots": [
+          61,
+          62,
+          63,
+          64
+        ],
+        "total_executed_slots": 4,
+        "completion_time": 64,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p3_1": {
+        "job_id": "p3_1",
+        "job_type": "periodic",
+        "task_id": "p3",
+        "r": 10,
+        "p": 20,
+        "e": 2,
+        "d": 15,
+        "deadline_window_end": 24,
+        "absolute_deadline": 24,
+        "w": 17.0,
+        "preempt": 0,
+        "executed_slots": [
+          18,
+          19
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 19,
+        "response_time": 9,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p3_2": {
+        "job_id": "p3_2",
+        "job_type": "periodic",
+        "task_id": "p3",
+        "r": 30,
+        "p": 20,
+        "e": 2,
+        "d": 15,
+        "deadline_window_end": 44,
+        "absolute_deadline": 44,
+        "w": 17.0,
+        "preempt": 0,
+        "executed_slots": [
+          42,
+          43
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 43,
+        "response_time": 13,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p3_3": {
+        "job_id": "p3_3",
+        "job_type": "periodic",
+        "task_id": "p3",
+        "r": 50,
+        "p": 20,
+        "e": 2,
+        "d": 15,
+        "deadline_window_end": 64,
+        "absolute_deadline": 64,
+        "w": 17.0,
+        "preempt": 0,
+        "executed_slots": [
+          62,
+          63
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 63,
+        "response_time": 13,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p3_4": {
+        "job_id": "p3_4",
+        "job_type": "periodic",
+        "task_id": "p3",
+        "r": 70,
+        "p": 20,
+        "e": 2,
+        "d": 15,
+        "deadline_window_end": 72,
+        "absolute_deadline": 84,
+        "w": 17.0,
+        "preempt": 0,
+        "executed_slots": [
+          71,
+          72
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 72,
+        "response_time": 2,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p4_1": {
+        "job_id": "p4_1",
+        "job_type": "periodic",
+        "task_id": "p4",
+        "r": 7,
+        "p": 10,
+        "e": 2,
+        "d": 10,
+        "deadline_window_end": 16,
+        "absolute_deadline": 16,
+        "w": 13.0,
+        "preempt": 0,
+        "executed_slots": [
+          11,
+          12
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 12,
+        "response_time": 5,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p4_2": {
+        "job_id": "p4_2",
+        "job_type": "periodic",
+        "task_id": "p4",
+        "r": 17,
+        "p": 10,
+        "e": 2,
+        "d": 10,
+        "deadline_window_end": 26,
+        "absolute_deadline": 26,
+        "w": 13.0,
+        "preempt": 0,
+        "executed_slots": [
+          19,
+          20
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 20,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p4_3": {
+        "job_id": "p4_3",
+        "job_type": "periodic",
+        "task_id": "p4",
+        "r": 27,
+        "p": 10,
+        "e": 2,
+        "d": 10,
+        "deadline_window_end": 36,
+        "absolute_deadline": 36,
+        "w": 13.0,
+        "preempt": 0,
+        "executed_slots": [
+          34,
+          35
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 35,
+        "response_time": 8,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p4_4": {
+        "job_id": "p4_4",
+        "job_type": "periodic",
+        "task_id": "p4",
+        "r": 37,
+        "p": 10,
+        "e": 2,
+        "d": 10,
+        "deadline_window_end": 46,
+        "absolute_deadline": 46,
+        "w": 13.0,
+        "preempt": 0,
+        "executed_slots": [
+          41,
+          42
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 42,
+        "response_time": 5,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p4_5": {
+        "job_id": "p4_5",
+        "job_type": "periodic",
+        "task_id": "p4",
+        "r": 47,
+        "p": 10,
+        "e": 2,
+        "d": 10,
+        "deadline_window_end": 56,
+        "absolute_deadline": 56,
+        "w": 13.0,
+        "preempt": 0,
+        "executed_slots": [
+          47,
+          48
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 48,
+        "response_time": 1,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p4_6": {
+        "job_id": "p4_6",
+        "job_type": "periodic",
+        "task_id": "p4",
+        "r": 57,
+        "p": 10,
+        "e": 2,
+        "d": 10,
+        "deadline_window_end": 66,
+        "absolute_deadline": 66,
+        "w": 13.0,
+        "preempt": 0,
+        "executed_slots": [
+          62,
+          63
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 63,
+        "response_time": 6,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p4_7": {
+        "job_id": "p4_7",
+        "job_type": "periodic",
+        "task_id": "p4",
+        "r": 67,
+        "p": 10,
+        "e": 2,
+        "d": 10,
+        "deadline_window_end": 72,
+        "absolute_deadline": 76,
+        "w": 13.0,
+        "preempt": 0,
+        "executed_slots": [
+          67,
+          68
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 68,
+        "response_time": 1,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p5_1": {
+        "job_id": "p5_1",
+        "job_type": "periodic",
+        "task_id": "p5",
+        "r": 6,
+        "p": 23,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 12,
+        "absolute_deadline": 12,
+        "w": 16.0,
+        "preempt": 0,
+        "executed_slots": [
+          10
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 10,
+        "response_time": 4,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p5_2": {
+        "job_id": "p5_2",
+        "job_type": "periodic",
+        "task_id": "p5",
+        "r": 29,
+        "p": 23,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 35,
+        "absolute_deadline": 35,
+        "w": 16.0,
+        "preempt": 0,
+        "executed_slots": [
+          35
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 35,
+        "response_time": 6,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p5_3": {
+        "job_id": "p5_3",
+        "job_type": "periodic",
+        "task_id": "p5",
+        "r": 52,
+        "p": 23,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 58,
+        "absolute_deadline": 58,
+        "w": 16.0,
+        "preempt": 0,
+        "executed_slots": [
+          52
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 52,
+        "response_time": 0,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p6_1": {
+        "job_id": "p6_1",
+        "job_type": "periodic",
+        "task_id": "p6",
+        "r": 15,
+        "p": 23,
+        "e": 1,
+        "d": 22,
+        "deadline_window_end": 36,
+        "absolute_deadline": 36,
+        "w": 6.0,
+        "preempt": 1,
+        "executed_slots": [
+          36
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 36,
+        "response_time": 21,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p6_2": {
+        "job_id": "p6_2",
+        "job_type": "periodic",
+        "task_id": "p6",
+        "r": 38,
+        "p": 23,
+        "e": 1,
+        "d": 22,
+        "deadline_window_end": 59,
+        "absolute_deadline": 59,
+        "w": 6.0,
+        "preempt": 1,
+        "executed_slots": [
+          41
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 41,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p6_3": {
+        "job_id": "p6_3",
+        "job_type": "periodic",
+        "task_id": "p6",
+        "r": 61,
+        "p": 23,
+        "e": 1,
+        "d": 22,
+        "deadline_window_end": 72,
+        "absolute_deadline": 82,
+        "w": 6.0,
+        "preempt": 1,
+        "executed_slots": [
+          64
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 64,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p7_1": {
+        "job_id": "p7_1",
+        "job_type": "periodic",
+        "task_id": "p7",
+        "r": 5,
+        "p": 20,
+        "e": 3,
+        "d": 20,
+        "deadline_window_end": 24,
+        "absolute_deadline": 24,
+        "w": 16.0,
+        "preempt": 1,
+        "executed_slots": [
+          10,
+          11,
+          13
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 13,
+        "response_time": 8,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p7_2": {
+        "job_id": "p7_2",
+        "job_type": "periodic",
+        "task_id": "p7",
+        "r": 25,
+        "p": 20,
+        "e": 3,
+        "d": 20,
+        "deadline_window_end": 44,
+        "absolute_deadline": 44,
+        "w": 16.0,
+        "preempt": 1,
+        "executed_slots": [
+          34,
+          36,
+          43
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 43,
+        "response_time": 18,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p7_3": {
+        "job_id": "p7_3",
+        "job_type": "periodic",
+        "task_id": "p7",
+        "r": 45,
+        "p": 20,
+        "e": 3,
+        "d": 20,
+        "deadline_window_end": 64,
+        "absolute_deadline": 64,
+        "w": 16.0,
+        "preempt": 1,
+        "executed_slots": [
+          62,
+          63,
+          64
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 64,
+        "response_time": 19,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p7_4": {
+        "job_id": "p7_4",
+        "job_type": "periodic",
+        "task_id": "p7",
+        "r": 65,
+        "p": 20,
+        "e": 3,
+        "d": 20,
+        "deadline_window_end": 72,
+        "absolute_deadline": 84,
+        "w": 16.0,
+        "preempt": 1,
+        "executed_slots": [
+          65,
+          66,
+          67
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 67,
+        "response_time": 2,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p8_1": {
+        "job_id": "p8_1",
+        "job_type": "periodic",
+        "task_id": "p8",
+        "r": 7,
+        "p": 9,
+        "e": 3,
+        "d": 8,
+        "deadline_window_end": 14,
+        "absolute_deadline": 14,
+        "w": 12.0,
+        "preempt": 0,
+        "executed_slots": [
+          10,
+          11,
+          12
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 12,
+        "response_time": 5,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p8_2": {
+        "job_id": "p8_2",
+        "job_type": "periodic",
+        "task_id": "p8",
+        "r": 16,
+        "p": 9,
+        "e": 3,
+        "d": 8,
+        "deadline_window_end": 23,
+        "absolute_deadline": 23,
+        "w": 12.0,
+        "preempt": 0,
+        "executed_slots": [
+          17,
+          18,
+          19
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 19,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p8_3": {
+        "job_id": "p8_3",
+        "job_type": "periodic",
+        "task_id": "p8",
+        "r": 25,
+        "p": 9,
+        "e": 3,
+        "d": 8,
+        "deadline_window_end": 32,
+        "absolute_deadline": 32,
+        "w": 12.0,
+        "preempt": 0,
+        "executed_slots": [
+          28,
+          29,
+          30
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 30,
+        "response_time": 5,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p8_4": {
+        "job_id": "p8_4",
+        "job_type": "periodic",
+        "task_id": "p8",
+        "r": 34,
+        "p": 9,
+        "e": 3,
+        "d": 8,
+        "deadline_window_end": 41,
+        "absolute_deadline": 41,
+        "w": 12.0,
+        "preempt": 0,
+        "executed_slots": [
+          34,
+          35,
+          36
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 36,
+        "response_time": 2,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p8_5": {
+        "job_id": "p8_5",
+        "job_type": "periodic",
+        "task_id": "p8",
+        "r": 43,
+        "p": 9,
+        "e": 3,
+        "d": 8,
+        "deadline_window_end": 50,
+        "absolute_deadline": 50,
+        "w": 12.0,
+        "preempt": 0,
+        "executed_slots": [
+          43,
+          44,
+          45
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 45,
+        "response_time": 2,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p8_6": {
+        "job_id": "p8_6",
+        "job_type": "periodic",
+        "task_id": "p8",
+        "r": 52,
+        "p": 9,
+        "e": 3,
+        "d": 8,
+        "deadline_window_end": 59,
+        "absolute_deadline": 59,
+        "w": 12.0,
+        "preempt": 0,
+        "executed_slots": [
+          52,
+          53,
+          54
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 54,
+        "response_time": 2,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p8_7": {
+        "job_id": "p8_7",
+        "job_type": "periodic",
+        "task_id": "p8",
+        "r": 61,
+        "p": 9,
+        "e": 3,
+        "d": 8,
+        "deadline_window_end": 68,
+        "absolute_deadline": 68,
+        "w": 12.0,
+        "preempt": 0,
+        "executed_slots": [
+          62,
+          63,
+          64
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 64,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p8_8": {
+        "job_id": "p8_8",
+        "job_type": "periodic",
+        "task_id": "p8",
+        "r": 70,
+        "p": 9,
+        "e": 3,
+        "d": 8,
+        "deadline_window_end": 72,
+        "absolute_deadline": 77,
+        "w": 12.0,
+        "preempt": 0,
+        "executed_slots": [
+          70,
+          71,
+          72
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 72,
+        "response_time": 2,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p9_1": {
+        "job_id": "p9_1",
+        "job_type": "periodic",
+        "task_id": "p9",
+        "r": 7,
+        "p": 7,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 13,
+        "absolute_deadline": 13,
+        "w": 9.0,
+        "preempt": 1,
+        "executed_slots": [
+          10
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 10,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p9_10": {
+        "job_id": "p9_10",
+        "job_type": "periodic",
+        "task_id": "p9",
+        "r": 70,
+        "p": 7,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 72,
+        "absolute_deadline": 76,
+        "w": 9.0,
+        "preempt": 1,
+        "executed_slots": [
+          72
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 72,
+        "response_time": 2,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p9_2": {
+        "job_id": "p9_2",
+        "job_type": "periodic",
+        "task_id": "p9",
+        "r": 14,
+        "p": 7,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 20,
+        "absolute_deadline": 20,
+        "w": 9.0,
+        "preempt": 1,
+        "executed_slots": [
+          20
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 20,
+        "response_time": 6,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p9_3": {
+        "job_id": "p9_3",
+        "job_type": "periodic",
+        "task_id": "p9",
+        "r": 21,
+        "p": 7,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 27,
+        "absolute_deadline": 27,
+        "w": 9.0,
+        "preempt": 1,
+        "executed_slots": [
+          26
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 26,
+        "response_time": 5,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p9_4": {
+        "job_id": "p9_4",
+        "job_type": "periodic",
+        "task_id": "p9",
+        "r": 28,
+        "p": 7,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 34,
+        "absolute_deadline": 34,
+        "w": 9.0,
+        "preempt": 1,
+        "executed_slots": [
+          34
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 34,
+        "response_time": 6,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p9_5": {
+        "job_id": "p9_5",
+        "job_type": "periodic",
+        "task_id": "p9",
+        "r": 35,
+        "p": 7,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 41,
+        "absolute_deadline": 41,
+        "w": 9.0,
+        "preempt": 1,
+        "executed_slots": [
+          35
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 35,
+        "response_time": 0,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p9_6": {
+        "job_id": "p9_6",
+        "job_type": "periodic",
+        "task_id": "p9",
+        "r": 42,
+        "p": 7,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 48,
+        "absolute_deadline": 48,
+        "w": 9.0,
+        "preempt": 1,
+        "executed_slots": [
+          43
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 43,
+        "response_time": 1,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p9_7": {
+        "job_id": "p9_7",
+        "job_type": "periodic",
+        "task_id": "p9",
+        "r": 49,
+        "p": 7,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 55,
+        "absolute_deadline": 55,
+        "w": 9.0,
+        "preempt": 1,
+        "executed_slots": [
+          51
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 51,
+        "response_time": 2,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p9_8": {
+        "job_id": "p9_8",
+        "job_type": "periodic",
+        "task_id": "p9",
+        "r": 56,
+        "p": 7,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 62,
+        "absolute_deadline": 62,
+        "w": 9.0,
+        "preempt": 1,
+        "executed_slots": [
+          62
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 62,
+        "response_time": 6,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "p9_9": {
+        "job_id": "p9_9",
+        "job_type": "periodic",
+        "task_id": "p9",
+        "r": 63,
+        "p": 7,
+        "e": 1,
+        "d": 7,
+        "deadline_window_end": 69,
+        "absolute_deadline": 69,
+        "w": 9.0,
+        "preempt": 1,
+        "executed_slots": [
+          63
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 63,
+        "response_time": 0,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "s1": {
+        "job_id": "s1",
+        "job_type": "sporadic",
+        "task_id": "s1",
+        "r": 6,
+        "e": 2,
+        "d": 8,
+        "deadline_window_end": 13,
+        "absolute_deadline": 13,
+        "w": 11.0,
+        "preempt": null,
+        "executed_slots": [
+          6,
+          10
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 10,
+        "response_time": 4,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "s2": {
+        "job_id": "s2",
+        "job_type": "sporadic",
+        "task_id": "s2",
+        "r": 17,
+        "e": 3,
+        "d": 6,
+        "deadline_window_end": 22,
+        "absolute_deadline": 22,
+        "w": 19.0,
+        "preempt": null,
+        "executed_slots": [
+          18,
+          19,
+          20
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 20,
+        "response_time": 3,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "s3": {
+        "job_id": "s3",
+        "job_type": "sporadic",
+        "task_id": "s3",
+        "r": 29,
+        "e": 1,
+        "d": 4,
+        "deadline_window_end": 32,
+        "absolute_deadline": 32,
+        "w": 6.0,
+        "preempt": null,
+        "executed_slots": [
+          29
+        ],
+        "total_executed_slots": 1,
+        "completion_time": 29,
+        "response_time": 0,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "s4": {
+        "job_id": "s4",
+        "job_type": "sporadic",
+        "task_id": "s4",
+        "r": 44,
+        "e": 2,
+        "d": 5,
+        "deadline_window_end": 48,
+        "absolute_deadline": 48,
+        "w": 16.0,
+        "preempt": null,
+        "executed_slots": [
+          44,
+          45
+        ],
+        "total_executed_slots": 2,
+        "completion_time": 45,
+        "response_time": 1,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      },
+      "s5": {
+        "job_id": "s5",
+        "job_type": "sporadic",
+        "task_id": "s5",
+        "r": 60,
+        "e": 3,
+        "d": 9,
+        "deadline_window_end": 68,
+        "absolute_deadline": 68,
+        "w": 8.0,
+        "preempt": null,
+        "executed_slots": [
+          61,
+          62,
+          65
+        ],
+        "total_executed_slots": 3,
+        "completion_time": 65,
+        "response_time": 5,
+        "tardiness": 0,
+        "is_completed": true,
+        "is_hard_deadline_missed": false,
+        "is_soft_deadline_missed": false,
+        "is_non_preemptive_violation": false,
+        "is_rejected_sporadic": false
+      }
+    },
+    "schedule_entries": [
+      {
+        "t": 1,
+        "P": {
+          "thermal_1": 15.0,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 19.999,
+          "battery_2": 15.0
+        },
+        "k": {
+          "p2_1": {
+            "battery_1": 17.0
+          }
+        },
+        "sell": 32.999,
+        "soc": {
+          "battery_1": 25.001,
+          "battery_2": 10.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "battery_1": 17.0
+          }
+        }
+      },
+      {
+        "t": 2,
+        "P": {
+          "thermal_1": 30.0,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 4.999,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p2_1": {
+            "thermal_1": 12.001,
+            "battery_1": 4.999
+          }
+        },
+        "sell": 17.999,
+        "soc": {
+          "battery_1": 20.002,
+          "battery_2": 10.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "thermal_1": 12.001,
+            "battery_1": 4.999
+          }
+        }
+      },
+      {
+        "t": 3,
+        "P": {
+          "thermal_1": 45.0,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p2_1": {
+            "thermal_1": 17.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 8.0
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 40.002,
+          "battery_2": 18.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "thermal_1": 17.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 8.0
+          }
+        }
+      },
+      {
+        "t": 4,
+        "P": {
+          "thermal_1": 60.0,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p2_1": {
+            "thermal_1": 17.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 9.403
+          },
+          "battery_2_chg": {
+            "thermal_1": 8.198
+          }
+        },
+        "sell": 25.399,
+        "soc": {
+          "battery_1": 49.405,
+          "battery_2": 26.198
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "thermal_1": 17.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 9.403
+          },
+          "battery_2_chg": {
+            "thermal_1": 8.198
+          }
+        }
+      },
+      {
+        "t": 5,
+        "P": {
+          "thermal_1": 75.0,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "a1": {
+            "thermal_1": 14.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 15.0
+          }
+        },
+        "sell": 26.0,
+        "soc": {
+          "battery_1": 69.405,
+          "battery_2": 41.198
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "a1": {
+            "thermal_1": 14.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 15.0
+          }
+        }
+      },
+      {
+        "t": 6,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p1_1": {
+            "thermal_1": 16.0
+          },
+          "a1": {
+            "thermal_1": 14.0
+          },
+          "s1": {
+            "thermal_1": 11.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 15.0
+          }
+        },
+        "sell": 4.0,
+        "soc": {
+          "battery_1": 89.405,
+          "battery_2": 56.198
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p1": {
+            "thermal_1": 16.0
+          },
+          "a1": {
+            "thermal_1": 14.0
+          },
+          "s1": {
+            "thermal_1": 11.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 15.0
+          }
+        }
+      },
+      {
+        "t": 7,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 0.0,
+          "pv_1": 1.8,
+          "pv_2": 2.4,
+          "battery_1": 15.999,
+          "battery_2": 8.002
+        },
+        "k": {
+          "p1_1": {
+            "battery_1": 15.999,
+            "battery_2": 0.001
+          }
+        },
+        "sell": 92.201,
+        "soc": {
+          "battery_1": 73.406,
+          "battery_2": 48.196
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p1": {
+            "battery_1": 15.999,
+            "battery_2": 0.001
+          }
+        }
+      },
+      {
+        "t": 8,
+        "P": {
+          "thermal_1": 75.0,
+          "thermal_2": 0.0,
+          "pv_1": 9.6,
+          "pv_2": 12.8,
+          "battery_1": 20.0,
+          "battery_2": 15.0
+        },
+        "k": {
+          "p1_1": {
+            "pv_1": 1.001,
+            "battery_2": 14.999
+          }
+        },
+        "sell": 116.4,
+        "soc": {
+          "battery_1": 53.406,
+          "battery_2": 33.196
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p1": {
+            "pv_1": 1.001,
+            "battery_2": 14.999
+          }
+        }
+      },
+      {
+        "t": 9,
+        "P": {
+          "thermal_1": 60.0,
+          "thermal_2": 0.0,
+          "pv_1": 15.0,
+          "pv_2": 20.0,
+          "battery_1": 19.999,
+          "battery_2": 15.0
+        },
+        "k": {
+          "p1_1": {
+            "battery_1": 1.001,
+            "battery_2": 14.999
+          }
+        },
+        "sell": 113.999,
+        "soc": {
+          "battery_1": 33.407,
+          "battery_2": 18.196
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p1": {
+            "battery_1": 1.001,
+            "battery_2": 14.999
+          }
+        }
+      },
+      {
+        "t": 10,
+        "P": {
+          "thermal_1": 45.0,
+          "thermal_2": 0.0,
+          "pv_1": 18.0,
+          "pv_2": 24.0,
+          "battery_1": 0.0,
+          "battery_2": 0.001
+        },
+        "k": {
+          "p5_1": {
+            "pv_1": 15.999,
+            "pv_2": 0.001
+          },
+          "p7_1": {
+            "pv_2": 15.999,
+            "battery_2": 0.001
+          },
+          "p8_1": {
+            "thermal_1": 12.0
+          },
+          "p9_1": {
+            "thermal_1": 7.0,
+            "pv_1": 1.999,
+            "pv_2": 0.001
+          },
+          "a1": {
+            "thermal_1": 6.001,
+            "pv_2": 7.999
+          },
+          "s1": {
+            "thermal_1": 11.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 8.999,
+            "pv_1": 0.002
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 42.408,
+          "battery_2": 18.195
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p5": {
+            "pv_1": 15.999,
+            "pv_2": 0.001
+          },
+          "p7": {
+            "pv_2": 15.999,
+            "battery_2": 0.001
+          },
+          "p8": {
+            "thermal_1": 12.0
+          },
+          "p9": {
+            "thermal_1": 7.0,
+            "pv_1": 1.999,
+            "pv_2": 0.001
+          },
+          "a1": {
+            "thermal_1": 6.001,
+            "pv_2": 7.999
+          },
+          "s1": {
+            "thermal_1": 11.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 8.999,
+            "pv_1": 0.002
+          }
+        }
+      },
+      {
+        "t": 11,
+        "P": {
+          "thermal_1": 30.0,
+          "thermal_2": 0.0,
+          "pv_1": 13.8,
+          "pv_2": 18.4,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p4_1": {
+            "pv_1": 13.0
+          },
+          "p7_1": {
+            "pv_1": 0.799,
+            "pv_2": 15.201
+          },
+          "p8_1": {
+            "thermal_1": 12.0
+          },
+          "a2": {
+            "thermal_1": 1.801,
+            "pv_2": 3.199
+          },
+          "battery_1_chg": {
+            "thermal_1": 1.201
+          },
+          "battery_2_chg": {
+            "thermal_1": 14.998,
+            "pv_1": 0.001
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 43.609,
+          "battery_2": 33.194
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p4": {
+            "pv_1": 13.0
+          },
+          "p7": {
+            "pv_1": 0.799,
+            "pv_2": 15.201
+          },
+          "p8": {
+            "thermal_1": 12.0
+          },
+          "a2": {
+            "thermal_1": 1.801,
+            "pv_2": 3.199
+          },
+          "battery_1_chg": {
+            "thermal_1": 1.201
+          },
+          "battery_2_chg": {
+            "thermal_1": 14.998,
+            "pv_1": 0.001
+          }
+        }
+      },
+      {
+        "t": 12,
+        "P": {
+          "thermal_1": 15.0,
+          "thermal_2": 0.0,
+          "pv_1": 16.2,
+          "pv_2": 21.6,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p4_1": {
+            "thermal_1": 0.001,
+            "pv_2": 12.999
+          },
+          "p8_1": {
+            "thermal_1": 3.401,
+            "pv_2": 8.599
+          },
+          "a2": {
+            "pv_1": 5.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 11.598,
+            "pv_1": 5.599
+          },
+          "battery_2_chg": {
+            "pv_1": 5.601,
+            "pv_2": 0.002
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 60.806,
+          "battery_2": 38.797
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p4": {
+            "thermal_1": 0.001,
+            "pv_2": 12.999
+          },
+          "p8": {
+            "thermal_1": 3.401,
+            "pv_2": 8.599
+          },
+          "a2": {
+            "pv_1": 5.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 11.598,
+            "pv_1": 5.599
+          },
+          "battery_2_chg": {
+            "pv_1": 5.601,
+            "pv_2": 0.002
+          }
+        }
+      },
+      {
+        "t": 13,
+        "P": {
+          "thermal_1": 0.0,
+          "thermal_2": 0.0,
+          "pv_1": 16.2,
+          "pv_2": 21.6,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p2_2": {
+            "pv_1": 0.001,
+            "pv_2": 16.999
+          },
+          "p7_1": {
+            "pv_1": 16.0
+          },
+          "battery_2_chg": {
+            "pv_1": 0.199,
+            "pv_2": 4.601
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 60.806,
+          "battery_2": 43.597
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "pv_1": 0.001,
+            "pv_2": 16.999
+          },
+          "p7": {
+            "pv_1": 16.0
+          },
+          "battery_2_chg": {
+            "pv_1": 0.199,
+            "pv_2": 4.601
+          }
+        }
+      },
+      {
+        "t": 14,
+        "P": {
+          "thermal_1": 0.0,
+          "thermal_2": 0.0,
+          "pv_1": 9.6,
+          "pv_2": 12.8,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p2_2": {
+            "pv_1": 4.2,
+            "pv_2": 12.8
+          },
+          "battery_1_chg": {
+            "pv_1": 5.4
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 66.206,
+          "battery_2": 43.597
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "pv_1": 4.2,
+            "pv_2": 12.8
+          },
+          "battery_1_chg": {
+            "pv_1": 5.4
+          }
+        }
+      },
+      {
+        "t": 15,
+        "P": {
+          "thermal_1": 0.0,
+          "thermal_2": 0.0,
+          "pv_1": 6.6,
+          "pv_2": 8.8,
+          "battery_1": 0.0,
+          "battery_2": 1.6
+        },
+        "k": {
+          "p2_2": {
+            "pv_1": 6.6,
+            "pv_2": 8.8,
+            "battery_2": 1.6
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 66.206,
+          "battery_2": 41.997
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "pv_1": 6.6,
+            "pv_2": 8.8,
+            "battery_2": 1.6
+          }
+        }
+      },
+      {
+        "t": 16,
+        "P": {
+          "thermal_1": 0.0,
+          "thermal_2": 0.0,
+          "pv_1": 3.6,
+          "pv_2": 4.8,
+          "battery_1": 0.0,
+          "battery_2": 8.6
+        },
+        "k": {
+          "p2_2": {
+            "pv_1": 3.6,
+            "pv_2": 4.8,
+            "battery_2": 8.6
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 66.206,
+          "battery_2": 33.397
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "pv_1": 3.6,
+            "pv_2": 4.8,
+            "battery_2": 8.6
+          }
+        }
+      },
+      {
+        "t": 17,
+        "P": {
+          "thermal_1": 15.0,
+          "thermal_2": 0.0,
+          "pv_1": 2.4,
+          "pv_2": 3.2,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p8_2": {
+            "thermal_1": 12.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 3.0,
+            "pv_1": 2.4,
+            "pv_2": 3.2
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 66.206,
+          "battery_2": 41.997
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p8": {
+            "thermal_1": 12.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 3.0,
+            "pv_1": 2.4,
+            "pv_2": 3.2
+          }
+        }
+      },
+      {
+        "t": 18,
+        "P": {
+          "thermal_1": 30.0,
+          "thermal_2": 0.0,
+          "pv_1": 1.2,
+          "pv_2": 1.6,
+          "battery_1": 15.199,
+          "battery_2": 0.001
+        },
+        "k": {
+          "p3_1": {
+            "thermal_1": 15.4,
+            "pv_1": 0.001,
+            "pv_2": 1.599
+          },
+          "p8_2": {
+            "thermal_1": 10.799,
+            "pv_1": 1.199,
+            "pv_2": 0.001,
+            "battery_2": 0.001
+          },
+          "s2": {
+            "thermal_1": 3.801,
+            "battery_1": 15.199
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 51.007,
+          "battery_2": 41.996
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p3": {
+            "thermal_1": 15.4,
+            "pv_1": 0.001,
+            "pv_2": 1.599
+          },
+          "p8": {
+            "thermal_1": 10.799,
+            "pv_1": 1.199,
+            "pv_2": 0.001,
+            "battery_2": 0.001
+          },
+          "s2": {
+            "thermal_1": 3.801,
+            "battery_1": 15.199
+          }
+        }
+      },
+      {
+        "t": 19,
+        "P": {
+          "thermal_1": 45.0,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 15.999,
+          "battery_2": 0.001
+        },
+        "k": {
+          "p3_1": {
+            "thermal_1": 16.999,
+            "battery_1": 0.001
+          },
+          "p4_2": {
+            "thermal_1": 13.0
+          },
+          "p8_2": {
+            "thermal_1": 12.0
+          },
+          "s2": {
+            "thermal_1": 3.001,
+            "battery_1": 15.998,
+            "battery_2": 0.001
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 35.008,
+          "battery_2": 41.995
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p3": {
+            "thermal_1": 16.999,
+            "battery_1": 0.001
+          },
+          "p4": {
+            "thermal_1": 13.0
+          },
+          "p8": {
+            "thermal_1": 12.0
+          },
+          "s2": {
+            "thermal_1": 3.001,
+            "battery_1": 15.998,
+            "battery_2": 0.001
+          }
+        }
+      },
+      {
+        "t": 20,
+        "P": {
+          "thermal_1": 60.0,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 0.0,
+          "battery_2": 0.999
+        },
+        "k": {
+          "p4_2": {
+            "thermal_1": 13.0
+          },
+          "p9_2": {
+            "thermal_1": 9.0
+          },
+          "s2": {
+            "thermal_1": 18.001,
+            "battery_2": 0.999
+          },
+          "battery_1_chg": {
+            "thermal_1": 19.999
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 55.007,
+          "battery_2": 40.996
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p4": {
+            "thermal_1": 13.0
+          },
+          "p9": {
+            "thermal_1": 9.0
+          },
+          "s2": {
+            "thermal_1": 18.001,
+            "battery_2": 0.999
+          },
+          "battery_1_chg": {
+            "thermal_1": 19.999
+          }
+        }
+      },
+      {
+        "t": 21,
+        "P": {
+          "thermal_1": 75.0,
+          "thermal_2": 20.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 0.0,
+          "battery_2": 0.996
+        },
+        "k": {
+          "battery_1_chg": {
+            "thermal_1": 4.993
+          }
+        },
+        "sell": 91.003,
+        "soc": {
+          "battery_1": 60.0,
+          "battery_2": 40.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "battery_1_chg": {
+            "thermal_1": 4.993
+          }
+        }
+      },
+      {
+        "t": 22,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 40.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 20.0,
+          "battery_2": 15.0
+        },
+        "k": {},
+        "sell": 155.0,
+        "soc": {
+          "battery_1": 40.0,
+          "battery_2": 25.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": []
+      },
+      {
+        "t": 23,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 45.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 20.0,
+          "battery_2": 15.0
+        },
+        "k": {},
+        "sell": 160.0,
+        "soc": {
+          "battery_1": 20.0,
+          "battery_2": 10.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": []
+      },
+      {
+        "t": 24,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 45.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 15.0
+          }
+        },
+        "sell": 90.0,
+        "soc": {
+          "battery_1": 40.0,
+          "battery_2": 25.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 15.0
+          }
+        }
+      },
+      {
+        "t": 25,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 40.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 20.0,
+          "battery_2": 15.0
+        },
+        "k": {
+          "p2_3": {
+            "battery_1": 2.001,
+            "battery_2": 14.999
+          }
+        },
+        "sell": 138.0,
+        "soc": {
+          "battery_1": 20.0,
+          "battery_2": 10.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "battery_1": 2.001,
+            "battery_2": 14.999
+          }
+        }
+      },
+      {
+        "t": 26,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 20.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p2_3": {
+            "thermal_1": 17.0
+          },
+          "p9_3": {
+            "thermal_1": 9.0
+          },
+          "a3": {
+            "thermal_1": 13.0
+          },
+          "a4": {
+            "thermal_1": 9.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 12.0,
+            "thermal_2": 3.0
+          }
+        },
+        "sell": 17.0,
+        "soc": {
+          "battery_1": 40.0,
+          "battery_2": 25.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "thermal_1": 17.0
+          },
+          "p9": {
+            "thermal_1": 9.0
+          },
+          "a3": {
+            "thermal_1": 13.0
+          },
+          "a4": {
+            "thermal_1": 9.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 12.0,
+            "thermal_2": 3.0
+          }
+        }
+      },
+      {
+        "t": 27,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 20.0,
+          "battery_2": 15.0
+        },
+        "k": {
+          "p2_3": {
+            "battery_1": 2.001,
+            "battery_2": 14.999
+          }
+        },
+        "sell": 98.0,
+        "soc": {
+          "battery_1": 20.0,
+          "battery_2": 10.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "battery_1": 2.001,
+            "battery_2": 14.999
+          }
+        }
+      },
+      {
+        "t": 28,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p2_3": {
+            "thermal_1": 17.0
+          },
+          "p8_3": {
+            "thermal_1": 12.0
+          },
+          "a3": {
+            "thermal_1": 13.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 15.0
+          }
+        },
+        "sell": 3.0,
+        "soc": {
+          "battery_1": 40.0,
+          "battery_2": 25.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "thermal_1": 17.0
+          },
+          "p8": {
+            "thermal_1": 12.0
+          },
+          "a3": {
+            "thermal_1": 13.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 15.0
+          }
+        }
+      },
+      {
+        "t": 29,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p8_3": {
+            "thermal_1": 12.0
+          },
+          "a3": {
+            "thermal_1": 13.0
+          },
+          "a4": {
+            "thermal_1": 9.0
+          },
+          "s3": {
+            "thermal_1": 6.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 15.0
+          }
+        },
+        "sell": 5.0,
+        "soc": {
+          "battery_1": 60.0,
+          "battery_2": 40.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p8": {
+            "thermal_1": 12.0
+          },
+          "a3": {
+            "thermal_1": 13.0
+          },
+          "a4": {
+            "thermal_1": 9.0
+          },
+          "s3": {
+            "thermal_1": 6.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 15.0
+          }
+        }
+      },
+      {
+        "t": 30,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p1_2": {
+            "thermal_1": 16.0
+          },
+          "p8_3": {
+            "thermal_1": 12.0
+          },
+          "a3": {
+            "thermal_1": 13.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 15.0
+          }
+        },
+        "sell": 4.0,
+        "soc": {
+          "battery_1": 80.0,
+          "battery_2": 55.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p1": {
+            "thermal_1": 16.0
+          },
+          "p8": {
+            "thermal_1": 12.0
+          },
+          "a3": {
+            "thermal_1": 13.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 15.0
+          }
+        }
+      },
+      {
+        "t": 31,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 0.0,
+          "pv_1": 1.2,
+          "pv_2": 1.6,
+          "battery_1": 20.0,
+          "battery_2": 15.0
+        },
+        "k": {
+          "p1_2": {
+            "pv_1": 1.199,
+            "pv_2": 1.599,
+            "battery_1": 13.201,
+            "battery_2": 0.001
+          }
+        },
+        "sell": 101.8,
+        "soc": {
+          "battery_1": 60.0,
+          "battery_2": 40.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p1": {
+            "pv_1": 1.199,
+            "pv_2": 1.599,
+            "battery_1": 13.201,
+            "battery_2": 0.001
+          }
+        }
+      },
+      {
+        "t": 32,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 0.0,
+          "pv_1": 4.8,
+          "pv_2": 6.4,
+          "battery_1": 20.0,
+          "battery_2": 15.0
+        },
+        "k": {
+          "p1_2": {
+            "pv_1": 1.0,
+            "battery_1": 0.001,
+            "battery_2": 14.999
+          }
+        },
+        "sell": 110.2,
+        "soc": {
+          "battery_1": 40.0,
+          "battery_2": 25.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p1": {
+            "pv_1": 1.0,
+            "battery_1": 0.001,
+            "battery_2": 14.999
+          }
+        }
+      },
+      {
+        "t": 33,
+        "P": {
+          "thermal_1": 75.0,
+          "thermal_2": 0.0,
+          "pv_1": 9.6,
+          "pv_2": 12.8,
+          "battery_1": 20.0,
+          "battery_2": 15.0
+        },
+        "k": {
+          "p1_2": {
+            "thermal_1": 0.001,
+            "pv_2": 0.999,
+            "battery_1": 0.001,
+            "battery_2": 14.999
+          }
+        },
+        "sell": 116.4,
+        "soc": {
+          "battery_1": 20.0,
+          "battery_2": 10.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p1": {
+            "thermal_1": 0.001,
+            "pv_2": 0.999,
+            "battery_1": 0.001,
+            "battery_2": 14.999
+          }
+        }
+      },
+      {
+        "t": 34,
+        "P": {
+          "thermal_1": 60.0,
+          "thermal_2": 0.0,
+          "pv_1": 6.0,
+          "pv_2": 8.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p4_3": {
+            "pv_1": 5.999,
+            "pv_2": 7.001
+          },
+          "p7_2": {
+            "thermal_1": 15.999,
+            "pv_2": 0.001
+          },
+          "p8_4": {
+            "thermal_1": 12.0
+          },
+          "p9_4": {
+            "thermal_1": 8.999,
+            "pv_1": 0.001
+          },
+          "a5": {
+            "thermal_1": 10.002,
+            "pv_2": 0.998
+          },
+          "battery_1_chg": {
+            "thermal_1": 10.999
+          },
+          "battery_2_chg": {
+            "thermal_1": 2.001
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 30.999,
+          "battery_2": 12.001
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p4": {
+            "pv_1": 5.999,
+            "pv_2": 7.001
+          },
+          "p7": {
+            "thermal_1": 15.999,
+            "pv_2": 0.001
+          },
+          "p8": {
+            "thermal_1": 12.0
+          },
+          "p9": {
+            "thermal_1": 8.999,
+            "pv_1": 0.001
+          },
+          "a5": {
+            "thermal_1": 10.002,
+            "pv_2": 0.998
+          },
+          "battery_1_chg": {
+            "thermal_1": 10.999
+          },
+          "battery_2_chg": {
+            "thermal_1": 2.001
+          }
+        }
+      },
+      {
+        "t": 35,
+        "P": {
+          "thermal_1": 45.0,
+          "thermal_2": 0.0,
+          "pv_1": 16.8,
+          "pv_2": 22.4,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p4_3": {
+            "thermal_1": 13.0
+          },
+          "p5_2": {
+            "thermal_1": 0.001,
+            "pv_1": 15.999
+          },
+          "p8_4": {
+            "thermal_1": 12.0
+          },
+          "p9_5": {
+            "thermal_1": 0.001,
+            "pv_2": 8.999
+          },
+          "battery_1_chg": {
+            "thermal_1": 19.201
+          },
+          "battery_2_chg": {
+            "thermal_1": 0.797,
+            "pv_1": 0.801,
+            "pv_2": 13.401
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 50.2,
+          "battery_2": 27.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p4": {
+            "thermal_1": 13.0
+          },
+          "p5": {
+            "thermal_1": 0.001,
+            "pv_1": 15.999
+          },
+          "p8": {
+            "thermal_1": 12.0
+          },
+          "p9": {
+            "thermal_1": 0.001,
+            "pv_2": 8.999
+          },
+          "battery_1_chg": {
+            "thermal_1": 19.201
+          },
+          "battery_2_chg": {
+            "thermal_1": 0.797,
+            "pv_1": 0.801,
+            "pv_2": 13.401
+          }
+        }
+      },
+      {
+        "t": 36,
+        "P": {
+          "thermal_1": 30.0,
+          "thermal_2": 0.0,
+          "pv_1": 7.2,
+          "pv_2": 9.6,
+          "battery_1": 0.0,
+          "battery_2": 1.999
+        },
+        "k": {
+          "p6_1": {
+            "thermal_1": 5.999,
+            "pv_2": 0.001
+          },
+          "p7_2": {
+            "thermal_1": 0.001,
+            "pv_1": 4.401,
+            "pv_2": 9.599,
+            "battery_2": 1.999
+          },
+          "p8_4": {
+            "thermal_1": 11.999,
+            "pv_1": 0.001
+          },
+          "battery_1_chg": {
+            "thermal_1": 12.001,
+            "pv_1": 2.798
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 64.999,
+          "battery_2": 25.001
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p6": {
+            "thermal_1": 5.999,
+            "pv_2": 0.001
+          },
+          "p7": {
+            "thermal_1": 0.001,
+            "pv_1": 4.401,
+            "pv_2": 9.599,
+            "battery_2": 1.999
+          },
+          "p8": {
+            "thermal_1": 11.999,
+            "pv_1": 0.001
+          },
+          "battery_1_chg": {
+            "thermal_1": 12.001,
+            "pv_1": 2.798
+          }
+        }
+      },
+      {
+        "t": 37,
+        "P": {
+          "thermal_1": 15.0,
+          "thermal_2": 0.0,
+          "pv_1": 9.6,
+          "pv_2": 12.8,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p2_4": {
+            "thermal_1": 14.999,
+            "pv_2": 2.001
+          },
+          "battery_1_chg": {
+            "thermal_1": 0.001,
+            "pv_1": 9.6,
+            "pv_2": 10.398
+          },
+          "battery_2_chg": {
+            "pv_2": 0.401
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 84.998,
+          "battery_2": 25.402
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "thermal_1": 14.999,
+            "pv_2": 2.001
+          },
+          "battery_1_chg": {
+            "thermal_1": 0.001,
+            "pv_1": 9.6,
+            "pv_2": 10.398
+          },
+          "battery_2_chg": {
+            "pv_2": 0.401
+          }
+        }
+      },
+      {
+        "t": 38,
+        "P": {
+          "thermal_1": 0.0,
+          "thermal_2": 0.0,
+          "pv_1": 4.8,
+          "pv_2": 6.4,
+          "battery_1": 7.001,
+          "battery_2": 5.799
+        },
+        "k": {
+          "p2_4": {
+            "pv_1": 4.8,
+            "pv_2": 6.4,
+            "battery_1": 0.001,
+            "battery_2": 5.799
+          },
+          "a6": {
+            "battery_1": 7.0
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 77.997,
+          "battery_2": 19.603
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "pv_1": 4.8,
+            "pv_2": 6.4,
+            "battery_1": 0.001,
+            "battery_2": 5.799
+          },
+          "a6": {
+            "battery_1": 7.0
+          }
+        }
+      },
+      {
+        "t": 39,
+        "P": {
+          "thermal_1": 0.0,
+          "thermal_2": 0.0,
+          "pv_1": 7.8,
+          "pv_2": 10.4,
+          "battery_1": 4.995,
+          "battery_2": 0.805
+        },
+        "k": {
+          "p2_4": {
+            "pv_1": 6.599,
+            "pv_2": 10.4,
+            "battery_2": 0.001
+          },
+          "a6": {
+            "pv_1": 1.201,
+            "battery_1": 4.995,
+            "battery_2": 0.804
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 73.002,
+          "battery_2": 18.798
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "pv_1": 6.599,
+            "pv_2": 10.4,
+            "battery_2": 0.001
+          },
+          "a6": {
+            "pv_1": 1.201,
+            "battery_1": 4.995,
+            "battery_2": 0.804
+          }
+        }
+      },
+      {
+        "t": 40,
+        "P": {
+          "thermal_1": 15.0,
+          "thermal_2": 0.0,
+          "pv_1": 4.8,
+          "pv_2": 6.4,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p2_4": {
+            "thermal_1": 14.999,
+            "pv_1": 2.001
+          },
+          "battery_2_chg": {
+            "thermal_1": 0.001,
+            "pv_1": 2.799,
+            "pv_2": 6.4
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 73.002,
+          "battery_2": 27.998
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "thermal_1": 14.999,
+            "pv_1": 2.001
+          },
+          "battery_2_chg": {
+            "thermal_1": 0.001,
+            "pv_1": 2.799,
+            "pv_2": 6.4
+          }
+        }
+      },
+      {
+        "t": 41,
+        "P": {
+          "thermal_1": 24.601,
+          "thermal_2": 0.0,
+          "pv_1": 3.6,
+          "pv_2": 4.8,
+          "battery_1": 0.999,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p4_4": {
+            "thermal_1": 11.999,
+            "pv_1": 0.001,
+            "pv_2": 0.001,
+            "battery_1": 0.999
+          },
+          "p6_2": {
+            "thermal_1": 5.999,
+            "pv_2": 0.001
+          },
+          "battery_2_chg": {
+            "thermal_1": 6.603,
+            "pv_1": 3.599,
+            "pv_2": 4.798
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 72.003,
+          "battery_2": 42.998
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p4": {
+            "thermal_1": 11.999,
+            "pv_1": 0.001,
+            "pv_2": 0.001,
+            "battery_1": 0.999
+          },
+          "p6": {
+            "thermal_1": 5.999,
+            "pv_2": 0.001
+          },
+          "battery_2_chg": {
+            "thermal_1": 6.603,
+            "pv_1": 3.599,
+            "pv_2": 4.798
+          }
+        }
+      },
+      {
+        "t": 42,
+        "P": {
+          "thermal_1": 39.601,
+          "thermal_2": 0.0,
+          "pv_1": 3.6,
+          "pv_2": 4.8,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p3_2": {
+            "thermal_1": 17.0
+          },
+          "p4_4": {
+            "thermal_1": 12.999,
+            "pv_1": 0.001
+          },
+          "battery_1_chg": {
+            "thermal_1": 9.602,
+            "pv_1": 3.599,
+            "pv_2": 4.8
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 90.004,
+          "battery_2": 42.998
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p3": {
+            "thermal_1": 17.0
+          },
+          "p4": {
+            "thermal_1": 12.999,
+            "pv_1": 0.001
+          },
+          "battery_1_chg": {
+            "thermal_1": 9.602,
+            "pv_1": 3.599,
+            "pv_2": 4.8
+          }
+        }
+      },
+      {
+        "t": 43,
+        "P": {
+          "thermal_1": 54.601,
+          "thermal_2": 0.0,
+          "pv_1": 0.6,
+          "pv_2": 0.8,
+          "battery_1": 0.001,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p3_2": {
+            "thermal_1": 17.0
+          },
+          "p7_2": {
+            "thermal_1": 16.0
+          },
+          "p8_5": {
+            "thermal_1": 12.0
+          },
+          "p9_6": {
+            "thermal_1": 7.599,
+            "pv_1": 0.6,
+            "pv_2": 0.8,
+            "battery_1": 0.001
+          },
+          "battery_2_chg": {
+            "thermal_1": 2.002
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 90.003,
+          "battery_2": 45.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p3": {
+            "thermal_1": 17.0
+          },
+          "p7": {
+            "thermal_1": 16.0
+          },
+          "p8": {
+            "thermal_1": 12.0
+          },
+          "p9": {
+            "thermal_1": 7.599,
+            "pv_1": 0.6,
+            "pv_2": 0.8,
+            "battery_1": 0.001
+          },
+          "battery_2_chg": {
+            "thermal_1": 2.002
+          }
+        }
+      },
+      {
+        "t": 44,
+        "P": {
+          "thermal_1": 69.601,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p8_5": {
+            "thermal_1": 12.0
+          },
+          "a6": {
+            "thermal_1": 7.0
+          },
+          "s4": {
+            "thermal_1": 16.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 9.997
+          },
+          "battery_2_chg": {
+            "thermal_1": 15.0
+          }
+        },
+        "sell": 9.604,
+        "soc": {
+          "battery_1": 100.0,
+          "battery_2": 60.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p8": {
+            "thermal_1": 12.0
+          },
+          "a6": {
+            "thermal_1": 7.0
+          },
+          "s4": {
+            "thermal_1": 16.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 9.997
+          },
+          "battery_2_chg": {
+            "thermal_1": 15.0
+          }
+        }
+      },
+      {
+        "t": 45,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p8_5": {
+            "thermal_1": 12.0
+          },
+          "s4": {
+            "thermal_1": 16.0
+          }
+        },
+        "sell": 52.0,
+        "soc": {
+          "battery_1": 100.0,
+          "battery_2": 60.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p8": {
+            "thermal_1": 12.0
+          },
+          "s4": {
+            "thermal_1": 16.0
+          }
+        }
+      },
+      {
+        "t": 46,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 20.0,
+          "battery_2": 15.0
+        },
+        "k": {},
+        "sell": 115.0,
+        "soc": {
+          "battery_1": 80.0,
+          "battery_2": 45.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": []
+      },
+      {
+        "t": 47,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p4_5": {
+            "thermal_1": 13.0
+          }
+        },
+        "sell": 67.0,
+        "soc": {
+          "battery_1": 80.0,
+          "battery_2": 45.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p4": {
+            "thermal_1": 13.0
+          }
+        }
+      },
+      {
+        "t": 48,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p4_5": {
+            "thermal_1": 13.0
+          },
+          "a7": {
+            "thermal_1": 11.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 15.0
+          }
+        },
+        "sell": 21.0,
+        "soc": {
+          "battery_1": 100.0,
+          "battery_2": 60.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p4": {
+            "thermal_1": 13.0
+          },
+          "a7": {
+            "thermal_1": 11.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 15.0
+          }
+        }
+      },
+      {
+        "t": 49,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 20.0,
+          "battery_2": 15.0
+        },
+        "k": {
+          "p2_5": {
+            "battery_1": 2.001,
+            "battery_2": 14.999
+          }
+        },
+        "sell": 98.0,
+        "soc": {
+          "battery_1": 80.0,
+          "battery_2": 45.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "battery_1": 2.001,
+            "battery_2": 14.999
+          }
+        }
+      },
+      {
+        "t": 50,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 20.0,
+          "battery_2": 15.0
+        },
+        "k": {
+          "p2_5": {
+            "thermal_1": 16.999,
+            "battery_2": 0.001
+          }
+        },
+        "sell": 98.0,
+        "soc": {
+          "battery_1": 60.0,
+          "battery_2": 30.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "thermal_1": 16.999,
+            "battery_2": 0.001
+          }
+        }
+      },
+      {
+        "t": 51,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p2_5": {
+            "thermal_1": 17.0
+          },
+          "p9_7": {
+            "thermal_1": 9.0
+          }
+        },
+        "sell": 54.0,
+        "soc": {
+          "battery_1": 60.0,
+          "battery_2": 30.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "thermal_1": 17.0
+          },
+          "p9": {
+            "thermal_1": 9.0
+          }
+        }
+      },
+      {
+        "t": 52,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 0.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p2_5": {
+            "thermal_1": 17.0
+          },
+          "p5_3": {
+            "thermal_1": 16.0
+          },
+          "p8_6": {
+            "thermal_1": 12.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 15.0
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 80.0,
+          "battery_2": 45.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "thermal_1": 17.0
+          },
+          "p5": {
+            "thermal_1": 16.0
+          },
+          "p8": {
+            "thermal_1": 12.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 15.0
+          }
+        }
+      },
+      {
+        "t": 53,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 20.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p8_6": {
+            "thermal_1": 12.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 15.0
+          }
+        },
+        "sell": 53.0,
+        "soc": {
+          "battery_1": 100.0,
+          "battery_2": 60.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p8": {
+            "thermal_1": 12.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 20.0
+          },
+          "battery_2_chg": {
+            "thermal_1": 15.0
+          }
+        }
+      },
+      {
+        "t": 54,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 40.0,
+          "pv_1": 0.6,
+          "pv_2": 0.8,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p1_3": {
+            "thermal_1": 16.0
+          },
+          "p8_6": {
+            "thermal_1": 11.401,
+            "pv_1": 0.599
+          }
+        },
+        "sell": 93.4,
+        "soc": {
+          "battery_1": 100.0,
+          "battery_2": 60.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p1": {
+            "thermal_1": 16.0
+          },
+          "p8": {
+            "thermal_1": 11.401,
+            "pv_1": 0.599
+          }
+        }
+      },
+      {
+        "t": 55,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 45.0,
+          "pv_1": 8.4,
+          "pv_2": 11.2,
+          "battery_1": 20.0,
+          "battery_2": 15.0
+        },
+        "k": {
+          "p1_3": {
+            "thermal_1": 0.001,
+            "thermal_2": 0.001,
+            "pv_1": 0.999,
+            "battery_2": 14.999
+          }
+        },
+        "sell": 163.6,
+        "soc": {
+          "battery_1": 80.0,
+          "battery_2": 45.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p1": {
+            "thermal_1": 0.001,
+            "thermal_2": 0.001,
+            "pv_1": 0.999,
+            "battery_2": 14.999
+          }
+        }
+      },
+      {
+        "t": 56,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 45.0,
+          "pv_1": 21.0,
+          "pv_2": 28.0,
+          "battery_1": 20.0,
+          "battery_2": 15.0
+        },
+        "k": {
+          "p1_3": {
+            "battery_1": 16.0
+          }
+        },
+        "sell": 193.0,
+        "soc": {
+          "battery_1": 60.0,
+          "battery_2": 30.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p1": {
+            "battery_1": 16.0
+          }
+        }
+      },
+      {
+        "t": 57,
+        "P": {
+          "thermal_1": 75.0,
+          "thermal_2": 45.0,
+          "pv_1": 34.2,
+          "pv_2": 45.6,
+          "battery_1": 20.0,
+          "battery_2": 15.0
+        },
+        "k": {
+          "p1_3": {
+            "battery_1": 16.0
+          }
+        },
+        "sell": 218.8,
+        "soc": {
+          "battery_1": 40.0,
+          "battery_2": 15.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p1": {
+            "battery_1": 16.0
+          }
+        }
+      },
+      {
+        "t": 58,
+        "P": {
+          "thermal_1": 60.0,
+          "thermal_2": 40.0,
+          "pv_1": 48.0,
+          "pv_2": 64.0,
+          "battery_1": 20.0,
+          "battery_2": 5.0
+        },
+        "k": {},
+        "sell": 237.0,
+        "soc": {
+          "battery_1": 20.0,
+          "battery_2": 10.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": []
+      },
+      {
+        "t": 59,
+        "P": {
+          "thermal_1": 45.0,
+          "thermal_2": 20.0,
+          "pv_1": 57.6,
+          "pv_2": 76.8,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "a7": {
+            "pv_1": 11.0
+          }
+        },
+        "sell": 188.4,
+        "soc": {
+          "battery_1": 20.0,
+          "battery_2": 10.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "a7": {
+            "pv_1": 11.0
+          }
+        }
+      },
+      {
+        "t": 60,
+        "P": {
+          "thermal_1": 30.0,
+          "thermal_2": 0.0,
+          "pv_1": 58.8,
+          "pv_2": 78.4,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "a7": {
+            "pv_2": 11.0
+          }
+        },
+        "sell": 156.2,
+        "soc": {
+          "battery_1": 20.0,
+          "battery_2": 10.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "a7": {
+            "pv_2": 11.0
+          }
+        }
+      },
+      {
+        "t": 61,
+        "P": {
+          "thermal_1": 15.0,
+          "thermal_2": 0.0,
+          "pv_1": 60.0,
+          "pv_2": 80.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p2_6": {
+            "pv_1": 17.0
+          },
+          "a7": {
+            "thermal_1": 11.0
+          },
+          "s5": {
+            "pv_2": 8.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 4.0,
+            "pv_1": 12.601
+          }
+        },
+        "sell": 102.399,
+        "soc": {
+          "battery_1": 36.601,
+          "battery_2": 10.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "pv_1": 17.0
+          },
+          "a7": {
+            "thermal_1": 11.0
+          },
+          "s5": {
+            "pv_2": 8.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 4.0,
+            "pv_1": 12.601
+          }
+        }
+      },
+      {
+        "t": 62,
+        "P": {
+          "thermal_1": 0.0,
+          "thermal_2": 0.0,
+          "pv_1": 57.0,
+          "pv_2": 76.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p2_6": {
+            "pv_2": 17.0
+          },
+          "p3_3": {
+            "pv_1": 16.999,
+            "pv_2": 0.001
+          },
+          "p4_6": {
+            "pv_1": 12.999,
+            "pv_2": 0.001
+          },
+          "p7_3": {
+            "pv_1": 15.999,
+            "pv_2": 0.001
+          },
+          "p8_7": {
+            "pv_1": 10.999,
+            "pv_2": 1.001
+          },
+          "p9_8": {
+            "pv_2": 9.0
+          },
+          "s5": {
+            "pv_2": 8.0
+          },
+          "a9": {
+            "pv_2": 6.0
+          },
+          "battery_1_chg": {
+            "pv_1": 0.004,
+            "pv_2": 19.996
+          },
+          "battery_2_chg": {
+            "pv_2": 15.0
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 56.601,
+          "battery_2": 25.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "pv_2": 17.0
+          },
+          "p3": {
+            "pv_1": 16.999,
+            "pv_2": 0.001
+          },
+          "p4": {
+            "pv_1": 12.999,
+            "pv_2": 0.001
+          },
+          "p7": {
+            "pv_1": 15.999,
+            "pv_2": 0.001
+          },
+          "p8": {
+            "pv_1": 10.999,
+            "pv_2": 1.001
+          },
+          "p9": {
+            "pv_2": 9.0
+          },
+          "s5": {
+            "pv_2": 8.0
+          },
+          "a9": {
+            "pv_2": 6.0
+          },
+          "battery_1_chg": {
+            "pv_1": 0.004,
+            "pv_2": 19.996
+          },
+          "battery_2_chg": {
+            "pv_2": 15.0
+          }
+        }
+      },
+      {
+        "t": 63,
+        "P": {
+          "thermal_1": 0.0,
+          "thermal_2": 0.0,
+          "pv_1": 48.0,
+          "pv_2": 64.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p2_6": {
+            "pv_1": 16.999,
+            "pv_2": 0.001
+          },
+          "p3_3": {
+            "pv_1": 16.999,
+            "pv_2": 0.001
+          },
+          "p4_6": {
+            "pv_1": 12.999,
+            "pv_2": 0.001
+          },
+          "p7_3": {
+            "pv_1": 0.999,
+            "pv_2": 15.001
+          },
+          "p8_7": {
+            "pv_2": 12.0
+          },
+          "p9_9": {
+            "pv_2": 9.0
+          },
+          "a9": {
+            "pv_2": 6.0
+          },
+          "battery_1_chg": {
+            "pv_1": 0.004,
+            "pv_2": 19.996
+          },
+          "battery_2_chg": {
+            "pv_2": 2.0
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 76.601,
+          "battery_2": 27.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "pv_1": 16.999,
+            "pv_2": 0.001
+          },
+          "p3": {
+            "pv_1": 16.999,
+            "pv_2": 0.001
+          },
+          "p4": {
+            "pv_1": 12.999,
+            "pv_2": 0.001
+          },
+          "p7": {
+            "pv_1": 0.999,
+            "pv_2": 15.001
+          },
+          "p8": {
+            "pv_2": 12.0
+          },
+          "p9": {
+            "pv_2": 9.0
+          },
+          "a9": {
+            "pv_2": 6.0
+          },
+          "battery_1_chg": {
+            "pv_1": 0.004,
+            "pv_2": 19.996
+          },
+          "battery_2_chg": {
+            "pv_2": 2.0
+          }
+        }
+      },
+      {
+        "t": 64,
+        "P": {
+          "thermal_1": 0.0,
+          "thermal_2": 0.0,
+          "pv_1": 36.0,
+          "pv_2": 48.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p2_6": {
+            "pv_1": 16.999,
+            "pv_2": 0.001
+          },
+          "p6_3": {
+            "pv_1": 5.999,
+            "pv_2": 0.001
+          },
+          "p7_3": {
+            "pv_1": 12.999,
+            "pv_2": 3.001
+          },
+          "p8_7": {
+            "pv_2": 12.0
+          },
+          "a8": {
+            "pv_2": 12.0
+          },
+          "battery_1_chg": {
+            "pv_1": 0.003,
+            "pv_2": 14.996
+          },
+          "battery_2_chg": {
+            "pv_2": 6.001
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 91.6,
+          "battery_2": 33.001
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p2": {
+            "pv_1": 16.999,
+            "pv_2": 0.001
+          },
+          "p6": {
+            "pv_1": 5.999,
+            "pv_2": 0.001
+          },
+          "p7": {
+            "pv_1": 12.999,
+            "pv_2": 3.001
+          },
+          "p8": {
+            "pv_2": 12.0
+          },
+          "a8": {
+            "pv_2": 12.0
+          },
+          "battery_1_chg": {
+            "pv_1": 0.003,
+            "pv_2": 14.996
+          },
+          "battery_2_chg": {
+            "pv_2": 6.001
+          }
+        }
+      },
+      {
+        "t": 65,
+        "P": {
+          "thermal_1": 15.0,
+          "thermal_2": 0.0,
+          "pv_1": 21.6,
+          "pv_2": 28.8,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p7_4": {
+            "pv_1": 15.999,
+            "pv_2": 0.001
+          },
+          "a8": {
+            "pv_1": 0.6,
+            "pv_2": 11.4
+          },
+          "s5": {
+            "thermal_1": 2.999,
+            "pv_1": 5.001
+          },
+          "a9": {
+            "thermal_1": 6.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 6.001,
+            "pv_2": 2.399
+          },
+          "battery_2_chg": {
+            "pv_2": 15.0
+          }
+        },
+        "sell": 0.0,
+        "soc": {
+          "battery_1": 100.0,
+          "battery_2": 48.001
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p7": {
+            "pv_1": 15.999,
+            "pv_2": 0.001
+          },
+          "a8": {
+            "pv_1": 0.6,
+            "pv_2": 11.4
+          },
+          "s5": {
+            "thermal_1": 2.999,
+            "pv_1": 5.001
+          },
+          "a9": {
+            "thermal_1": 6.0
+          },
+          "battery_1_chg": {
+            "thermal_1": 6.001,
+            "pv_2": 2.399
+          },
+          "battery_2_chg": {
+            "pv_2": 15.0
+          }
+        }
+      },
+      {
+        "t": 66,
+        "P": {
+          "thermal_1": 30.0,
+          "thermal_2": 0.0,
+          "pv_1": 7.2,
+          "pv_2": 9.6,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p7_4": {
+            "thermal_1": 6.399,
+            "pv_1": 0.001,
+            "pv_2": 9.6
+          },
+          "battery_2_chg": {
+            "thermal_1": 11.999
+          }
+        },
+        "sell": 18.801,
+        "soc": {
+          "battery_1": 100.0,
+          "battery_2": 60.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p7": {
+            "thermal_1": 6.399,
+            "pv_1": 0.001,
+            "pv_2": 9.6
+          },
+          "battery_2_chg": {
+            "thermal_1": 11.999
+          }
+        }
+      },
+      {
+        "t": 67,
+        "P": {
+          "thermal_1": 45.0,
+          "thermal_2": 20.0,
+          "pv_1": 0.6,
+          "pv_2": 0.8,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p4_7": {
+            "thermal_2": 12.999,
+            "pv_1": 0.001
+          },
+          "p7_4": {
+            "thermal_1": 16.0
+          }
+        },
+        "sell": 37.4,
+        "soc": {
+          "battery_1": 100.0,
+          "battery_2": 60.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p4": {
+            "thermal_2": 12.999,
+            "pv_1": 0.001
+          },
+          "p7": {
+            "thermal_1": 16.0
+          }
+        }
+      },
+      {
+        "t": 68,
+        "P": {
+          "thermal_1": 60.0,
+          "thermal_2": 40.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 20.0,
+          "battery_2": 5.0
+        },
+        "k": {
+          "p4_7": {
+            "battery_1": 13.0
+          }
+        },
+        "sell": 112.0,
+        "soc": {
+          "battery_1": 80.0,
+          "battery_2": 55.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p4": {
+            "battery_1": 13.0
+          }
+        }
+      },
+      {
+        "t": 69,
+        "P": {
+          "thermal_1": 75.0,
+          "thermal_2": 45.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 20.0,
+          "battery_2": 15.0
+        },
+        "k": {},
+        "sell": 155.0,
+        "soc": {
+          "battery_1": 60.0,
+          "battery_2": 40.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": []
+      },
+      {
+        "t": 70,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 45.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 20.0,
+          "battery_2": 15.0
+        },
+        "k": {
+          "p8_8": {
+            "thermal_1": 12.0
+          }
+        },
+        "sell": 148.0,
+        "soc": {
+          "battery_1": 40.0,
+          "battery_2": 25.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p8": {
+            "thermal_1": 12.0
+          }
+        }
+      },
+      {
+        "t": 71,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 45.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 20.0,
+          "battery_2": 15.0
+        },
+        "k": {
+          "p3_4": {
+            "thermal_1": 0.001,
+            "thermal_2": 16.999
+          },
+          "p8_8": {
+            "thermal_2": 0.001,
+            "battery_1": 11.999
+          }
+        },
+        "sell": 131.0,
+        "soc": {
+          "battery_1": 20.0,
+          "battery_2": 10.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p3": {
+            "thermal_1": 0.001,
+            "thermal_2": 16.999
+          },
+          "p8": {
+            "thermal_2": 0.001,
+            "battery_1": 11.999
+          }
+        }
+      },
+      {
+        "t": 72,
+        "P": {
+          "thermal_1": 80.0,
+          "thermal_2": 45.0,
+          "pv_1": 0.0,
+          "pv_2": 0.0,
+          "battery_1": 0.0,
+          "battery_2": 0.0
+        },
+        "k": {
+          "p3_4": {
+            "thermal_1": 17.0
+          },
+          "p8_8": {
+            "thermal_1": 12.0
+          },
+          "p9_10": {
+            "thermal_1": 9.0
+          }
+        },
+        "sell": 87.0,
+        "soc": {
+          "battery_1": 20.0,
+          "battery_2": 10.0
+        },
+        "missed_aperiodic": [],
+        "rejected_sporadic": [],
+        "k_raw": {
+          "p3": {
+            "thermal_1": 17.0
+          },
+          "p8": {
+            "thermal_1": 12.0
+          },
+          "p9": {
+            "thermal_1": 9.0
+          }
+        }
+      }
+    ],
+    "rejected_sporadic": [],
+    "periodic_completion_time_jitter": {
+      "p1": {
+        "definition": "population standard deviation of completion times",
+        "completion_times": [
+          9,
+          33,
+          57
+        ],
+        "stddev": 19.595917942265423,
+        "max_minus_min": 48
+      },
+      "p2": {
+        "definition": "population standard deviation of completion times",
+        "completion_times": [
+          4,
+          16,
+          28,
+          40,
+          52,
+          64
+        ],
+        "stddev": 20.493901531919196,
+        "max_minus_min": 60
+      },
+      "p3": {
+        "definition": "population standard deviation of completion times",
+        "completion_times": [
+          19,
+          43,
+          63,
+          72
+        ],
+        "stddev": 20.376150274278995,
+        "max_minus_min": 53
+      },
+      "p4": {
+        "definition": "population standard deviation of completion times",
+        "completion_times": [
+          12,
+          20,
+          35,
+          42,
+          48,
+          63,
+          68
+        ],
+        "stddev": 19.201403009963112,
+        "max_minus_min": 56
+      },
+      "p5": {
+        "definition": "population standard deviation of completion times",
+        "completion_times": [
+          10,
+          35,
+          52
+        ],
+        "stddev": 17.249798710580816,
+        "max_minus_min": 42
+      },
+      "p6": {
+        "definition": "population standard deviation of completion times",
+        "completion_times": [
+          36,
+          41,
+          64
+        ],
+        "stddev": 12.192894105447921,
+        "max_minus_min": 28
+      },
+      "p7": {
+        "definition": "population standard deviation of completion times",
+        "completion_times": [
+          13,
+          43,
+          64,
+          67
+        ],
+        "stddev": 21.568205766822608,
+        "max_minus_min": 54
+      },
+      "p8": {
+        "definition": "population standard deviation of completion times",
+        "completion_times": [
+          12,
+          19,
+          30,
+          36,
+          45,
+          54,
+          64,
+          72
+        ],
+        "stddev": 19.82422760159901,
+        "max_minus_min": 60
+      },
+      "p9": {
+        "definition": "population standard deviation of completion times",
+        "completion_times": [
+          10,
+          72,
+          20,
+          26,
+          34,
+          35,
+          43,
+          51,
+          62,
+          63
+        ],
+        "stddev": 19.23122460999299,
+        "max_minus_min": 62
+      }
+    },
+    "warnings": [],
+    "errors": []
+  },
+  "recalculated_metrics": {
+    "hard_deadline_miss_rate": 0.0,
+    "soft_deadline_miss_rate": 0.0,
+    "average_tardiness": 0.0,
+    "max_tardiness": 0.0,
+    "average_response_time": 4.870967741935484,
+    "max_response_time": 21.0,
+    "average_response_time_plus_one": 5.870967741935484,
+    "max_response_time_plus_one": 22.0,
+    "completion_time_jitter": 18.859302616985563,
+    "completion_time_jitter_definition": "mean of per-periodic-task population standard deviation of completion times",
+    "time_slot_convention": "Accepted response-time conventions: completion_time = max(executed_slots); absolute_deadline = r + d - 1; response_time = completion_time - r or completion_time - r + 1; tardiness = max(0, completion_time - absolute_deadline)",
+    "completed_response_time_job_count": 62,
+    "sporadic_value_rate": 1.0,
+    "basic_generator_cost": 295672.968,
+    "generator_cost": 295672.968,
+    "basic_market_revenue": 361668.829,
+    "market_revenue": 361668.829,
+    "basic_objective_value": -65995.86100000003,
+    "objective_value": -65995.86100000003,
+    "hard_deadline_missed_jobs": [],
+    "soft_deadline_missed_jobs": [],
+    "warnings": [],
+    "errors": []
+  },
+  "evaluation_consistency_check": {
+    "comparisons": [
+      {
+        "field": "hard_deadline_miss_rate",
+        "recalculated_value": 0.0,
+        "submitted_value": 0.0,
+        "difference": 0.0,
+        "status": "match",
+        "note": ""
+      },
+      {
+        "field": "soft_deadline_miss_rate",
+        "recalculated_value": 0.0,
+        "submitted_value": 0.0,
+        "difference": 0.0,
+        "status": "match",
+        "note": ""
+      },
+      {
+        "field": "average_tardiness",
+        "recalculated_value": 0.0,
+        "submitted_value": 0.0,
+        "difference": 0.0,
+        "status": "match",
+        "note": ""
+      },
+      {
+        "field": "max_tardiness",
+        "recalculated_value": 0.0,
+        "submitted_value": 0,
+        "difference": 0.0,
+        "status": "match",
+        "note": ""
+      },
+      {
+        "field": "average_response_time",
+        "recalculated_value": 4.870967741935484,
+        "submitted_value": 4.871,
+        "difference": 3.2258064516454965e-05,
+        "status": "match",
+        "note": "detected response time convention: completion_time - release_time; without +1=4.870967741935484; with +1=5.870967741935484"
+      },
+      {
+        "field": "max_response_time",
+        "recalculated_value": 21.0,
+        "submitted_value": 21,
+        "difference": 0.0,
+        "status": "match",
+        "note": "detected response time convention: completion_time - release_time; without +1=21.0; with +1=22.0"
+      },
+      {
+        "field": "completion_time_jitter",
+        "recalculated_value": 18.859302616985563,
+        "submitted_value": 7.5556,
+        "difference": -11.303702616985563,
+        "status": "mismatch",
+        "note": "difference exceeds tolerance 0.001"
+      },
+      {
+        "field": "sporadic_value_rate",
+        "recalculated_value": 1.0,
+        "submitted_value": 1.0,
+        "difference": 0.0,
+        "status": "match",
+        "note": ""
+      },
+      {
+        "field": "generator_cost",
+        "recalculated_value": 295672.968,
+        "submitted_value": 295672.968,
+        "difference": 0.0,
+        "status": "match",
+        "note": ""
+      },
+      {
+        "field": "market_revenue",
+        "recalculated_value": 361668.829,
+        "submitted_value": 361668.829,
+        "difference": 0.0,
+        "status": "match",
+        "note": "possible Level 2 market mechanism changes this formula"
+      },
+      {
+        "field": "objective_value",
+        "recalculated_value": -65995.86100000003,
+        "submitted_value": -65995.861,
+        "difference": 2.9103830456733704e-11,
+        "status": "match",
+        "note": "possible Level 2 market mechanism changes this formula"
+      }
+    ],
+    "mismatch_count": 1,
+    "missing_count": 0,
+    "warnings": [
+      {
+        "section": "evaluation_consistency",
+        "message": "submitted metrics differ from recalculated metrics",
+        "count": 1
+      }
+    ],
+    "errors": []
+  },
+  "feasibility_check": {
+    "checks": {
+      "violation_count": 0,
+      "warning_count": 1,
+      "has_severe_violation": false
+    },
+    "violations": [],
+    "warnings": [
+      {
+        "check": "storage_soc_transition",
+        "message": "SOC bounds are checked directly. SOC transition equation may require manual review for Level 2 battery extensions.",
+        "manual_review": true
+      }
+    ],
+    "errors": []
+  },
+  "level2_evidence": {
+    "manual_review_required": true,
+    "interpretation_note": "Level 2 evidence detection is only a hint for manual review. No detected evidence does not necessarily mean the submission has no Level 2 work. Please verify Level 2 assumptions, modeling, and dynamic scheduling design from README, report.pdf, source code, and demo explanation.",
+    "scan_root": "D:\\Desktop\\114_2\\即時系統導論\\final_project",
+    "scan_paths": [
+      "src/advanced_scheduler.*",
+      "runtime_config.*",
+      "crontab.txt",
+      "src/runtime_config.*",
+      "src/crontab.txt"
+    ],
+    "detected_extensions": [
+      "dynamic_rescheduling",
+      "market_mechanism"
+    ],
+    "evidence": [
+      {
+        "source": "filesystem",
+        "path": "src\\advanced_scheduler.py",
+        "category": "dynamic_rescheduling"
+      },
+      {
+        "source": "README.md",
+        "category": "market_mechanism",
+        "keywords": [
+          "real-time"
+        ]
+      },
+      {
+        "source": "README.md",
+        "category": "dynamic_rescheduling",
+        "keywords": [
+          "dynamic",
+          "level 2"
+        ]
+      }
+    ],
+    "warnings": [
+      {
+        "category": "market_mechanism",
+        "message": "market_revenue may require manual review due to Level 2 market fields"
+      }
+    ],
+    "review_questions": [
+      "請學生說明 Level 2 放寬了哪些 assumptions。",
+      "請學生說明新增欄位如何影響限制式與 objective value。",
+      "請學生說明 Level 2 方法和 Level 1 static schedule 的差異。",
+      "請學生根據甘特圖說明 miss、reject、replan 或成本上升的原因。",
+      "請學生說明 rejected sporadic jobs 的原因。",
+      "請學生說明每次 replan 的觸發時機。",
+      "請學生說明 market revenue 是否包含 commitment penalty。"
+    ],
+    "errors": []
+  },
+  "chart_files": {
+    "files": {
+      "job_gantt": "D:\\Desktop\\114_2\\即時系統導論\\final_project\\test2\\reports\\charts\\job_gantt.png",
+      "generator_output_timeline": "D:\\Desktop\\114_2\\即時系統導論\\final_project\\test2\\reports\\charts\\generator_output_timeline.png",
+      "battery_soc_timeline": "D:\\Desktop\\114_2\\即時系統導論\\final_project\\test2\\reports\\charts\\battery_soc_timeline.png",
+      "sell_timeline": "D:\\Desktop\\114_2\\即時系統導論\\final_project\\test2\\reports\\charts\\sell_timeline.png",
+      "deadline_miss_timeline": null
+    },
+    "warnings": [],
+    "errors": []
+  },
+  "overall_status": "invalid_submission_structure",
+  "manual_review_required": true,
+  "warnings": [
+    {
+      "category": "market_mechanism",
+      "message": "market_revenue may require manual review due to Level 2 market fields"
+    },
+    {
+      "section": "evaluation_consistency",
+      "message": "submitted metrics differ from recalculated metrics",
+      "count": 1
+    },
+    {
+      "check": "storage_soc_transition",
+      "message": "SOC bounds are checked directly. SOC transition equation may require manual review for Level 2 battery extensions.",
+      "manual_review": true
+    }
+  ],
+  "errors": [
+    {
+      "file": "output/evaluation_results.json",
+      "field": "acceptance_test",
+      "message": "required evaluation field missing"
+    }
+  ],
+  "report_files": {
+    "json": "D:\\Desktop\\114_2\\即時系統導論\\final_project\\test2\\reports\\final_project_report.json",
+    "text": "D:\\Desktop\\114_2\\即時系統導論\\final_project\\test2\\reports\\final_project_report.txt"
+  }
+}

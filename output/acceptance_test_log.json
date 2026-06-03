@@ -4,9 +4,8 @@
             "job_id": "s1",
             "status": "Accepted",
             "scheduled_time_steps": [
-                6,
-                7,
-                8
+                11,
+                12
             ],
             "reason": "Sufficient resources available",
             "constraint_violation": false
@@ -15,9 +14,9 @@
             "job_id": "s2",
             "status": "Accepted",
             "scheduled_time_steps": [
-                23,
-                24,
-                25
+                17,
+                18,
+                19
             ],
             "reason": "Sufficient resources available",
             "constraint_violation": false
@@ -26,7 +25,7 @@
             "job_id": "s3",
             "status": "Accepted",
             "scheduled_time_steps": [
-                37
+                30
             ],
             "reason": "Sufficient resources available",
             "constraint_violation": false
@@ -35,7 +34,8 @@
             "job_id": "s4",
             "status": "Accepted",
             "scheduled_time_steps": [
-                40
+                47,
+                48
             ],
             "reason": "Sufficient resources available",
             "constraint_violation": false
@@ -44,16 +44,9 @@
             "job_id": "s5",
             "status": "Accepted",
             "scheduled_time_steps": [
-                44
-            ],
-            "reason": "Sufficient resources available",
-            "constraint_violation": false
-        },
-        {
-            "job_id": "s6",
-            "status": "Accepted",
-            "scheduled_time_steps": [
-                65
+                62,
+                63,
+                64
             ],
             "reason": "Sufficient resources available",
             "constraint_violation": false

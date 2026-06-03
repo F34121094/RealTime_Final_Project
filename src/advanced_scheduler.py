@@ -806,7 +806,7 @@ if __name__ == "__main__":
             # --- 1. 填寫 P 矩陣 ---
             for i in gen_ids:
                 val = pulp.value(v["P"][i, t])
-                time_step_data["P"][i] = round(val, 2)
+                time_step_data["P"][i] = round(val, 4)
             
             step_surplus_p = 0.0  # [修正 1] 新增：紀錄「這一個小時」多出來的總電量
             
@@ -822,7 +822,7 @@ if __name__ == "__main__":
                 step_surplus_p += surplus_p                    # 累加這個小時的溢出電量
                 bonus_revenue += surplus_p * price_72[t-1]     # 累加總溢出收益
                 
-                time_step_data["P"][i] = round(actual_p, 2)
+                time_step_data["P"][i] = round(actual_p, 4)
                 
                 
             
@@ -837,7 +837,7 @@ if __name__ == "__main__":
                     if k_var is not None:
                         val = pulp.value(k_var)
                         if val is not None and val > 0:
-                            task_k_dict[i] = round(val, 2)
+                            task_k_dict[i] = round(val, 4)
                 
                 if task_k_dict:
                     time_step_data["k"][base_id] = task_k_dict
@@ -853,11 +853,11 @@ if __name__ == "__main__":
             
             for sid in storage_ids:
                 val = pulp.value(v["P_dis"][sid, t])
-                time_step_data["P"][sid] = round(val, 2)
+                time_step_data["P"][sid] = round(val, 4)
 
                 chg_val = pulp.value(v["P_ch"][sid, t])
                 if chg_val is not None and chg_val > 0:
-                    chg_val = round(chg_val, 2)
+                    chg_val = round(chg_val, 4)
                     chg_key = f"{sid}_chg"
                     time_step_data["k"][chg_key] = {}
                     
@@ -866,13 +866,13 @@ if __name__ == "__main__":
                             break
                         if avail > 0:
                             take = min(avail, chg_val)
-                            take = round(take, 2)
+                            take = round(take, 4)
                             if take > 0:
                                 time_step_data["k"][chg_key][i] = take
-                                chg_val = round(chg_val - take, 2)
+                                chg_val = round(chg_val - take, 4)
                                 remaining_power[i] -= take
                 soc_val = pulp.value(v["SOC"][sid, t])
-                time_step_data["soc"][sid] = round(soc_val, 2) if soc_val else 0.0
+                time_step_data["soc"][sid] = round(soc_val, 4) if soc_val else 0.0
 
             # --- 4. 填寫售電量與 SOC ---
             sell_val = pulp.value(v["Sell"][t])
@@ -880,7 +880,7 @@ if __name__ == "__main__":
             
             # [修正 2] 實際售電 = 計畫售電 + 這小時多出來的電
             actual_sell = scheduled_sell + step_surplus_p 
-            time_step_data["sell"] = round(actual_sell, 2)
+            time_step_data["sell"] = round(actual_sell, 4)
 
             # 累加違約金 (違約金是固定的 1000 元，不隨電價波動)
             true_deficit = max(0.0, contract_qty - actual_sell)
