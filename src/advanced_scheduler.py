@@ -911,15 +911,16 @@ if __name__ == "__main__":
         # 淨成本要加上老化成本
         real_net_cost = real_gen_cost + real_deg_cost - actual_revenue + penalty_cost - bonus_revenue
 
-        print(f"預估發電總成本: $ {real_gen_cost:.2f}")
-        print(f"電池老化總成本: $ {real_deg_cost:.2f}")
-        print(f"預估售電總收益 (排程內): $ {real_revenue:.2f}")
-        print(f"實際售電總收益 (含 +-5% 波動與 0.7 倍折價): $ {actual_revenue:.2f}")
-        print(f"售電違約總罰金: $ {penalty_cost:.2f}")
-        print(f"真實天氣溢出收益 (Bonus): $ {bonus_revenue:.2f}")
-        print(f"系統真實淨成本 (含 Bonus): $ {real_net_cost:.2f}")
-        print(f"Rejected Sporadic 數量: {len(scheduler.rejected_sporadic)}")
-        print(f"Missed Aperiodic 數量: {len(scheduler.missed_aperiodic)}")
+        # print(f"預估發電總成本: $ {real_gen_cost:.2f}")
+        # print(f"電池老化總成本: $ {real_deg_cost:.2f}")
+        # print(f"預估售電總收益 (排程內): $ {real_revenue:.2f}")
+        # print(f"實際售電總收益 (含 +-5% 波動與 0.7 倍折價): $ {actual_revenue:.2f}")
+        # print(f"售電違約總罰金: $ {penalty_cost:.2f}")
+        # print(f"真實天氣溢出收益 (Bonus): $ {bonus_revenue:.2f}")
+        # print(f"系統真實淨成本 (含 Bonus): $ {real_net_cost:.2f}")
+        # print(f"Rejected Sporadic 數量: {len(scheduler.rejected_sporadic)}")
+        # print(f"Missed Aperiodic 數量: {len(scheduler.missed_aperiodic)}")
+        print("[Schedule Complete]")
         # 5. 匯出檔案
         output_path = "output/schedule_result.json"
         import os

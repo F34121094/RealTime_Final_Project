@@ -727,11 +727,12 @@ if __name__ == "__main__":
                 miss_log_time = min(abs_deadline + 1, scheduler.time_horizon)
                 scheduler.missed_at_t[miss_log_time].append(base_id)
 
-        print(f"預估發電總成本: $ {real_gen_cost:.2f}")
-        print(f"預估售電總收益: $ {real_revenue:.2f}")
-        print(f"系統真實淨成本 (不含虛擬罰款): $ {real_net_cost:.2f}")
-        print(f"Rejected Sporadic 數量: {len(scheduler.rejected_sporadic)}")
-        print(f"Missed Aperiodic 數量: {len(scheduler.missed_aperiodic)}")
+        # print(f"預估發電總成本: $ {real_gen_cost:.2f}")
+        # print(f"預估售電總收益: $ {real_revenue:.2f}")
+        # print(f"系統真實淨成本 (不含虛擬罰款): $ {real_net_cost:.2f}")
+        # print(f"Rejected Sporadic 數量: {len(scheduler.rejected_sporadic)}")
+        # print(f"Missed Aperiodic 數量: {len(scheduler.missed_aperiodic)}")
+        print("[Schedule Complete]")
 
         # ==========================================
         # 4. 建立 JSON 匯出結構
