@@ -117,6 +117,7 @@ VPP_RealTime_Scheduler/
 
 ## 7. 補充說明
 * ### Level 2 輸出 json 新增額外欄位
-    * **` schedule_result.json ` :** 
-        1. **contract_sell** : 對應到放寬的的 Assumptions 4 售電契約，紀錄完成periodic tasks 時每個小時規劃的售電量
-        2. **price**
+    **` schedule_result.json ` :** 
+    1. **contract_sell** : 對應到放寬的 Assumptions 4 售電契約，紀錄完成periodic tasks 時每個小時規劃的售電量
+    2. **price** : 對應到放寬的 Assumptions 4 售電契約，紀錄 72 小時真實買出的電量。
+    3. **is_peak_hour** : 對應到放寬的 Assumptions 9 熱門時段售電獎勵，記錄熱門時段有 1.25 倍的電價加成。
