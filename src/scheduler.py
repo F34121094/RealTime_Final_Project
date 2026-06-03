@@ -445,7 +445,7 @@ class VPPScheduler:
         print("\n--- 正在計算 Base Schedule (Periodic) ---")
         
         self._apply_dynamic_balance()                       # 綁定能量平衡限制式
-        self.model.solve(pulp.PULP_CBC_CMD(msg=False))      # 求解
+        self.model.solve(pulp.PULP_CBC_CMD(msg=False, timeLimit=15, gapRel=0.02))      # 求解
         
         if pulp.LpStatus[self.model.status] == "Optimal":
             print("=> Base Schedule 成功建立！")
@@ -519,7 +519,7 @@ class VPPScheduler:
             self._update_objective()
             
             # 3. 嘗試求解 (Acceptance Test)
-            self.model.solve(pulp.PULP_CBC_CMD(msg=False))
+            self.model.solve(pulp.PULP_CBC_CMD(msg=False, timeLimit=15, gapRel=0.02))
             
             if pulp.LpStatus[self.model.status] == "Optimal":
                 if task.type == 1: # Sporadic
